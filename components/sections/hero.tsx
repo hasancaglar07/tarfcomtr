@@ -1,0 +1,356 @@
+'use client'
+
+import { useEffect, useMemo, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { ArrowRight, Play, ShieldCheck, BookOpen, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
+import { BrandMarquee } from '@/components/sections/brand-marquee'
+
+interface HeroProps {
+  locale: string
+  data?: {
+    eyebrow?: string | null
+    title?: string | null
+    subtitle?: string | null
+    primary_cta_label?: string | null
+    primary_cta_href?: string | null
+    tertiary_cta_label?: string | null
+    tertiary_cta_href?: string | null
+    background_image?: string | null
+    stats?: Array<{
+      value: string
+      label: string
+    }> | null
+    video_cover?: string | null
+    video_url?: string | null
+  } | null
+}
+
+const defaultContent = {
+  tr: {
+    eyebrow: 'Tarf Düşünce Enstitüsü',
+    title: 'Bilim, teknoloji ve irfanı bir araya getirerek geleceği inşa ediyoruz',
+    subtitle:
+      'TARF olarak profesyonel eğitim ve danışmanlık hizmetleri sunuyoruz. Uzman kadromuzla kaliteli eğitim programları ve danışmanlık hizmetleri.',
+    primary_cta_label: 'TARF Ekosistemine Katılın',
+    primary_cta_href: '/tr/contact',
+    tertiary_cta_label: 'Tanıtım Filmi',
+    tertiary_cta_href: '/tr/videos',
+    stats: [
+      { value: '6+', label: 'Ana Hizmet' },
+      { value: '15+', label: 'Aktif Proje' },
+      { value: '100+', label: 'Etkinlik' },
+      { value: '500+', label: 'Katılımcı' },
+    ],
+  },
+  en: {
+    eyebrow: 'Tarf Think Tank Institute',
+    title: 'Building the future by bringing together science, technology and wisdom',
+    subtitle:
+      'TARF provides professional education and consulting services. Quality education programs and consulting services with our expert staff.',
+    primary_cta_label: 'Join TARF Ecosystem',
+    primary_cta_href: '/en/contact',
+    tertiary_cta_label: 'Watch Showreel',
+    tertiary_cta_href: '/en/videos',
+    stats: [
+      { value: '6+', label: 'Main Services' },
+      { value: '15+', label: 'Active Projects' },
+      { value: '100+', label: 'Events' },
+      { value: '500+', label: 'Participants' },
+    ],
+  },
+  ar: {
+    eyebrow: 'معهد تارف للفكر',
+    title: 'بناء المستقبل من خلال الجمع بين العلم والتكنولوجيا والحكمة',
+    subtitle:
+      'يقدم TARF خدمات التعليم والاستشارات المهنية. برامج تعليمية عالية الجودة وخدمات استشارية مع فريقنا الخبير.',
+    primary_cta_label: 'انضم إلى نظام TARF',
+    primary_cta_href: '/ar/contact',
+    tertiary_cta_label: 'شاهد الفيلم التعريفي',
+    tertiary_cta_href: '/ar/videos',
+    stats: [
+      { value: '6+', label: 'الخدمات الرئيسية' },
+      { value: '15+', label: 'المشاريع النشطة' },
+      { value: '100+', label: 'الفعاليات' },
+      { value: '500+', label: 'المشاركون' },
+    ],
+  },
+}
+
+const getYouTubeVideoId = (url?: string | null) => {
+  if (!url) return null
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
+  const match = url.match(regExp)
+  return match && match[2].length === 11 ? match[2] : null
+}
+
+export function Hero({ locale, data }: HeroProps) {
+  const content = {
+    ...(defaultContent[locale as keyof typeof defaultContent] || defaultContent.en),
+    ...data,
+  }
+
+  const stats = content.stats?.slice(0, 4) || defaultContent[locale as keyof typeof defaultContent]?.stats || []
+
+  const heroVideos = useMemo(() => {
+    const fallbackVideos = [
+      {
+        id: 'hero-1',
+        title: 'TARF Ekosistemi · Bilim ve Teknoloji Yolculuğu',
+        youtube_url: 'https://www.youtube.com/watch?v=Qt6oaPhToZ4',
+        cover: null,
+      },
+      {
+        id: 'hero-2',
+        title: 'Geleceğe Dair Eğitim Vizyonu',
+        youtube_url: 'https://www.youtube.com/watch?v=Dn0_mblycJw&t=812s',
+        cover: null,
+      },
+    ]
+
+    const customVideo = content.video_url
+      ? [
+          {
+            id: 'hero-custom',
+            title: content.title || 'Tanıtım Filmi',
+            youtube_url: content.video_url,
+            cover: content.video_cover || null,
+          },
+        ]
+      : []
+
+    const combined = [...customVideo, ...fallbackVideos]
+    const seen = new Set<string>()
+    return combined.filter((video) => {
+      const id = getYouTubeVideoId(video.youtube_url)
+      if (!id) return true
+      if (seen.has(id)) return false
+      seen.add(id)
+      return true
+    })
+  }, [content.title, content.video_cover, content.video_url])
+
+  const [heroVideoIndex, setHeroVideoIndex] = useState(0)
+  const [heroVideoPlaying, setHeroVideoPlaying] = useState(false)
+
+  useEffect(() => {
+    if (heroVideos.length <= 1 || heroVideoPlaying) return
+    const timer = setInterval(() => {
+      setHeroVideoIndex((prev) => (prev + 1) % heroVideos.length)
+    }, 8000)
+    return () => clearInterval(timer)
+  }, [heroVideos.length, heroVideoPlaying])
+
+  useEffect(() => {
+    if (heroVideoIndex >= heroVideos.length) {
+      setHeroVideoIndex(0)
+    }
+  }, [heroVideoIndex, heroVideos.length])
+
+  useEffect(() => {
+    setHeroVideoPlaying(false)
+  }, [heroVideoIndex])
+
+  const currentHeroVideo = heroVideos[heroVideoIndex]
+  const heroVideoId = currentHeroVideo ? getYouTubeVideoId(currentHeroVideo.youtube_url) : null
+  const heroVideoCover =
+    currentHeroVideo?.cover ||
+    (heroVideoId ? `https://img.youtube.com/vi/${heroVideoId}/maxresdefault.jpg` : content.background_image)
+  const heroVideoLink = currentHeroVideo?.youtube_url || (content.tertiary_cta_href as string) || '#'
+  const hasMultipleHeroVideos = heroVideos.length > 1
+
+  return (
+    <>
+      <section className="relative overflow-hidden bg-gradient-to-br from-secondary via-background to-primary/10">
+        <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
+        <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
+        <div className="container relative z-10 py-20 lg:py-28">
+          <div className="grid items-center gap-16 lg:grid-cols-2">
+            <StaggerContainer className="space-y-8">
+              <StaggerItem>
+                <div className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-background/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                  <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                  {content.eyebrow}
+                </div>
+              </StaggerItem>
+
+            <StaggerItem>
+              <div className="space-y-5">
+                <h1 className="text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-[56px]">
+                  {content.title || defaultContent.en.title}
+                </h1>
+                <p className="text-lg text-muted-foreground">
+                  {content.subtitle || defaultContent.en.subtitle}
+                </p>
+              </div>
+            </StaggerItem>
+
+            <StaggerItem>
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <Link href={(content.primary_cta_href as string) || '#'}>
+                  <Button size="lg">
+                    {content.primary_cta_label || 'Başla'}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href={(content.tertiary_cta_href as string) || '#'}>
+                  <Button size="lg" variant="outline" className="bg-white/80">
+                    <Play className="mr-2 h-4 w-4" />
+                    {content.tertiary_cta_label || 'Videoyu İzle'}
+                  </Button>
+                </Link>
+              </div>
+            </StaggerItem>
+
+            <StaggerItem>
+              <div className="grid gap-4 rounded-3xl border border-dashed border-border/60 bg-white/80 p-6 shadow-xl sm:grid-cols-2 lg:grid-cols-2">
+                {stats.slice(0, 4).map((stat, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="rounded-full bg-primary/10 p-3 text-primary">
+                      <BookOpen className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-extrabold text-foreground">{stat.value}</p>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">{stat.label}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </StaggerItem>
+            </StaggerContainer>
+
+            <Animate variant="slideInRight">
+              <div className="relative">
+                <div className="absolute -inset-6 hidden rounded-[40px] bg-gradient-to-tr from-primary/30 to-amber-200/30 blur-2xl lg:block" />
+                <div className="relative rounded-[32px] border border-border bg-card/80 p-6 shadow-2xl backdrop-blur">
+                  <div className="rounded-[26px] border border-border/70 bg-muted/30 p-3">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] bg-primary/10">
+                      {heroVideoPlaying && heroVideoId ? (
+                        <iframe
+                          className="h-full w-full"
+                          src={`https://www.youtube.com/embed/${heroVideoId}?autoplay=1&rel=0&modestbranding=1`}
+                          title={currentHeroVideo?.title || 'Hero video'}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <>
+                          {heroVideoCover ? (
+                            <Image src={heroVideoCover} alt={currentHeroVideo?.title || 'Hero visual'} fill className="object-cover" />
+                          ) : (
+                            <div className="absolute inset-0 flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 via-amber-50 to-white">
+                              <Sparkles className="h-16 w-16 text-primary" />
+                            </div>
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/20 to-transparent" />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            {heroVideoId ? (
+                              <button
+                                type="button"
+                                onClick={() => setHeroVideoPlaying(true)}
+                                className="rounded-full bg-white/90 px-8 py-3 text-sm font-semibold uppercase tracking-[0.35em] text-primary shadow-2xl transition hover:bg-white"
+                              >
+                                <span className="flex items-center gap-2">
+                                  <Play className="h-5 w-5" />
+                                  {locale === 'tr' ? 'Oynat' : locale === 'ar' ? 'تشغيل' : 'Play'}
+                                </span>
+                              </button>
+                            ) : (
+                              <Link href={heroVideoLink} target="_blank" rel="noopener noreferrer">
+                                <Button size="lg" className="rounded-full bg-white/90 text-primary hover:bg-white">
+                                  <Play className="mr-2 h-5 w-5" />
+                                  {locale === 'tr' ? 'Oynat' : locale === 'ar' ? 'تشغيل' : 'Play'}
+                                </Button>
+                              </Link>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex flex-col gap-6">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.4em] text-muted-foreground">
+                          {locale === 'tr' ? 'TARF Ekosistemi' : locale === 'ar' ? 'نظام TARF' : 'TARF Ecosystem'}
+                        </p>
+                        <p className="text-lg font-semibold text-foreground">{currentHeroVideo?.title}</p>
+                      </div>
+                      {hasMultipleHeroVideos && (
+                        <div className="flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setHeroVideoIndex((prev) => (prev - 1 + heroVideos.length) % heroVideos.length)}
+                            className="rounded-full border border-border/60 bg-background/70 p-2 text-muted-foreground transition hover:text-primary"
+                            aria-label="Önceki video"
+                          >
+                            <ChevronLeft className="h-4 w-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setHeroVideoIndex((prev) => (prev + 1) % heroVideos.length)}
+                            className="rounded-full border border-border/60 bg-background/70 p-2 text-muted-foreground transition hover:text-primary"
+                            aria-label="Sonraki video"
+                          >
+                            <ChevronRight className="h-4 w-4" />
+                          </button>
+                          <div className="hidden gap-2 md:flex">
+                            {heroVideos.map((video, index) => (
+                              <button
+                                key={video.id}
+                                type="button"
+                                onClick={() => setHeroVideoIndex(index)}
+                                className={`h-1.5 w-6 rounded-full transition ${
+                                  index === heroVideoIndex ? 'bg-primary' : 'bg-border hover:bg-primary/60'
+                                }`}
+                                aria-label={`Video ${index + 1}`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="rounded-2xl border border-dashed border-border/70 bg-white/60 p-4 shadow-lg">
+                        <p className="text-xs font-semibold text-primary">
+                          {locale === 'tr' ? 'Geleceği Kodluyoruz' : locale === 'ar' ? 'نبرمج المستقبل' : 'Coding the Future'}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {locale === 'tr'
+                            ? 'Yenilikçi dijital çözümler geliştiren Ar-Ge ve teknoloji merkezi'
+                            : locale === 'ar'
+                            ? 'مركز البحث والتطوير والتكنولوجيا الذي يطور حلولاً رقمية مبتكرة'
+                            : 'R&D and technology center developing innovative digital solutions'}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-dashed border-border/70 bg-white/60 p-4 shadow-lg">
+                        <p className="text-xs font-semibold text-primary">
+                          {locale === 'tr' ? 'Bilim ve İrfan' : locale === 'ar' ? 'العلم والمعرفة' : 'Science and Wisdom'}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {locale === 'tr'
+                            ? 'Fikir üretimi ve araştırmayı öncelikli hedef olarak belirleyen platform'
+                            : locale === 'ar'
+                            ? 'منصة تحدد إنتاج الأفكار والبحث كهدف أساسي'
+                            : 'Platform prioritizing idea generation and research'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Animate>
+          </div>
+        </div>
+      </section>
+      <div className="-mt-12">
+        <BrandMarquee locale={locale} variant="overlay" />
+      </div>
+    </>
+  )
+}
