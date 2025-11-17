@@ -10,6 +10,7 @@ import { Play, Calendar, Clock } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Animate, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/animate'
+import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 export async function generateMetadata({
   params,
@@ -79,7 +80,7 @@ export default async function PodcastsPage({
                   <div className="relative h-56 w-full md:h-auto md:w-1/3 bg-primary/10">
                     {podcast.featured_image ? (
                       <Image
-                        src={podcast.featured_image}
+                        src={resolveImageSrc(podcast.featured_image, getDefaultImage())}
                         alt={podcast.title}
                         fill
                         className="object-cover"

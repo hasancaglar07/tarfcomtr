@@ -1,6 +1,6 @@
-import { createElement, forwardRef, type PropsWithChildren } from 'react'
+import { createElement, forwardRef, type PropsWithChildren, type ReactNode } from 'react'
 
-type MotionProps = Record<string, unknown>
+type MotionProps = Record<string, unknown> & PropsWithChildren
 
 const animationKeys = new Set([
   'initial',
@@ -22,7 +22,7 @@ const animationKeys = new Set([
 
 const createMotionComponent = (tag: string) => {
   const Component = forwardRef<HTMLElement, MotionProps>(({ children, ...rest }, ref) => {
-    const safeProps: MotionProps = {}
+    const safeProps: Record<string, unknown> = {}
 
     Object.entries(rest).forEach(([key, value]) => {
       if (!animationKeys.has(key)) {
@@ -30,7 +30,7 @@ const createMotionComponent = (tag: string) => {
       }
     })
 
-    return createElement(tag, { ref, ...safeProps }, children)
+    return createElement(tag, { ref, ...safeProps }, children as ReactNode)
   })
 
   Component.displayName = `motion.${tag}`

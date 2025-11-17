@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Play, ArrowRight, Clock, Calendar } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 interface Podcast {
   id: number
@@ -96,7 +97,7 @@ export function PodcastSection({ locale, podcasts }: PodcastSectionProps) {
                 <div className="relative h-48 w-full overflow-hidden rounded-t-lg bg-gradient-to-br from-primary/20 to-primary/5">
                   {podcast.featured_image ? (
                     <Image
-                      src={podcast.featured_image}
+                      src={resolveImageSrc(podcast.featured_image, getDefaultImage())}
                       alt={podcast.title}
                       fill
                       className="object-cover"

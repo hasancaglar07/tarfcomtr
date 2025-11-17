@@ -11,6 +11,7 @@ import { notFound } from 'next/navigation'
 import { normalizeLocale } from '@/lib/i18n'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
 import { buildPageMetadata } from '@/lib/seo'
+import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 export async function generateMetadata({
   params,
@@ -117,21 +118,19 @@ export default async function BlogPost({
           </div>
 
           {/* Featured Image */}
-          {post.featured_image && (
-            <div className="container py-8">
-              <Animate variant="scaleUp" delay={0.2} className="max-w-4xl mx-auto">
-                <div className="relative aspect-video rounded-lg overflow-hidden">
-                  <Image
-                    src={post.featured_image}
-                    alt={post.title}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-              </Animate>
-            </div>
-          )}
+          <div className="container py-8">
+            <Animate variant="scaleUp" delay={0.2} className="max-w-4xl mx-auto">
+              <div className="relative aspect-video rounded-lg overflow-hidden">
+                <Image
+                  src={resolveImageSrc(post.featured_image, getDefaultImage())}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </Animate>
+          </div>
 
           {/* Content */}
           <div className="container py-8">

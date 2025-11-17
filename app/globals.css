@@ -221,6 +221,68 @@
   .animate-scale-in {
     animation: scale-in 0.5s ease-out;
   }
+
+  /* Disable costly keyframe effects when the user or viewport can't handle them */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Özel: Ekosistem ortakları marquee animasyonunu her zaman aktif tut */
+  @keyframes brand-marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes brand-marquee-shimmer {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .brand-marquee-track {
+    animation: brand-marquee-scroll 20s linear infinite;
+  }
+
+  .brand-marquee-shimmer {
+    animation: brand-marquee-shimmer 12s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand-marquee-track,
+    .brand-marquee-shimmer {
+      animation-duration: 20s !important;
+      animation-iteration-count: infinite !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .animation-wrapper,
+    .animate-fade-in,
+    .animate-slide-up,
+    .animate-slide-in-left,
+    .animate-slide-in-right,
+    .animate-scale-in {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
   
   /* Gradient backgrounds */
   .gradient-primary {

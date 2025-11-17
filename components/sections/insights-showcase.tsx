@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar, Clock, Play, Mic2, Sparkles } from 'lucide-react'
+import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 interface BasePost {
   id: number
@@ -89,7 +90,7 @@ export function InsightsShowcase({
               <div className="relative h-64 w-full">
                 {featuredPost.featured_image ? (
                   <Image
-                    src={featuredPost.featured_image}
+                    src={resolveImageSrc(featuredPost.featured_image, getDefaultImage())}
                     alt={featuredPost.title}
                     fill
                     className="object-cover"

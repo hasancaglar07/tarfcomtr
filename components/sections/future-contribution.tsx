@@ -11,7 +11,7 @@ import {
   Globe,
   BookOpen,
   Lightbulb,
-  Rocket
+  Rocket,
 } from 'lucide-react'
 import Link from 'next/link'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
@@ -31,30 +31,30 @@ const defaultContent = {
       { value: '10,000+', label: 'Eğitim Alan Öğrenci', icon: Users },
       { value: '50+', label: 'Eğitim Programı', icon: BookOpen },
       { value: '100+', label: 'İş Ortağı', icon: Target },
-      { value: '95%', label: 'Memnuniyet Oranı', icon: Award }
+      { value: '95%', label: 'Memnuniyet Oranı', icon: Award },
     ],
     contributions: [
       {
         icon: Globe,
         title: 'Dijital Dönüşüm',
-        description: 'Türkiye\'nin dijital dönüşümüne liderlik ediyoruz'
+        description: 'Türkiye\'nin dijital dönüşümüne liderlik ediyoruz',
       },
       {
         icon: Users,
         title: 'Gençlik Eğitimi',
-        description: 'Gençlere modern teknolojiler konusunda eğitim veriyoruz'
+        description: 'Gençlere modern teknolojiler konusunda eğitim veriyoruz',
       },
       {
         icon: Lightbulb,
         title: 'İnovasyon',
-        description: 'Yenilikçi çözümler ve projeler geliştiriyoruz'
+        description: 'Yenilikçi çözümler ve projeler geliştiriyoruz',
       },
       {
         icon: Rocket,
         title: 'Kariyer Desteği',
-        description: 'Öğrencilerin kariyer yolculuğunda yanlarındayız'
-      }
-    ]
+        description: 'Öğrencilerin kariyer yolculuğunda yanlarındayız',
+      },
+    ],
   },
   en: {
     title: 'Our Contribution to the Future',
@@ -66,30 +66,30 @@ const defaultContent = {
       { value: '10,000+', label: 'Trained Students', icon: Users },
       { value: '50+', label: 'Training Programs', icon: BookOpen },
       { value: '100+', label: 'Partners', icon: Target },
-      { value: '95%', label: 'Satisfaction Rate', icon: Award }
+      { value: '95%', label: 'Satisfaction Rate', icon: Award },
     ],
     contributions: [
       {
         icon: Globe,
         title: 'Digital Transformation',
-        description: 'Leading Turkey\'s digital transformation'
+        description: 'Leading Turkey\'s digital transformation',
       },
       {
         icon: Users,
         title: 'Youth Education',
-        description: 'Training young people in modern technologies'
+        description: 'Training young people in modern technologies',
       },
       {
         icon: Lightbulb,
         title: 'Innovation',
-        description: 'Developing innovative solutions and projects'
+        description: 'Developing innovative solutions and projects',
       },
       {
         icon: Rocket,
         title: 'Career Support',
-        description: 'Supporting students in their career journey'
-      }
-    ]
+        description: 'Supporting students in their career journey',
+      },
+    ],
   },
   ar: {
     title: 'مساهمتنا في المستقبل',
@@ -101,31 +101,31 @@ const defaultContent = {
       { value: '10,000+', label: 'طالب مدرب', icon: Users },
       { value: '50+', label: 'برنامج تدريبي', icon: BookOpen },
       { value: '100+', label: 'شريك', icon: Target },
-      { value: '95%', label: 'معدل الرضا', icon: Award }
+      { value: '95%', label: 'معدل الرضا', icon: Award },
     ],
     contributions: [
       {
         icon: Globe,
         title: 'التحول الرقمي',
-        description: 'قيادة التحول الرقمي في تركيا'
+        description: 'قيادة التحول الرقمي في تركيا',
       },
       {
         icon: Users,
         title: 'تعليم الشباب',
-        description: 'تدريب الشباب على التقنيات الحديثة'
+        description: 'تدريب الشباب على التقنيات الحديثة',
       },
       {
         icon: Lightbulb,
         title: 'الابتكار',
-        description: 'تطوير حلول ومشاريع مبتكرة'
+        description: 'تطوير حلول ومشاريع مبتكرة',
       },
       {
         icon: Rocket,
         title: 'دعم المسار المهني',
-        description: 'دعم الطلاب في رحلتهم المهنية'
-      }
-    ]
-  }
+        description: 'دعم الطلاب في رحلتهم المهنية',
+      },
+    ],
+  },
 }
 
 export function FutureContribution({ locale }: FutureContributionProps) {
@@ -137,16 +137,16 @@ export function FutureContribution({ locale }: FutureContributionProps) {
         {/* Header */}
         <Animate variant="fadeIn">
           <div className="text-center mb-16">
-          <Badge className="mb-4">
-            <TrendingUp className="w-4 h-4 mr-2" />
-            {content.title}
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            {content.title}
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            {content.subtitle}
-          </p>
+            <Badge className="mb-4">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              {content.title}
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              {content.title}
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              {content.subtitle}
+            </p>
           </div>
         </Animate>
 
@@ -156,9 +156,7 @@ export function FutureContribution({ locale }: FutureContributionProps) {
             const Icon = stat.icon
             return (
               <StaggerItem key={index}>
-                <Card
-                  className="p-6 text-center hover:shadow-lg transition-all hover:-translate-y-1 group"
-                >
+                <Card className="p-6 text-center hover:shadow-lg transition-all hover:-translate-y-1 group">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                     <Icon className="w-6 h-6" />
                   </div>
@@ -180,9 +178,7 @@ export function FutureContribution({ locale }: FutureContributionProps) {
             const Icon = item.icon
             return (
               <StaggerItem key={index}>
-                <Card
-                  className="p-6 hover:shadow-xl transition-all hover:-translate-y-2 group"
-                >
+                <Card className="p-6 hover:shadow-xl transition-all hover:-translate-y-2 group">
                   <div className="bg-gradient-to-br from-primary/10 to-primary/5 w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                     <Icon className="w-7 h-7 text-primary" />
                   </div>
@@ -201,29 +197,29 @@ export function FutureContribution({ locale }: FutureContributionProps) {
         {/* CTA Card */}
         <Animate variant="fadeIn" delay={0.4}>
           <Card className="relative overflow-hidden">
-          {/* Background Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" />
-          
-          {/* Content */}
-          <div className="relative p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="text-center md:text-left">
-              <h3 className="text-2xl md:text-3xl font-bold mb-2">
-                {content.cta_title}
-              </h3>
-              <p className="text-lg text-muted-foreground">
-                {content.cta_description}
-              </p>
+            {/* Background Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" />
+
+            {/* Content */}
+            <div className="relative p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl md:text-3xl font-bold mb-2">
+                  {content.cta_title}
+                </h3>
+                <p className="text-lg text-muted-foreground">
+                  {content.cta_description}
+                </p>
+              </div>
+              <Link href={`/${locale}/contact`}>
+                <Button
+                  size="lg"
+                  className="whitespace-nowrap group"
+                >
+                  {content.cta_button}
+                  <Rocket className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                </Button>
+              </Link>
             </div>
-            <Link href={`/${locale}/contact`}>
-              <Button
-                size="lg"
-                className="whitespace-nowrap group"
-              >
-                {content.cta_button}
-                <Rocket className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-              </Button>
-            </Link>
-          </div>
           </Card>
         </Animate>
       </div>

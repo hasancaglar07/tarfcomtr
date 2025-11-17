@@ -10,6 +10,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { normalizeLocale } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
+import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 export async function generateMetadata({
   params,
@@ -97,7 +98,7 @@ export default async function ServiceDetailPage({
             <div className="container py-8">
               <div className="relative h-80 w-full overflow-hidden rounded-3xl">
                 <Image
-                  src={service.featured_image}
+                  src={resolveImageSrc(service.featured_image, getDefaultImage())}
                   alt={service.title}
                   fill
                   className="object-cover"

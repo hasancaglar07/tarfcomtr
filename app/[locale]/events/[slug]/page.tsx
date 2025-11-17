@@ -11,6 +11,7 @@ import { notFound } from 'next/navigation'
 import { normalizeLocale } from '@/lib/i18n'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
 import { buildPageMetadata } from '@/lib/seo'
+import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 export async function generateMetadata({
   params,
@@ -139,7 +140,7 @@ export default async function EventDetailPage({
               <Animate variant="scaleUp" delay={0.3}>
                 <div className="relative h-[420px] w-full overflow-hidden rounded-3xl">
                   <Image
-                    src={event.featured_image}
+                    src={resolveImageSrc(event.featured_image, getDefaultImage())}
                     alt={event.title}
                     fill
                     className="object-cover"

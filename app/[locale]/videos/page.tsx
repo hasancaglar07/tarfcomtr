@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { normalizeLocale } from '@/lib/i18n'
 import { Animate, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/animate'
 import { buildPageMetadata } from '@/lib/seo'
+import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 export async function generateMetadata({
   params,
@@ -76,7 +77,7 @@ export default async function VideosPage({
                     <div className="relative aspect-video bg-black">
                       {video.featured_image ? (
                         <Image
-                          src={video.featured_image}
+                          src={resolveImageSrc(video.featured_image, getDefaultImage())}
                           alt={video.title}
                           fill
                           className="object-cover group-hover:opacity-75 transition-opacity"

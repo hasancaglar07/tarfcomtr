@@ -7,6 +7,7 @@ import { Play, ArrowRight, Calendar, User, ChevronLeft, ChevronRight } from 'luc
 import Link from 'next/link'
 import Image from 'next/image'
 import { Animate, StaggerContainer } from '@/components/ui/animate'
+import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 interface Video {
   id: number
@@ -104,7 +105,10 @@ function getYouTubeVideoId(url?: string | null): string | null {
 
 const buildVideoMeta = (video: Video) => {
   const videoId = getYouTubeVideoId(video.youtube_url)
-  const thumbnail = video.featured_image ?? (videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null)
+  const featured = resolveImageSrc(video.featured_image, '')
+  const thumbnail =
+    featured ||
+    (videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : getDefaultImage())
   return { videoId, thumbnail }
 }
 

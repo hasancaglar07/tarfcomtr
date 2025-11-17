@@ -10,6 +10,7 @@ import { notFound } from 'next/navigation'
 import { normalizeLocale } from '@/lib/i18n'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
 import { buildPageMetadata } from '@/lib/seo'
+import { stripImages } from '@/lib/html'
 
 export async function generateMetadata({
   params,
@@ -141,7 +142,11 @@ export default async function PodcastDetailPage({
               <Card className="p-8 md:p-12">
                 <div
                   className="prose prose-lg dark:prose-invert max-w-none text-foreground"
-                  dangerouslySetInnerHTML={{ __html: podcast.content ?? podcast.content_raw ?? podcast.excerpt ?? '' }}
+                  dangerouslySetInnerHTML={{
+                    __html: stripImages(
+                      podcast.content ?? podcast.content_raw ?? podcast.excerpt ?? '',
+                    ),
+                  }}
                 />
               </Card>
             </Animate>

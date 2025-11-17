@@ -10,6 +10,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Layers, ArrowRight, Sparkles } from 'lucide-react'
 import { Animate, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/animate'
+import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 export async function generateMetadata({
   params,
@@ -96,7 +97,7 @@ export default async function ServicesPage({
                   {service.featured_image && (
                     <div className="relative h-56 w-full">
                       <Image
-                        src={service.featured_image}
+                        src={resolveImageSrc(service.featured_image, getDefaultImage())}
                         alt={service.title}
                         fill
                         className="object-cover"

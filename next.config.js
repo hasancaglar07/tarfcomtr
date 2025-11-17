@@ -1,6 +1,8 @@
 const path = require('path')
 
 /** @type {import('next').NextConfig} */
+const storageHosts = ['tarfakademi.com', 'www.tarfakademi.com', 'panel.tarfakademi.com']
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -10,11 +12,18 @@ const nextConfig = {
         port: '8000',
         pathname: '/storage/**',
       },
-      {
-        protocol: 'https',
-        hostname: 'tarfakademi.com',
-        pathname: '/storage/**',
-      },
+      ...storageHosts.flatMap((hostname) => ([
+        {
+          protocol: 'https',
+          hostname,
+          pathname: '/storage/**',
+        },
+        {
+          protocol: 'http',
+          hostname,
+          pathname: '/storage/**',
+        },
+      ])),
       {
         protocol: 'https',
         hostname: 'img.youtube.com',

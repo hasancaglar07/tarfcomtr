@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import { SUPPORTED_LOCALES, normalizeLocale, type SupportedLocale } from '@/lib/i18n'
+import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://tarfakademi.com'
 
 export const siteSeoConfig = {
   siteName: 'TARF Akademi',
-  defaultImage: '/img/og-default.png',
+  defaultImage: getDefaultImage(),
   locales: {
     tr: {
       title: 'TARF Akademi · Bilim, teknoloji ve etik üretim ekosistemi',
@@ -206,9 +207,8 @@ interface SeoParams {
 }
 
 const normalizeImageUrl = (image?: string | null) => {
-  if (!image) return absoluteUrl(siteSeoConfig.defaultImage)
-  if (image.startsWith('http')) return image
-  return absoluteUrl(image)
+  const resolved = resolveImageSrc(image, siteSeoConfig.defaultImage)
+  return absoluteUrl(resolved)
 }
 
 export function buildPageMetadata({

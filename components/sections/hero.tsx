@@ -166,29 +166,29 @@ export function Hero({ locale, data }: HeroProps) {
       <section className="relative overflow-hidden bg-gradient-to-br from-secondary via-background to-primary/10">
         <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
         <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
-        <div className="container relative z-10 py-20 lg:py-28">
+        <div className="container relative z-10 pt-12 pb-20 lg:pt-16 lg:pb-28">
           <div className="grid items-center gap-16 lg:grid-cols-2">
             <StaggerContainer className="space-y-8">
               <StaggerItem>
-                <div className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-background/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                <div className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-background/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground mx-auto lg:mx-0">
                   <ShieldCheck className="h-3.5 w-3.5 text-primary" />
                   {content.eyebrow}
                 </div>
               </StaggerItem>
 
             <StaggerItem>
-              <div className="space-y-5">
+              <div className="space-y-5 max-w-2xl mx-auto lg:mx-0 text-center lg:text-left text-balance">
                 <h1 className="text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-[56px]">
                   {content.title || defaultContent.en.title}
                 </h1>
-                <p className="text-lg text-muted-foreground">
+                <p className="text-lg text-muted-foreground leading-relaxed">
                   {content.subtitle || defaultContent.en.subtitle}
                 </p>
               </div>
             </StaggerItem>
 
             <StaggerItem>
-              <div className="flex flex-col gap-4 sm:flex-row">
+              <div className="flex flex-col gap-4 sm:flex-row items-center sm:items-start justify-center sm:justify-start">
                 <Link href={(content.primary_cta_href as string) || '#'}>
                   <Button size="lg">
                     {content.primary_cta_label || 'Başla'}
@@ -278,7 +278,9 @@ export function Hero({ locale, data }: HeroProps) {
                         <p className="text-xs uppercase tracking-[0.4em] text-muted-foreground">
                           {locale === 'tr' ? 'TARF Ekosistemi' : locale === 'ar' ? 'نظام TARF' : 'TARF Ecosystem'}
                         </p>
-                        <p className="text-lg font-semibold text-foreground">{currentHeroVideo?.title}</p>
+                        <p className="text-lg font-semibold text-foreground leading-snug line-clamp-2 min-h-[3.1rem]">
+                          {currentHeroVideo?.title}
+                        </p>
                       </div>
                       {hasMultipleHeroVideos && (
                         <div className="flex items-center gap-3">

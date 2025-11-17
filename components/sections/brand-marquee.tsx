@@ -1,7 +1,6 @@
 'use client'
 
 import Image, { type StaticImageData } from 'next/image'
-import { motion } from 'framer-motion'
 import logo1 from '@/assets/1.png'
 import logo2 from '@/assets/2.png'
 import logo3 from '@/assets/3.png'
@@ -30,35 +29,10 @@ const logos = [
   { src: logo12, alt: 'TARF partner 12' },
 ]
 
-const marqueeVariants = {
-  animate: {
-    x: ['0%', '-50%'],
-    transition: {
-      x: {
-        repeat: Infinity,
-        duration: 32,
-        ease: 'linear' as const,
-      },
-    },
-  },
-}
-
-const shimmerVariants = {
-  animate: {
-    backgroundPosition: ['0% 50%', '100% 50%'],
-    transition: {
-      backgroundPosition: {
-        repeat: Infinity,
-        duration: 10,
-        ease: 'linear' as const,
-      },
-    },
-  },
-}
-
 type BrandMarqueeVariant = 'default' | 'overlay'
 
 export function BrandMarquee({ locale, variant = 'default' }: { locale: string; variant?: BrandMarqueeVariant }) {
+  // Kayan logo satırı için logoları iki kez tekrar ederek kesintisiz bir akış oluşturuyoruz
   const displayLogos = [...logos, ...logos]
 
   const helper =
@@ -98,11 +72,7 @@ export function BrandMarquee({ locale, variant = 'default' }: { locale: string; 
           {helper}
         </div>
         <div className={frameClass}>
-          <motion.div
-            className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(115deg,rgba(255,255,255,0.52),rgba(255,255,255,0.18),rgba(255,255,255,0.52))]"
-            variants={shimmerVariants}
-            animate="animate"
-          />
+          <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(115deg,rgba(255,255,255,0.52),rgba(255,255,255,0.18),rgba(255,255,255,0.52))] brand-marquee-shimmer" />
           <MarqueeRow logos={displayLogos} />
         </div>
       </div>
@@ -110,24 +80,24 @@ export function BrandMarquee({ locale, variant = 'default' }: { locale: string; 
   )
 }
 
-function MarqueeRow({ logos }: { logos: Array<{ src: StaticImageData; alt: string }> }) {
+function MarqueeRow({
+  logos,
+}: {
+  logos: Array<{ src: StaticImageData; alt: string }>
+}) {
   return (
     <div
-      className="overflow-hidden"
+      className="overflow-hidden brand-marquee-mask"
       style={{
         WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
         maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
       }}
     >
-      <motion.div
-        className="flex min-w-[200%] items-center gap-10 px-8"
-        variants={marqueeVariants}
-        animate="animate"
-      >
+      <div className="flex min-w-[200%] items-center gap-10 px-8 brand-marquee-track">
         {logos.map((logo, index) => (
           <LogoCard key={index} logo={logo} />
         ))}
-      </motion.div>
+      </div>
     </div>
   )
 }
