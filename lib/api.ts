@@ -48,6 +48,7 @@ export interface Hero {
   id: string
   title: string
   subtitle: string
+  eyebrow?: string | null
   description: string | null
   button_text: string | null
   button_url: string | null
@@ -257,6 +258,7 @@ async function getHeroes(locale: string = 'tr') {
     id: h.id,
     title: h.title,
     subtitle: h.subtitle,
+    eyebrow: h.description ?? null,
     description: h.description,
     button_text: h.buttonText,
     button_url: h.buttonUrl,

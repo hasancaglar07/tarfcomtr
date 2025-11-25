@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/Users/hasaneksi/.config/herd-lite/bin/php",
+            "args": [
+                "/Users/hasaneksi/PhpstormProjects/safa-vakfi/tarfakademi/artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}
