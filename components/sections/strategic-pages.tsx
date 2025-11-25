@@ -1,15 +1,19 @@
 import Link from 'next/link'
-import { contentPageGroups, ContentPageCategory } from '@/content/content-pages'
+import type { ContentPageCategory, ContentPageDefinition } from '@/content/content-pages'
 import { ArrowRight } from 'lucide-react'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
 
 interface StrategicPagesProps {
   locale: string
+  groups: Record<
+    ContentPageCategory,
+    { label: string; description: string; pages: ContentPageDefinition[] }
+  >
 }
 
 const groupOrder: ContentPageCategory[] = ['kurumsal', 'dusunce', 'akademi', 'yazilim', 'kulupler', 'yayinlar']
 
-export function StrategicPages({ locale }: StrategicPagesProps) {
+export function StrategicPages({ locale, groups }: StrategicPagesProps) {
   return (
     <section className="relative isolate overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white py-24">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[50rem] bg-[radial-gradient(circle_at_top,_rgba(250,180,70,0.18),_transparent_55%)]" />
@@ -89,7 +93,7 @@ export function StrategicPages({ locale }: StrategicPagesProps) {
 
         <StaggerContainer className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {groupOrder.map((category) => {
-            const group = contentPageGroups[category]
+            const group = groups?.[category]
             if (!group) return null
             const featuredPages = group.pages.slice(0, 3)
 

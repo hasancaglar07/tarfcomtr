@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ContentCategory {
+  kurumsal
+  dusunce
+  akademi
+  yazilim
+  kulupler
+  yayinlar
+  yasal
+}
+
+enum PostType {
+  blog
+  event
+  video
+  podcast
+  service
+}
+
+enum PostStatus {
+  draft
+  published
+}
+
+enum ApplicationStatus {
+  new
+  in_review
+  closed
+}
+
+model ContentPage {
+  id              String           @id @default(uuid())
+  slug            String           @unique
+  category        ContentCategory
+  title           String
+  seoTitle        String?
+  seoDescription  String?
+  data            Json
+  publishedAt     DateTime?
+  status          PostStatus       @default(draft)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([category])
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  slug      String   @unique
+  name      String
+  type      PostType
+  locale    String?  @default("tr")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  posts Post[]
+
+  @@index([type, locale])
+}
+
+model Post {
+  id             String      @id @default(uuid())
+  slug           String
+  title          String
+  excerpt        String?
+  content        String?
+  type           PostType
+  status         PostStatus  @default(draft)
+  locale         String      @default("tr")
+  featuredImage  String?
+  seoTitle       String?
+  seoDescription String?
+  ogImage        String?
+  youtubeUrl     String?
+  audioUrl       String?
+  eventDate      DateTime?
+  eventTime      String?
+  location       String?
+  meta           Json?
+  publishedAt    DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+
+  @@unique([slug, type, locale])
+  @@index([type, status, locale])
+  @@index([publishedAt])
+}
+
+model FAQ {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  order     Int
+  locale    String   @default("tr")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Hero {
+  id             String   @id @default(uuid())
+  locale         String   @default("tr")
+  title          String
+  subtitle       String
+  description    String?
+  buttonText     String?
+  buttonUrl      String?
+  backgroundImage String?
+  videoUrl       String?
+  videoCover     String?
+  videoUrl2      String?
+  videoCover2    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([locale])
+}
+
+model Setting {
+  id              String   @id @default(uuid())
+  locale          String   @default("tr")
+  siteName        String
+  siteDescription String?
+  contactEmail    String?
+  contactPhone    String?
+  contactAddress  String?
+  social          Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([locale])
+}
+
+model Media {
+  id         String   @id @default(uuid())
+  url        String
+  type       String?
+  altText    String?
+  uploadedBy String?
+  locale     String?  @default("tr")
+  kind       String? // image, video, document, etc.
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Application {
+  id         String             @id @default(uuid())
+  name       String
+  email      String
+  phone      String?
+  subject    String?
+  message    String
+  status     ApplicationStatus  @default(new)
+  adminNote  String?
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+}

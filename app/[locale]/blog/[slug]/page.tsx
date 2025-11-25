@@ -25,10 +25,10 @@ export async function generateMetadata({
     const { post } = await api.getBlogPost(slug, locale)
     return buildPageMetadata({
       locale,
-      title: post.title,
-      description: post.excerpt,
+      title: post.seo_title || post.title,
+      description: post.seo_description || post.excerpt,
       pathSegments: ['blog', slug],
-      image: post.featured_image,
+      image: post.og_image || post.featured_image,
       type: 'article',
       publishedTime: post.created_at,
       modifiedTime: post.updated_at,

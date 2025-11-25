@@ -4,10 +4,8 @@ import { buildPageMetadata } from '@/lib/seo'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
 import { ArrowUpRight, Mail, Phone, MapPin } from 'lucide-react'
+import { ApplicationForm } from '@/components/forms/application-form'
 
 export async function generateMetadata({
   params,
@@ -248,44 +246,36 @@ export default async function ContactPage({
                   <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{copy.formTitle}</p>
                   <h2 className="text-2xl font-semibold text-slate-900">{copy.formSubtitle}</h2>
                 </div>
-                <form className="relative mt-6 space-y-4">
-                  <Input
-                    type="text"
-                    placeholder={copy.placeholders.name}
-                    required
-                    className="h-12 border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
-                  />
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <Input
-                      type="email"
-                      placeholder={copy.placeholders.email}
-                      required
-                      className="h-12 border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
-                    />
-                    <Input
-                      type="tel"
-                      placeholder={copy.placeholders.phone}
-                      className="h-12 border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
-                    />
-                  </div>
-                  <Input
-                    type="text"
-                    placeholder={copy.placeholders.company}
-                    className="h-12 border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
-                  />
-                  <Input
-                    type="text"
-                    placeholder={copy.placeholders.topic}
-                    className="h-12 border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
-                  />
-                  <Textarea
-                    placeholder={copy.placeholders.message}
-                    className="min-h-[160px] resize-none border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
-                  />
-                  <Button type="submit" className="h-12 w-full text-base font-semibold shadow-lg">
-                    {copy.submit}
-                  </Button>
-                </form>
+                <ApplicationForm
+                  copy={{
+                    placeholders: copy.placeholders,
+                    submit: copy.submit,
+                    successTitle:
+                      locale === 'tr'
+                        ? 'Başvurunuz alındı'
+                        : locale === 'ar'
+                          ? 'تم استلام طلبك'
+                          : 'Your application has been received',
+                    successBody:
+                      locale === 'tr'
+                        ? 'En kısa sürede dönüş yapacağız.'
+                        : locale === 'ar'
+                          ? 'سنعاود الاتصال بك في أقرب وقت.'
+                          : 'We will get back to you soon.',
+                    errorTitle:
+                      locale === 'tr'
+                        ? 'Gönderim hatası'
+                        : locale === 'ar'
+                          ? 'خطأ في الإرسال'
+                          : 'Submission error',
+                    errorBody:
+                      locale === 'tr'
+                        ? 'Lütfen alanları kontrol edip tekrar deneyin.'
+                        : locale === 'ar'
+                          ? 'يرجى التحقق من الحقول وإعادة المحاولة.'
+                          : 'Please check the fields and try again.',
+                  }}
+                />
               </Card>
             </div>
 

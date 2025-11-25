@@ -118,26 +118,7 @@ export function VideoSection({ locale, videos }: VideoSectionProps) {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null)
 
   const curatedVideos = useMemo(() => {
-    const fallbackVideos: Video[] = [
-      {
-        id: -1,
-        title: 'TARF Ekosistemi | Bilim ve Teknoloji Yolculuğu',
-        slug: 'tarf-ekosistemi',
-        youtube_url: 'https://www.youtube.com/watch?v=Qt6oaPhToZ4',
-        created_at: '2024-01-15T00:00:00Z',
-        user: { name: 'TARF Akademi' }
-      },
-      {
-        id: -2,
-        title: 'Geleceğe Dair Eğitim Vizyonu',
-        slug: 'gelecege-dair-egitim-vizyonu',
-        youtube_url: 'https://www.youtube.com/watch?v=Dn0_mblycJw&t=812s',
-        created_at: '2024-02-01T00:00:00Z',
-        user: { name: 'TARF Akademi' }
-      }
-    ]
-
-    const combined = [...fallbackVideos, ...videos]
+    const combined = [...videos]
     const seen = new Set<string>()
     return combined.filter((video) => {
       const id = getYouTubeVideoId(video.youtube_url ?? '')

@@ -1,0 +1,18 @@
+.ql-container {
+  min-height: 220px;
+  font-family: inherit;
+}
+.ql-toolbar {
+  border: 1px solid rgb(51 65 85);
+  border-bottom: none;
+  background: rgb(15 23 42);
+  color: rgb(226 232 240);
+}
+.ql-container.ql-snow {
+  border: 1px solid rgb(51 65 85);
+  background: rgb(7 11 18);
+  color: rgb(226 232 240);
+}
+.ql-editor {
+  min-height: 200px;
+}

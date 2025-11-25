@@ -1,28 +1,44 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { getToken } from 'next-auth/jwt'
 
 const locales = ['tr', 'en', 'ar']
 const defaultLocale = 'tr'
 
-export function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname
-  
-  // Check if pathname already has a locale
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // Admin auth guard
+  if (pathname.startsWith('/admin')) {
+    if (pathname.startsWith('/admin/login') || pathname.startsWith('/api/auth')) {
+      return NextResponse.next()
+    }
+
+    const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
+    if (!token) {
+      const loginUrl = new URL('/admin/login', request.url)
+      loginUrl.searchParams.set('callbackUrl', request.url)
+      return NextResponse.redirect(loginUrl)
+    }
+
+    return NextResponse.next()
+  }
+
+  // Locale redirect
   const pathnameHasLocale = locales.some(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
   )
 
-  if (pathnameHasLocale) return
+  if (pathnameHasLocale) {
+    return NextResponse.next()
+  }
 
-  // Redirect to default locale
   const locale = defaultLocale
-  request.nextUrl.pathname = `/${locale}${pathname}`
-  return NextResponse.redirect(request.nextUrl)
+  const url = request.nextUrl.clone()
+  url.pathname = `/${locale}${pathname}`
+  return NextResponse.redirect(url)
 }
 
 export const config = {
-  matcher: [
-    // Skip all internal paths (_next, api, etc)
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*|img|css|js|fonts).*)',
-  ],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\..*|img|css|js|fonts).*)'],
 }

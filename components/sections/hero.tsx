@@ -25,6 +25,8 @@ interface HeroProps {
     }> | null
     video_cover?: string | null
     video_url?: string | null
+    video_cover_2?: string | null
+    video_url_2?: string | null
   } | null
 }
 
@@ -121,7 +123,18 @@ export function Hero({ locale, data }: HeroProps) {
         ]
       : []
 
-    const combined = [...customVideo, ...fallbackVideos]
+    const customVideo2 = content.video_url_2
+      ? [
+          {
+            id: 'hero-custom-2',
+            title: content.title || 'Tanıtım Filmi 2',
+            youtube_url: content.video_url_2,
+            cover: content.video_cover_2 || content.background_image || null,
+          },
+        ]
+      : []
+
+    const combined = [...customVideo, ...customVideo2, ...fallbackVideos]
     const seen = new Set<string>()
     return combined.filter((video) => {
       const id = getYouTubeVideoId(video.youtube_url)
@@ -130,7 +143,7 @@ export function Hero({ locale, data }: HeroProps) {
       seen.add(id)
       return true
     })
-  }, [content.title, content.video_cover, content.video_url])
+  }, [content.title, content.video_cover, content.video_cover_2, content.video_url, content.video_url_2, content.background_image])
 
   const [heroVideoIndex, setHeroVideoIndex] = useState(0)
   const [heroVideoPlaying, setHeroVideoPlaying] = useState(false)

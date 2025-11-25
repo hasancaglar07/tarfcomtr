@@ -5,6 +5,7 @@ const storageHosts = ['tarfakademi.com', 'www.tarfakademi.com', 'panel.tarfakade
 
 const nextConfig = {
   images: {
+    unoptimized: true, // sharp gereksinimini kaldır
     remotePatterns: [
       {
         protocol: 'http',

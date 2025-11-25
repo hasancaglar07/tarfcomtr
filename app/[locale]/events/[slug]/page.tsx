@@ -24,10 +24,10 @@ export async function generateMetadata({
     const { event } = await api.getEvent(slug, locale)
     return buildPageMetadata({
       locale,
-      title: event.title,
-      description: event.excerpt,
+      title: event.seo_title || event.title,
+      description: event.seo_description || event.excerpt,
       pathSegments: ['events', slug],
-      image: event.featured_image,
+      image: event.og_image || event.featured_image,
       type: 'article',
       publishedTime: event.created_at,
       modifiedTime: event.updated_at,
@@ -145,6 +145,28 @@ export default async function EventDetailPage({
                     fill
                     className="object-cover"
                   />
+                </div>
+              </Animate>
+            </div>
+          )}
+
+          {event.gallery && event.gallery.length > 0 && (
+            <div className="container pb-10">
+              <Animate variant="slideUp" delay={0.35}>
+                <h2 className="text-xl font-semibold mb-4">
+                  {locale === 'tr' ? 'Galeri' : locale === 'ar' ? 'معرض الصور' : 'Gallery'}
+                </h2>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {event.gallery.map((img) => (
+                    <div key={img} className="relative h-48 w-full overflow-hidden rounded-2xl border border-slate-200/10">
+                      <Image
+                        src={resolveImageSrc(img, getDefaultImage())}
+                        alt={event.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ))}
                 </div>
               </Animate>
             </div>

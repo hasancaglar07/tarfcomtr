@@ -12,6 +12,7 @@ import { FutureContribution } from '@/components/sections/future-contribution'
 import { StatsShowcase } from '@/components/sections/stats-showcase'
 import { ValuePillars } from '@/components/sections/value-pillars'
 import { StrategicPages } from '@/components/sections/strategic-pages'
+import { getContentPageGroups } from '@/lib/content-store'
 type StaticHeroContent = {
   eyebrow?: string
   title: string
@@ -42,7 +43,6 @@ const STATIC_HERO_CONTENT: Record<string, StaticHeroContent> = {
       { value: '100+', label: 'Etkinlik' },
       { value: '500+', label: 'Katılımcı' },
     ],
-    video_url: 'https://www.youtube.com/watch?v=Qt6oaPhToZ4',
   },
   en: {
     eyebrow: 'Tarf Think Tank Institute',
@@ -59,7 +59,6 @@ const STATIC_HERO_CONTENT: Record<string, StaticHeroContent> = {
       { value: '100+', label: 'Events' },
       { value: '500+', label: 'Participants' },
     ],
-    video_url: 'https://www.youtube.com/watch?v=Qt6oaPhToZ4',
   },
   ar: {
     eyebrow: 'معهد تارف للفكر',
@@ -76,7 +75,6 @@ const STATIC_HERO_CONTENT: Record<string, StaticHeroContent> = {
       { value: '100+', label: 'الفعاليات' },
       { value: '500+', label: 'المشاركون' },
     ],
-    video_url: 'https://www.youtube.com/watch?v=Qt6oaPhToZ4',
   },
 }
 
@@ -97,8 +95,44 @@ export default async function Home({
 }) {
   const { locale: rawLocale } = await params
   const locale = normalizeLocale(rawLocale)
-  const data = await api.getHome(locale)
-  const heroContent = STATIC_HERO_CONTENT[locale] || STATIC_HERO_CONTENT.tr
+  let data
+  try {
+    data = await api.getHome(locale)
+  } catch (error) {
+    console.error('[home] API failed, using empty data', error)
+    const settings = await api.getSettings(locale)
+    data = {
+      heroes: [],
+      blog_posts: [],
+      services: [],
+      events: [],
+      videos: [],
+      podcasts: [],
+      faqs: [],
+      categories: [],
+      settings,
+    }
+  }
+  const contentPageGroups = await getContentPageGroups()
+  const heroFromDb = data.heroes && data.heroes.length > 0 ? data.heroes[0] : null
+  const heroContent =
+    heroFromDb
+      ? {
+          eyebrow: heroFromDb.eyebrow || STATIC_HERO_CONTENT[locale].eyebrow,
+          title: heroFromDb.title || STATIC_HERO_CONTENT[locale].title,
+          subtitle: heroFromDb.subtitle || STATIC_HERO_CONTENT[locale].subtitle,
+          primary_cta_label: heroFromDb.button_text || STATIC_HERO_CONTENT[locale].primary_cta_label,
+          primary_cta_href: heroFromDb.button_url || STATIC_HERO_CONTENT[locale].primary_cta_href,
+          tertiary_cta_label: STATIC_HERO_CONTENT[locale].tertiary_cta_label,
+          tertiary_cta_href: STATIC_HERO_CONTENT[locale].tertiary_cta_href,
+          background_image: heroFromDb.background_image || STATIC_HERO_CONTENT[locale].background_image,
+          stats: STATIC_HERO_CONTENT[locale].stats,
+          video_url: heroFromDb.video_url || STATIC_HERO_CONTENT[locale].video_url,
+          video_cover: heroFromDb.video_cover || heroFromDb.background_image || STATIC_HERO_CONTENT[locale].background_image,
+          video_url_2: heroFromDb.video_url_2,
+          video_cover_2: heroFromDb.video_cover_2,
+        }
+      : STATIC_HERO_CONTENT[locale] || STATIC_HERO_CONTENT.tr
 
   return (
     <>
@@ -132,7 +166,7 @@ export default async function Home({
         <ValuePillars locale={locale} />
 
         {/* Strategic Pages - Alt sayfalara giden bağlantılar */}
-        <StrategicPages locale={locale} />
+        <StrategicPages locale={locale} groups={contentPageGroups} />
 
         {/* Video Section - Eğitim videoları ve konuşmalar */}
         {data.videos && data.videos.length > 0 && (

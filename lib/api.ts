@@ -1,109 +1,90 @@
-const stripTrailingSlash = (value: string) => value.replace(/\/$/, '')
+import { PostStatus, PostType } from '@prisma/client'
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://tarfakademi.com'
-
-const API_URL = (() => {
-  const configuredUrl = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL
-  if (configuredUrl) {
-    return stripTrailingSlash(configuredUrl)
-  }
-
-  const defaultUrl =
-    process.env.NODE_ENV === 'production'
-      ? `${stripTrailingSlash(SITE_URL)}/api/v1`
-      : 'http://localhost:8000/api/v1'
-
-  if (process.env.NODE_ENV === 'production') {
-    console.warn(
-      `[api] NEXT_PUBLIC_API_URL tanımlanmadı, varsayılan olarak ${defaultUrl} kullanılacak.`
-    )
-  }
-
-  return defaultUrl
-})()
-
-export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message?: string;
-}
+import { prisma } from '@/lib/prisma'
 
 export interface Category {
-  id: number;
-  name: string;
-  slug: string;
-  posts_count?: number;
+  id: string
+  name: string
+  slug: string
+  posts_count?: number
 }
 
 export interface Author {
-  name: string;
+  name: string
 }
 
-export interface PostType {
-  id: number;
-  name: string;
-  slug: string;
+export interface PostTypeRef {
+  id: number
+  name: string
+  slug: string
 }
 
 export interface Post {
-  id: number;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content?: string;
-  content_raw?: string | null;
-  featured_image: string | null;
-  youtube_url?: string | null;
-  youtube_video_id?: string | null;
-  event_date?: string | null;
-  event_time?: string | null;
-  location?: string | null;
-  duration?: string | null;
-  category: Category | null;
-  post_type: PostType | null;
-  author: Author | null;
-  created_at: string;
-  updated_at: string;
+  id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  content?: string
+  content_raw?: string | null
+  featured_image: string | null
+  seo_title?: string | null
+  seo_description?: string | null
+  og_image?: string | null
+  youtube_url?: string | null
+  youtube_video_id?: string | null
+  event_date?: string | null
+  event_time?: string | null
+  location?: string | null
+  duration?: string | null
+  gallery?: string[]
+  category: Category | null
+  post_type: PostTypeRef | null
+  author: Author | null
+  created_at: string
+  updated_at: string
 }
 
 export interface Hero {
-  id: number;
-  title: string;
-  subtitle: string;
-  description: string;
-  button_text: string;
-  button_url: string;
-  image: string | null;
-  background_image: string | null;
+  id: string
+  title: string
+  subtitle: string
+  description: string | null
+  button_text: string | null
+  button_url: string | null
+  image: string | null
+  background_image: string | null
+  video_url?: string | null
+  video_cover?: string | null
+  video_url_2?: string | null
+  video_cover_2?: string | null
 }
 
 export interface Faq {
-  id: number;
-  question: string;
-  answer: string;
-  order: number;
+  id: string
+  question: string
+  answer: string
+  order: number
 }
 
 export interface Settings {
-  site_name: string;
-  site_description: string;
-  contact_email: string;
-  contact_phone: string;
-  contact_address: string;
-  contact_map_url?: string;
+  site_name: string
+  site_description: string | null
+  contact_email: string | null
+  contact_phone: string | null
+  contact_address: string | null
+  contact_map_url?: string | null
 }
 
 export interface HomeData {
-  heroes: Hero[];
-  blog_posts: Post[];
-  services: Post[];
-  events: Post[];
-  videos: Post[];
-  podcasts: Post[];
-  faqs: Faq[];
-  categories: Category[];
-  settings: Settings;
+  heroes: Hero[]
+  blog_posts: Post[]
+  services: Post[]
+  events: Post[]
+  videos: Post[]
+  podcasts: Post[]
+  faqs: Faq[]
+  categories: Category[]
+  settings: Settings
 }
 
 export interface BlogPostDetail {
@@ -140,89 +121,268 @@ const defaultSettings: Settings = {
   contact_address: 'İstanbul, Türkiye',
 }
 
-async function fetchApi<T>(endpoint: string, locale: string = 'tr'): Promise<T> {
-  const url = `${API_URL}${endpoint}?locale=${locale}`
+const mapPostType = (type: PostType): PostTypeRef => {
+  return {
+    id: 0,
+    name: type,
+    slug: type,
+  }
+}
 
-  const response = await fetch(url, {
-    next: { revalidate: 60 }, // Cache for 60 seconds
+const mapCategory = (category?: { id: string; name: string; slug: string } | null): Category | null =>
+  category
+    ? {
+        id: category.id,
+        name: category.name,
+        slug: category.slug,
+      }
+    : null
+
+type PostRecord = {
+  id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  content: string | null
+  featuredImage: string | null
+  seoTitle: string | null
+  seoDescription: string | null
+  ogImage: string | null
+  youtubeUrl: string | null
+  eventDate: Date | null
+  eventTime: string | null
+  location: string | null
+  meta: unknown
+  type: PostType
+  category: { id: string; name: string; slug: string } | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+const mapPost = (post: PostRecord): Post => {
+  const meta = post.meta && typeof post.meta === 'object' ? (post.meta as Record<string, unknown>) : null
+  const gallery =
+    meta && Array.isArray(meta.gallery)
+      ? (meta.gallery as string[])
+      : undefined
+
+  return {
+    id: post.id,
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt ?? null,
+    content: post.content ?? undefined,
+    content_raw: post.content ?? null,
+    featured_image: post.featuredImage ?? null,
+    seo_title: post.seoTitle ?? null,
+    seo_description: post.seoDescription ?? null,
+    og_image: post.ogImage ?? null,
+    youtube_url: post.youtubeUrl ?? null,
+    youtube_video_id: null,
+    event_date: post.eventDate ? post.eventDate.toISOString() : null,
+    event_time: post.eventTime ?? null,
+    location: post.location ?? null,
+    duration: null,
+    gallery,
+    category: mapCategory(post.category),
+    post_type: mapPostType(post.type),
+    author: null,
+    created_at: post.createdAt.toISOString(),
+    updated_at: post.updatedAt.toISOString(),
+  }
+}
+
+async function getPostsByType(type: PostType, locale: string, take?: number) {
+  const posts = await prisma.post.findMany({
+    where: { type, status: PostStatus.published, locale },
+    orderBy: { publishedAt: 'desc' },
+    include: { category: true },
+    take,
   })
+  return posts.map(mapPost)
+}
 
-  if (!response.ok) {
-    throw new Error(`API request failed: ${response.statusText}`)
+async function getPostDetail(type: PostType, slug: string, locale: string) {
+  const post = await prisma.post.findFirst({
+    where: { type, slug, locale, status: PostStatus.published },
+    include: { category: true },
+  })
+  if (!post) return null
+  const related = await prisma.post.findMany({
+    where: { type, status: PostStatus.published, locale, id: { not: post.id } },
+    orderBy: { publishedAt: 'desc' },
+    take: 3,
+    include: { category: true },
+  })
+  return { post: mapPost(post), related: related.map(mapPost) }
+}
+
+async function getSettings(locale: string = 'tr'): Promise<Settings> {
+  try {
+    const setting = await prisma.setting.findUnique({ where: { locale } })
+    if (!setting) return defaultSettings
+    return {
+      site_name: setting.siteName,
+      site_description: setting.siteDescription,
+      contact_email: setting.contactEmail,
+      contact_phone: setting.contactPhone,
+      contact_address: setting.contactAddress,
+      contact_map_url: null,
+    }
+  } catch (error) {
+    console.error('Settings fetch failed, using defaults:', error)
+    return defaultSettings
   }
+}
 
-  const result: ApiResponse<T> = await response.json()
+async function getFaqs(locale: string = 'tr') {
+  const faqs = await prisma.fAQ.findMany({
+    where: { locale },
+    orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+  })
+  return faqs.map((f) => ({
+    id: f.id,
+    question: f.question,
+    answer: f.answer,
+    order: f.order,
+  }))
+}
 
-  if (!result.success) {
-    throw new Error(result.message || 'API request failed')
-  }
+async function getHeroes(locale: string = 'tr') {
+  const heroes = await prisma.hero.findMany({
+    where: { locale },
+    orderBy: { createdAt: 'desc' },
+  })
+  return heroes.map<Hero>((h) => ({
+    id: h.id,
+    title: h.title,
+    subtitle: h.subtitle,
+    description: h.description,
+    button_text: h.buttonText,
+    button_url: h.buttonUrl,
+    image: null,
+    background_image: h.backgroundImage,
+    video_url: h.videoUrl,
+    video_cover: h.videoCover,
+    video_url_2: h.videoUrl2,
+    video_cover_2: h.videoCover2,
+  }))
+}
 
-  return result.data
+async function getCategories(type?: PostType, locale: string = 'tr') {
+  const categories = await prisma.category.findMany({
+    where: { locale, ...(type ? { type } : {}) },
+    orderBy: { name: 'asc' },
+  })
+  return categories.map((c) => ({
+    id: c.id,
+    name: c.name,
+    slug: c.slug,
+    posts_count: 0,
+  }))
 }
 
 export const api = {
   // Home page with all sections
-  getHome: (locale: string = 'tr') => 
-    fetchApi<HomeData>('/home', locale),
+  getHome: async (locale: string = 'tr') => {
+    const [heroes, blog_posts, services, events, videos, podcasts, faqs, categories, settings] =
+      await Promise.all([
+        getHeroes(locale),
+        getPostsByType(PostType.blog, locale, 3),
+        getPostsByType(PostType.service, locale, 4),
+        getPostsByType(PostType.event, locale, 6),
+        getPostsByType(PostType.video, locale, 6),
+        getPostsByType(PostType.podcast, locale, 6),
+        getFaqs(locale),
+        getCategories(undefined, locale),
+        getSettings(locale),
+      ])
+    return {
+      heroes,
+      blog_posts,
+      services,
+      events,
+      videos,
+      podcasts,
+      faqs,
+      categories,
+      settings,
+    } satisfies HomeData
+  },
 
   // Blog
-  getBlogPosts: (locale: string = 'tr') => 
-    fetchApi<Post[]>('/posts', locale),
-  
-  getBlogPost: (slug: string, locale: string = 'tr') => 
-    fetchApi<BlogPostDetail>(`/posts/${locale}/${encodeURIComponent(slug)}`, locale),
+  getBlogPosts: (locale: string = 'tr') => getPostsByType(PostType.blog, locale),
+
+  getBlogPost: async (slug: string, locale: string = 'tr') => {
+    const data = await getPostDetail(PostType.blog, slug, locale)
+    if (!data) throw new Error('Post not found')
+    return { post: data.post, related_posts: data.related }
+  },
 
   // Events
-  getEvents: (locale: string = 'tr') => 
-    fetchApi<Post[]>('/events', locale),
-  
-  getEvent: (slug: string, locale: string = 'tr') => 
-    fetchApi<EventDetail>(`/events/${locale}/${encodeURIComponent(slug)}`, locale),
+  getEvents: (locale: string = 'tr') => getPostsByType(PostType.event, locale),
+
+  getEvent: async (slug: string, locale: string = 'tr') => {
+    const data = await getPostDetail(PostType.event, slug, locale)
+    if (!data) throw new Error('Event not found')
+    return { event: data.post, related_events: data.related }
+  },
 
   // Videos
-  getVideos: (locale: string = 'tr') => 
-    fetchApi<Post[]>('/videos', locale),
-  
-  getVideo: (slug: string, locale: string = 'tr') => 
-    fetchApi<VideoDetail>(`/videos/${locale}/${encodeURIComponent(slug)}`, locale),
+  getVideos: (locale: string = 'tr') => getPostsByType(PostType.video, locale),
+
+  getVideo: async (slug: string, locale: string = 'tr') => {
+    const data = await getPostDetail(PostType.video, slug, locale)
+    if (!data) throw new Error('Video not found')
+    return { video: data.post, related_videos: data.related }
+  },
 
   // Podcasts
-  getPodcasts: (locale: string = 'tr') => 
-    fetchApi<Post[]>('/podcasts', locale),
-  
-  getPodcast: (slug: string, locale: string = 'tr') => 
-    fetchApi<PodcastDetail>(`/podcasts/${locale}/${encodeURIComponent(slug)}`, locale),
+  getPodcasts: (locale: string = 'tr') => getPostsByType(PostType.podcast, locale),
+
+  getPodcast: async (slug: string, locale: string = 'tr') => {
+    const data = await getPostDetail(PostType.podcast, slug, locale)
+    if (!data) throw new Error('Podcast not found')
+    return { podcast: data.post, related_podcasts: data.related }
+  },
 
   // Services
-  getServices: (locale: string = 'tr') => 
-    fetchApi<Post[]>('/services', locale),
-  
-  getService: (slug: string, locale: string = 'tr') => 
-    fetchApi<ServiceDetail>(`/services/${locale}/${encodeURIComponent(slug)}`, locale),
+  getServices: (locale: string = 'tr') => getPostsByType(PostType.service, locale),
+
+  getService: async (slug: string, locale: string = 'tr') => {
+    const data = await getPostDetail(PostType.service, slug, locale)
+    if (!data) throw new Error('Service not found')
+    return { service: data.post, child_services: [] }
+  },
 
   // Categories
-  getCategories: (locale: string = 'tr') => 
-    fetchApi<Category[]>('/categories', locale),
+  getCategories: (locale: string = 'tr') => getCategories(undefined, locale),
 
   // FAQs
-  getFaqs: (locale: string = 'tr') => 
-    fetchApi<Faq[]>('/faqs', locale),
+  getFaqs: (locale: string = 'tr') => getFaqs(locale),
 
   // Heroes
-  getHeroes: (locale: string = 'tr') => 
-    fetchApi<Hero[]>('/heroes', locale),
+  getHeroes: (locale: string = 'tr') => getHeroes(locale),
 
-  // Search
-  search: (query: string, locale: string = 'tr') => 
-    fetchApi<Post[]>(`/search?q=${encodeURIComponent(query)}`, locale),
+  // Search (basit başlık + içerik arama)
+  search: async (query: string, locale: string = 'tr') => {
+    const posts = await prisma.post.findMany({
+      where: {
+        locale,
+        status: PostStatus.published,
+        OR: [
+          { title: { contains: query, mode: 'insensitive' } },
+          { excerpt: { contains: query, mode: 'insensitive' } },
+          { content: { contains: query, mode: 'insensitive' } },
+        ],
+      },
+      orderBy: { publishedAt: 'desc' },
+      include: { category: true },
+      take: 20,
+    })
+    return posts.map(mapPost)
+  },
 
   // Settings
-  getSettings: async (locale: string = 'tr') => {
-    try {
-      return await fetchApi<Settings>('/settings', locale)
-    } catch (error) {
-      console.error('Settings API failed, using defaults:', error)
-      return defaultSettings
-    }
-  },
-};
+  getSettings,
+}
