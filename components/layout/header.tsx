@@ -145,16 +145,6 @@ export function Header({ locale, settings }: HeaderProps) {
     { label: locale === 'tr' ? 'İletişim' : 'Contact', href: `/${locale}/contact` },
     { label: locale === 'tr' ? 'Hakkımızda' : 'About', href: `/${locale}/hakkimizda` },
     { label: locale === 'tr' ? 'Etkinlik Takvimi' : 'Events Calendar', href: `/${locale}/events` },
-    {
-      label: locale === 'tr' ? 'Yayınlar' : 'Publications',
-      children: [
-        { label: locale === 'tr' ? 'TARF Dergi' : 'TARF Magazine', href: `/${locale}/dergi` },
-        { label: locale === 'tr' ? 'Blog' : 'Blog', href: `/${locale}/blog` },
-        { label: locale === 'tr' ? 'Raporlar' : 'Reports', href: `/${locale}/dusunce-enstitusu` },
-        { label: locale === 'tr' ? 'Videolar' : 'Videos', href: `/${locale}/videos` },
-        { label: locale === 'tr' ? 'Podcastler' : 'Podcasts', href: `/${locale}/podcasts` },
-      ],
-    },
   ]
 
   const navigation: NavSection[] = [
@@ -208,6 +198,21 @@ export function Header({ locale, settings }: HeaderProps) {
           label: locale === 'tr' ? 'Kültür & Sanat' : locale === 'ar' ? 'الثقافة والفن' : 'Culture & Art',
           href: `/${locale}/dusunce-enstitusu/kultur-sanat`,
           description: locale === 'tr' ? 'Kültürel araştırmalar' : 'Cultural research',
+        },
+        {
+          label: locale === 'tr' ? 'Uluslararası İlişkiler' : locale === 'ar' ? 'العلاقات الدولية' : 'International Relations',
+          href: `/${locale}/dusunce-enstitusu/uluslararasi-iliskiler`,
+          description: locale === 'tr' ? 'Diplomasi ve bölgesel çalışmalar' : 'Diplomacy and regional studies',
+        },
+        {
+          label: locale === 'tr' ? 'Çevre-İklim-Doğa' : locale === 'ar' ? 'البيئة والمناخ والطبيعة' : 'Environment & Climate',
+          href: `/${locale}/dusunce-enstitusu/cevre-iklim-doga`,
+          description: locale === 'tr' ? 'İklim ve sürdürülebilirlik' : 'Climate and sustainability',
+        },
+        {
+          label: locale === 'tr' ? 'Bilim ve Teknoloji' : locale === 'ar' ? 'العلم والتكنولوجيا' : 'Science & Technology',
+          href: `/${locale}/dusunce-enstitusu/bilim-teknoloji`,
+          description: locale === 'tr' ? 'Teknoloji ve etik' : 'Technology and ethics',
         },
       ],
     },

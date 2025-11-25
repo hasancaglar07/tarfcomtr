@@ -94,7 +94,7 @@ export interface ContentPageDefinition {
   }
 }
 
-const categoryLabels: Record<
+export const categoryLabels: Record<
   ContentPageCategory,
   { label: string; description: string }
 > = {
@@ -153,34 +153,18 @@ const kurumsalPages: ContentPageDefinition[] = [
       {
         id: 'timeline',
         eyebrow: 'Kuruluş hikayemiz',
-        title: 'Üreten gençler için kurulan kurumsal yapı',
-        description:
-          'Gelişimimiz merak eden, araştıran ve üretmek isteyen gençler için tasarlanan programlarla şekillendi.',
-        layout: 'timeline',
+        title: 'Bilimle irfanı buluşturan kuruluş hikayemiz',
+        layout: 'list',
         items: [
           {
-            title: '2008 - İlk fikir ve fon',
+            title: 'Kuruluş metni',
             description:
-              'Türkiye Araştırma Fonları Derneği çatısı altında gençleri üretime çağıran ilk programlar başlatıldı.',
-            meta: 'Temel prensipler',
+              'TARF Düşünce Enstitüsü, bilimle irfanı aynı potada eriten, düşünceyi gençliğin dinamizmiyle buluşturan bir merkez fikrinden doğdu. Bu toprakların birikimini, köklü medeniyet mirasını ve çağın ihtiyaçlarını bir araya getirerek yeni bir düşünce ekolü oluşturma idealine sahip bir grup akademisyen, araştırmacı ve gençlik öncüsünün uzun yıllara yayılan gayretlerinin neticesi olarak kuruldu.',
           },
           {
-            title: '2014 - Akademi çekirdeği',
+            title: 'Varlık sebebi',
             description:
-              'Bilimsel içerikler, okuma listeleri ve araştırma görevleriyle yapılandırılmış akademi müfredatı devreye alındı.',
-            meta: 'Öğrenme modelinin şekillenmesi',
-          },
-          {
-            title: '2019 - Teknoloji takımları',
-            description:
-              'Yazılım teknolojileri, teknoloji takımları ve teknoloji kafe konseptleriyle üretim kültürü güçlendirildi.',
-            meta: 'Çok katmanlı üretim',
-          },
-          {
-            title: '2024 - Küresel ağ',
-            description:
-              'Konferanslar, araştırma yayınları ve uluslararası sertifika programları ile küresel ölçekte iş birlikleri hızlandı.',
-            meta: 'Yeni bölgesel hedefler',
+              'Enstitünün temel hedefi; gençlerin fikir üretme kabiliyetlerini güçlendirmek, akademik çalışmaları sahadaki karşılığıyla buluşturmak ve Türkiye’nin düşünce dünyasına nitelikli katkılar sunmaktı. TARF, yalnızca bilgi aktaran bir kurum değil; hakikati araştıran, analiz eden, çözüm üreten ve gençliğe yol açan bir fikir atölyesi olma iddiasıyla yola çıktı.',
           },
         ],
       },
@@ -947,9 +931,12 @@ const dusuncePages: ContentPageDefinition[] = [
         columns: 2,
         items: [
           { title: 'Eğitim Araştırmaları', description: 'Modern öğrenme modelleri, müfredat dönüşümü ve öğretmen gelişimi.' },
-          { title: 'Gençlik Çalışmaları', description: 'Gençlik ve teknoloji, girişimcilik ve kariyer yolları üzerine araştırmalar.' },
           { title: 'Aile Araştırmaları', description: 'Modern aile dinamikleri, ebeveynlik ve aile destek programları.' },
           { title: 'Kültür & Sanat', description: 'Kültürel miras, çağdaş sanat ve kültürel diplomasi projeleri.' },
+          { title: 'Gençlik Çalışmaları', description: 'Gençlik ve teknoloji, girişimcilik ve kariyer yolları üzerine araştırmalar.' },
+          { title: 'Uluslararası İlişkiler', description: 'Küresel trendler, diplomasi ve bölgesel işbirliklerine odaklanan araştırmalar.' },
+          { title: 'Çevre-İklim-Doğa', description: 'İklim krizi, sürdürülebilirlik ve doğa temelli çözümler üzerine çalışmalar.' },
+          { title: 'Bilim ve Teknoloji', description: 'Bilimsel gelişmelerin toplum ve ekonomi üzerindeki etkilerine dair analizler.' },
         ],
       },
       {
@@ -1359,6 +1346,261 @@ const dusuncePages: ContentPageDefinition[] = [
         'Kültürel kimlik, sanat eğitimi ve dijital kültür üzerine araştırmalar ve sanatçı programları.',
     },
   },
+  {
+    slug: 'dusunce-enstitusu/uluslararasi-iliskiler',
+    category: 'dusunce',
+    hero: {
+      eyebrow: 'Düşünce Enstitüsü',
+      title: 'Uluslararası İlişkiler ve Politika Araştırmaları',
+      subtitle: 'Diplomasi, güvenlik ve küresel trendler odağında çalışmalar',
+      description:
+        'Küresel güç dengeleri, bölgesel işbirlikleri ve insani diplomasi başlıklarında veri temelli araştırmalar yürütüyor; politika notları ve eğitim programları üretiyoruz.',
+      actions: [
+        { label: 'Programları İncele', href: 'dusunce-enstitusu/uluslararasi-iliskiler' },
+        { label: 'İşbirliği Başlat', href: 'contact', variant: 'secondary' },
+      ],
+      stats: [
+        { label: 'Politika notu', value: '40+', helper: 'Yıllık' },
+        { label: 'Bölge dosyası', value: '12', helper: 'Orta Doğu, Afrika, Asya' },
+        { label: 'Paydaş', value: '50+', helper: 'Kamu, STK, akademi' },
+      ],
+    },
+    sections: [
+      {
+        id: 'focus',
+        eyebrow: 'Araştırma alanları',
+        title: 'Dış politika ve strateji',
+        layout: 'grid',
+        columns: 2,
+        items: [
+          { title: 'Diplomasi & diyalog', description: 'Barış inşası ve arabuluculuk süreçleri.' },
+          { title: 'Güvenlik çalışmaları', description: 'Savunma, hibrit tehditler ve siber güvenlik.' },
+          { title: 'Ekonomik ilişkiler', description: 'Ticaret, yatırım ve tedarik zinciri analizleri.' },
+          { title: 'Bölgesel entegrasyon', description: 'Bölgesel örgütler ve ortaklık modelleri.' },
+          { title: 'İnsani diplomasi', description: 'Göç, mülteci hareketleri ve insani yardım politikaları.' },
+        ],
+      },
+      {
+        id: 'programs',
+        eyebrow: 'Programlar',
+        title: 'Uygulama ve eğitim hatları',
+        layout: 'grid',
+        columns: 2,
+        items: [
+          { title: 'Diplomasi atölyeleri', description: 'Müzakere, protokol ve senaryo çalışmaları.' },
+          { title: 'Simülasyonlar', description: 'Model NATO, BM ve bölgesel örgüt simülasyonları.' },
+          { title: 'Politika brifingleri', description: 'Karar vericilere yönelik kısa ve uygulanabilir içerikler.' },
+          { title: 'Saha raporları', description: 'Bölge uzmanlarıyla yerinde gözlem ve veri toplama.' },
+        ],
+      },
+      {
+        id: 'highlights',
+        eyebrow: 'Öne çıkan içerikler',
+        title: 'Rapor ve yayınlar',
+        layout: 'grid',
+        columns: 2,
+        items: [
+          { title: 'Bölge analizleri', description: 'Orta Doğu, Afrika ve Asya odaklı stratejik raporlar.' },
+          { title: 'Güvenlik bülteni', description: 'Aylık tehdit analizi ve risk değerlendirmeleri.' },
+          { title: 'Ekonomi & ticaret dosyası', description: 'Tedarik zinciri, yatırım ve ticaret trendleri.' },
+          { title: 'Politika notları', description: 'Hızlı okunur, uygulanabilir öneriler.' },
+        ],
+      },
+      {
+        id: 'engagement',
+        eyebrow: 'Katılım yolları',
+        title: 'Ortak çalışmalar başlatın',
+        layout: 'list',
+        items: [
+          { title: 'Araştırma ortağı olun', description: 'Veri paylaşımı ve ortak saha çalışması.' },
+          { title: 'Eğitim talep edin', description: 'Diplomasi ve kriz yönetimi eğitimlerini kurumunuza taşıyın.' },
+          { title: 'Politika brifingi alın', description: 'Karar süreçleriniz için hızlı analiz talep edin.' },
+        ],
+      },
+    ],
+    cta: {
+      title: 'Politika analizi veya eğitim için iletişime geçin',
+      description:
+        'Uluslararası ilişkiler projeleri, brifingler ve saha araştırmaları için ekibimizle çalışın.',
+      primaryAction: { label: 'İletişime Geç', href: 'contact' },
+      secondaryAction: { label: 'Yayınları Gör', href: 'blog' },
+    },
+    seo: {
+      title: 'Uluslararası İlişkiler | TARF Düşünce Enstitüsü',
+      description:
+        'Diplomasi, güvenlik, ekonomi ve insani diplomasi alanlarında araştırmalar, politika notları ve eğitim programları.',
+    },
+  },
+  {
+    slug: 'dusunce-enstitusu/cevre-iklim-doga',
+    category: 'dusunce',
+    hero: {
+      eyebrow: 'Düşünce Enstitüsü',
+      title: 'Çevre, İklim ve Doğa Araştırmaları',
+      subtitle: 'Sürdürülebilir gelecek için veri ve çözüm üretiyoruz',
+      description:
+        'İklim krizi, enerji dönüşümü, biyolojik çeşitlilik ve doğa temelli çözümler üzerine araştırmalar yürütüyor; kurumlara uyarlanabilir programlar tasarlıyoruz.',
+      actions: [
+        { label: 'Programları İncele', href: 'dusunce-enstitusu/cevre-iklim-doga' },
+        { label: 'Ortak Proje Başlat', href: 'contact', variant: 'secondary' },
+      ],
+      stats: [
+        { label: 'İklim projesi', value: '25', helper: 'Pilot & saha' },
+        { label: 'Veri seti', value: '60+', helper: 'Açık ve şeffaf' },
+        { label: 'Paydaş', value: '40+', helper: 'Belediye, STK, özel sektör' },
+      ],
+    },
+    sections: [
+      {
+        id: 'focus',
+        eyebrow: 'Araştırma alanları',
+        title: 'Sürdürülebilirlik eksenli başlıklar',
+        layout: 'grid',
+        columns: 2,
+        items: [
+          { title: 'İklim politikaları', description: 'Emisyon azaltımı, uyum ve finansman modelleri.' },
+          { title: 'Enerji dönüşümü', description: 'Yenilenebilir enerji ve verimlilik çözümleri.' },
+          { title: 'Biyoçeşitlilik', description: 'Ekosistem hizmetleri ve koruma stratejileri.' },
+          { title: 'Şehircilik & mobilite', description: 'Yeşil altyapı, ulaşım ve döngüsel ekonomi.' },
+          { title: 'Doğa temelli çözümler', description: 'İklim uyumu için ekolojik tasarımlar.' },
+        ],
+      },
+      {
+        id: 'programs',
+        eyebrow: 'Programlar',
+        title: 'Uygulama ve eğitimler',
+        layout: 'grid',
+        columns: 2,
+        items: [
+          { title: 'İklim aksiyon planı', description: 'Yerel yönetimler için yol haritaları ve eğitimler.' },
+          { title: 'Yeşil kampüs programı', description: 'Üniversitelerde sürdürülebilirlik uygulamaları.' },
+          { title: 'Enerji verimliliği atölyeleri', description: 'KOBİ ve kurumlar için uygulamalı içerikler.' },
+          { title: 'Vatandaş bilimi', description: 'Topluluklarla veri toplama ve izleme projeleri.' },
+        ],
+      },
+      {
+        id: 'highlights',
+        eyebrow: 'Öne çıkan içerikler',
+        title: 'Rapor ve veri setleri',
+        layout: 'grid',
+        columns: 2,
+        items: [
+          { title: 'İklim risk haritası', description: 'Bölgesel risk analizi ve önceliklendirme.' },
+          { title: 'Enerji dönüşüm raporu', description: 'Sektörel dönüşüm ve yatırım trendleri.' },
+          { title: 'Doğa temelli çözümler kataloğu', description: 'Belediyeler için örnek uygulamalar.' },
+          { title: 'Karbon ayak izi kılavuzu', description: 'Kurumlar için ölçüm ve azaltım rehberi.' },
+        ],
+      },
+      {
+        id: 'engagement',
+        eyebrow: 'Katılım yolları',
+        title: 'Projelerinize destek alın',
+        layout: 'list',
+        items: [
+          { title: 'Saha araştırması talep edin', description: 'Veri toplama ve analiz süreçlerini bize devredin.' },
+          { title: 'Eğitim ve atölye düzenleyin', description: 'Çalışanlar veya öğrenciler için uyarlanmış içerikler.' },
+          { title: 'Ortak yayın üretin', description: 'Rapor ve politika notlarını birlikte hazırlayalım.' },
+        ],
+      },
+    ],
+    cta: {
+      title: 'Sürdürülebilirlik projeleri için iletişime geçin',
+      description:
+        'İklim, enerji ve doğa projelerinizde araştırma ve uygulama desteği sunabiliriz.',
+      primaryAction: { label: 'İletişime Geç', href: 'contact' },
+      secondaryAction: { label: 'Yayınları Gör', href: 'blog' },
+    },
+    seo: {
+      title: 'Çevre, İklim ve Doğa | TARF Düşünce Enstitüsü',
+      description:
+        'İklim politikaları, enerji dönüşümü, biyoçeşitlilik ve doğa temelli çözümler üzerine araştırmalar ve programlar.',
+    },
+  },
+  {
+    slug: 'dusunce-enstitusu/bilim-teknoloji',
+    category: 'dusunce',
+    hero: {
+      eyebrow: 'Düşünce Enstitüsü',
+      title: 'Bilim ve Teknoloji Araştırmaları',
+      subtitle: 'Bilimsel gelişmeleri toplum ve ekonomiyle buluşturuyoruz',
+      description:
+        'Yapay zekâ, veri bilimi, biyoteknoloji ve derin teknoloji alanlarında stratejik analizler yapıyor; teknoloji politikası ve etik çerçeveler geliştiriyoruz.',
+      actions: [
+        { label: 'Programları İncele', href: 'dusunce-enstitusu/bilim-teknoloji' },
+        { label: 'Danışmanlık Talep Et', href: 'contact', variant: 'secondary' },
+      ],
+      stats: [
+        { label: 'Araştırma dosyası', value: '30+', helper: 'Yıllık' },
+        { label: 'Teknoloji takımı', value: '10', helper: 'Pilot ve prototip' },
+        { label: 'Çalıştay', value: '70+', helper: 'Teknik & etik' },
+      ],
+    },
+    sections: [
+      {
+        id: 'focus',
+        eyebrow: 'Araştırma alanları',
+        title: 'Teknoloji ve etik kesişimi',
+        layout: 'grid',
+        columns: 2,
+        items: [
+          { title: 'Yapay zekâ & veri', description: 'Model güvenliği, etik AI ve veri yönetişimi.' },
+          { title: 'Siber güvenlik', description: 'Tehdit analizi, koruma ve farkındalık programları.' },
+          { title: 'Biyoteknoloji', description: 'Sağlık teknolojileri ve etik değerlendirmeler.' },
+          { title: 'Endüstri 4.0', description: 'IoT, otomasyon ve akıllı üretim.' },
+          { title: 'Teknoloji politikası', description: 'Regülasyon, standartlar ve toplumsal etki analizleri.' },
+        ],
+      },
+      {
+        id: 'programs',
+        eyebrow: 'Programlar',
+        title: 'Eğitim ve uygulama',
+        layout: 'grid',
+        columns: 2,
+        items: [
+          { title: 'Teknoloji politikası atölyesi', description: 'Regülasyon ve etik çerçeveler üzerine senaryolar.' },
+          { title: 'AI güvenliği modülleri', description: 'Model güvenliği ve risk yönetimi eğitimleri.' },
+          { title: 'Siber güvenlik kampı', description: 'Uygulamalı kırmızı/mavi takım çalışmaları.' },
+          { title: 'Derin teknoloji demo day', description: 'Prototip sunumları ve yatırımcı buluşmaları.' },
+        ],
+      },
+      {
+        id: 'highlights',
+        eyebrow: 'Öne çıkan içerikler',
+        title: 'Rapor ve ürünler',
+        layout: 'grid',
+        columns: 2,
+        items: [
+          { title: 'AI etik kılavuzu', description: 'Kurumlar için uygulanabilir prensipler.' },
+          { title: 'Siber tehdit görünümü', description: 'Güncel tehdit haritası ve korunma önerileri.' },
+          { title: 'Biyoteknoloji dosyası', description: 'Sağlık teknolojilerinde etik ve güvenlik.' },
+          { title: 'Teknoloji radar', description: 'Yükselen teknolojiler için kısa özetler.' },
+        ],
+      },
+      {
+        id: 'engagement',
+        eyebrow: 'Katılım yolları',
+        title: 'Teknoloji projelerinizi güçlendirin',
+        layout: 'list',
+        items: [
+          { title: 'Danışmanlık alın', description: 'Teknoloji stratejisi ve etik çerçeve desteği.' },
+          { title: 'Eğitim talep edin', description: 'AI güvenliği, siber güvenlik ve veri yönetişimi eğitimleri.' },
+          { title: 'Araştırma ortaklığı kurun', description: 'Pilot projeler ve test ortamları oluşturun.' },
+        ],
+      },
+    ],
+    cta: {
+      title: 'Teknoloji stratejiniz için birlikte çalışalım',
+      description:
+        'Araştırma, ürünleştirme ve politika tasarımı süreçlerinde uzman ekibimizle yanınızdayız.',
+      primaryAction: { label: 'İletişime Geç', href: 'contact' },
+      secondaryAction: { label: 'Programları Gör', href: 'akademi' },
+    },
+    seo: {
+      title: 'Bilim ve Teknoloji | TARF Düşünce Enstitüsü',
+      description:
+        'Yapay zekâ, siber güvenlik, biyoteknoloji ve teknoloji politikası alanlarında araştırmalar, eğitimler ve danışmanlık.',
+    },
+  },
 ]
 
 const akademiPages: ContentPageDefinition[] = [
@@ -1382,6 +1624,36 @@ const akademiPages: ContentPageDefinition[] = [
       ],
     },
     sections: [
+      {
+        id: 'purpose',
+        eyebrow: 'Varlık sebebi',
+        title: 'Misyon, vizyon ve amaçlarımız',
+        layout: 'grid',
+        columns: 2,
+        items: [
+          {
+            title: 'Misyon',
+            description:
+              'TARF Akademi; lisans öğrencilerinin akademik bilgi birikimlerini güçlendirmeyi, alanlarının etik ve ahlaki ilkeleriyle donatılmış, kişisel gelişimini önemseyen, toplumsal sorumluluk bilinci yüksek bireyler yetiştirmeyi amaçlayan bir eğitim ve gelişim platformudur.',
+          },
+          {
+            title: 'Vizyon',
+            description:
+              'Bilimsel yetkinliği güçlü, karakteri sağlam, değer odaklı ve profesyonel dünyada etkili bir duruş sergileyen gençler yetiştirerek Türkiye’nin akademik, entelektüel ve toplumsal gelişimine öncülük eden örnek bir akademi modeli oluşturmak.',
+          },
+          {
+            title: 'Amaçlar',
+            bullets: [
+              'Öğrencilerin alanlarının etik ve ahlaki ilkelerini güçlü bir şekilde öğrenmelerini sağlamak.',
+              'Gençlere geleceğe yönelik sağlam bir kariyer yapılanması kazandırmak.',
+              'Öğrencilerin profesyonel dünyada ihtiyaç duyacağı güçlü bir network ağı oluşturmak.',
+              'Akademik becerileri destekleyen kişisel gelişim eğitimleri sunmak.',
+              'Disiplinler arası bakış açısı kazandırarak farkındalığı yüksek bir akademik kimlik geliştirmek.',
+              'Gençlerin toplumsal sorumluluk bilinciyle hareket eden değer odaklı bireyler olarak yetişmesine katkı sağlamak.',
+            ],
+          },
+        ],
+      },
       {
         id: 'modules',
         eyebrow: 'Akademi modülleri',
