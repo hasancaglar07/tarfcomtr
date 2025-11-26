@@ -51,6 +51,23 @@ async function seedCategories() {
   }
 }
 
+type SeedPost = {
+  slug: string
+  title: string
+  excerpt: string
+  content: string
+  seoTitle?: string | null
+  seoDescription?: string | null
+  type: PostType
+  categoryId?: string | null
+  eventDate?: Date
+  eventTime?: string | null
+  location?: string | null
+  youtubeUrl?: string | null
+  audioUrl?: string | null
+  featuredImage?: string | null
+}
+
 async function seedPosts() {
   const blogCat = await prisma.category.findUnique({ where: { slug: 'genel' } })
   const eventCat = await prisma.category.findUnique({ where: { slug: 'etkinlik' } })
@@ -58,7 +75,7 @@ async function seedPosts() {
   const podcastCat = await prisma.category.findUnique({ where: { slug: 'podcast' } })
   const serviceCat = await prisma.category.findUnique({ where: { slug: 'egitim' } })
 
-  const posts = [
+  const posts: SeedPost[] = [
     {
       slug: 'yapay-zeka-ve-gelecek',
       title: 'Yapay Zeka ve Gelecek',

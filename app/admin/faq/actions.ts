@@ -8,7 +8,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidateHome } from '@/lib/content-store'
 
-type FaqActionState = { status: 'idle' | 'error'; message?: string }
+export type FaqActionState = { status: 'idle' | 'error'; message?: string }
 
 const faqSchema = z.object({
   id: z.string().optional(),

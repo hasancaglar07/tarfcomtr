@@ -17,7 +17,7 @@ const statusColors: Record<ApplicationStatus, string> = {
 }
 
 export default async function ApplicationsPage() {
-  let applications = []
+  let applications: Awaited<ReturnType<typeof prisma.application.findMany>> = []
   let loadError: string | null = null
   try {
     applications = await prisma.application.findMany({

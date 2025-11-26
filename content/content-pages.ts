@@ -51,6 +51,8 @@ export interface ContentPageHero {
   highlight?: string
   badge?: string
   stats?: StatBlock[]
+  backgroundImage?: string
+  videoUrl?: string
   actions?: Array<{
     label: string
     href: string

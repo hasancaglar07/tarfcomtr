@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { ContentPageDefinition } from '@/content/content-pages'
 
 import type { PageActionState } from '@/app/admin/actions'

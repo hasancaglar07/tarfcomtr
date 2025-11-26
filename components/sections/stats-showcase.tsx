@@ -1,3 +1,5 @@
+import type { Category } from '@/lib/api'
+
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Animate } from '@/components/ui/animate'
@@ -10,7 +12,7 @@ interface StatsShowcaseProps {
   blogCount: number
   videosCount: number
   podcastsCount: number
-  categories?: Array<{ id: number; name: string }>
+  categories?: Category[]
 }
 
 export function StatsShowcase({

@@ -23,15 +23,13 @@ export function SectionEditor({ value, onChange }: SectionEditorProps) {
   }
 
   const addSection = () => {
-    const next = [
-      ...sections,
-      {
-        id: `section-${Date.now()}`,
-        title: 'Yeni bölüm',
-        layout: 'grid',
-        items: [],
-      },
-    ]
+    const newSection: ContentSection = {
+      id: `section-${Date.now()}`,
+      title: 'Yeni bölüm',
+      layout: 'grid',
+      items: [],
+    }
+    const next = [...sections, newSection]
     setSections(next)
     onChange(next)
   }
@@ -142,29 +140,31 @@ export function SectionEditor({ value, onChange }: SectionEditorProps) {
                         className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs text-slate-100 outline-none focus:border-orange-400"
                         placeholder="Link"
                         value={item.cta?.href || ''}
-                        onChange={(e) => {
-                          const items = [...(section.items || [])]
-                          items[itemIndex] = {
-                            ...items[itemIndex],
-                            cta: { ...(items[itemIndex].cta || {}), href: e.target.value },
-                          }
-                          updateSection(index, { items })
-                        }}
-                      />
-                      <input
+                      onChange={(e) => {
+                        const items = [...(section.items || [])]
+                        const currentCta = items[itemIndex].cta || { label: '', href: '' }
+                        items[itemIndex] = {
+                          ...items[itemIndex],
+                          cta: { ...currentCta, href: e.target.value },
+                        }
+                        updateSection(index, { items })
+                      }}
+                    />
+                    <input
                         className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs text-slate-100 outline-none focus:border-orange-400"
                         placeholder="Link metni"
                         value={item.cta?.label || ''}
-                        onChange={(e) => {
-                          const items = [...(section.items || [])]
-                          items[itemIndex] = {
-                            ...items[itemIndex],
-                            cta: { ...(items[itemIndex].cta || {}), label: e.target.value },
-                          }
-                          updateSection(index, { items })
-                        }}
-                      />
-                    </div>
+                      onChange={(e) => {
+                        const items = [...(section.items || [])]
+                        const currentCta = items[itemIndex].cta || { label: '', href: '' }
+                        items[itemIndex] = {
+                          ...items[itemIndex],
+                          cta: { ...currentCta, label: e.target.value },
+                        }
+                        updateSection(index, { items })
+                      }}
+                    />
+                  </div>
                     <div className="grid gap-1 sm:grid-cols-3">
                       <input
                         className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs text-slate-100 outline-none focus:border-orange-400"

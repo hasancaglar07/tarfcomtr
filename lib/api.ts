@@ -351,10 +351,10 @@ export const api = {
   // Services
   getServices: (locale: string = 'tr') => getPostsByType(PostType.service, locale),
 
-  getService: async (slug: string, locale: string = 'tr') => {
+  getService: async (slug: string, locale: string = 'tr'): Promise<ServiceDetail> => {
     const data = await getPostDetail(PostType.service, slug, locale)
     if (!data) throw new Error('Service not found')
-    return { service: data.post, child_services: [] }
+    return { service: data.post, child_services: data.related ?? [] }
   },
 
   // Categories

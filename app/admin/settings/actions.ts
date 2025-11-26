@@ -8,7 +8,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidateHome } from '@/lib/content-store'
 
-type SettingsActionState = { status: 'idle' | 'error'; message?: string }
+export type SettingsActionState = { status: 'idle' | 'error'; message?: string }
 
 const settingsSchema = z.object({
   locale: z.string().default('tr'),

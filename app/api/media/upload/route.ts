@@ -16,14 +16,16 @@ export async function POST(request: Request) {
   }
 
   const formData = await request.formData()
-  const file = formData.get('file')
+  const fileEntry = formData.get('file')
   const locale = formData.get('locale')?.toString() || 'tr'
   const altText = formData.get('altText')?.toString() || null
-  const kind = formData.get('kind')?.toString() || (file ? file.type?.split('/')[0] : null)
 
-  if (!file || !(file instanceof File)) {
+  if (!fileEntry || !(fileEntry instanceof File)) {
     return NextResponse.json({ error: 'Dosya gerekli' }, { status: 400 })
   }
+
+  const file = fileEntry
+  const kind = formData.get('kind')?.toString() || file.type?.split('/')[0] || null
 
   const blob = await put(file.name, file, {
     access: 'public',

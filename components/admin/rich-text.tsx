@@ -46,7 +46,6 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
 
   return (
     <div className="rich-text bg-slate-950/60 rounded-lg border border-slate-800">
-      {/* @ts-expect-error quill types */}
       <ReactQuill value={value} onChange={onChange} placeholder={placeholder} modules={modules} />
     </div>
   )

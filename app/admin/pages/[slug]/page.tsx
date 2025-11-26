@@ -27,6 +27,34 @@ export default async function EditPage({
     notFound()
   }
 
+  const fallbackContent: ContentPageDefinition = {
+    slug: page.slug,
+    category: 'kurumsal',
+    hero: {
+      eyebrow: '',
+      title: page.title || page.slug,
+      subtitle: '',
+      description: '',
+      actions: [],
+      stats: [],
+    },
+    sections: [],
+    cta: {
+      title: '',
+      description: '',
+      primaryAction: { label: '', href: '' },
+    },
+    seo: {
+      title: page.title || page.slug,
+      description: '',
+    },
+  }
+
+  const contentData =
+    page.data && typeof page.data === 'object'
+      ? (page.data as unknown as ContentPageDefinition)
+      : fallbackContent
+
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">
       <div className="mx-auto flex max-w-5xl flex-col gap-6">
@@ -55,7 +83,7 @@ export default async function EditPage({
           <ContentPageForm
             mode="edit"
             action={updatePageAction}
-            defaultValues={page.data as ContentPageDefinition}
+            defaultValues={contentData}
           />
 
           <div className="mt-6 flex justify-end">

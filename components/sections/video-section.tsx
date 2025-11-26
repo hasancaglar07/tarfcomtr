@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import type { Post } from '@/lib/api'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Play, ArrowRight, Calendar, User, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -9,17 +10,7 @@ import Image from 'next/image'
 import { Animate, StaggerContainer } from '@/components/ui/animate'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
-interface Video {
-  id: number
-  title: string
-  slug: string
-  featured_image?: string | null
-  youtube_url?: string | null
-  created_at: string
-  user?: {
-    name: string
-  } | null
-}
+type Video = Post
 
 interface VideoSectionProps {
   locale: string
@@ -280,10 +271,10 @@ export function VideoSection({ locale, videos }: VideoSectionProps) {
                     <Calendar className="h-4 w-4" />
                     <span>{formatDate(currentVideo.created_at)}</span>
                   </div>
-                  {currentVideo.user?.name && (
+                  {currentVideo.author?.name && (
                     <div className="flex items-center gap-2">
                       <User className="h-4 w-4" />
-                      <span>{currentVideo.user.name}</span>
+                      <span>{currentVideo.author.name}</span>
                     </div>
                   )}
                 </div>

@@ -1,5 +1,7 @@
 'use client'
 
+import type { Category, Post } from '@/lib/api'
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -8,26 +10,8 @@ import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { Animate, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/animate'
 
-interface BlogPost {
-  id: number
-  title: string
-  slug: string
-  excerpt: string
-  featured_image?: string | null
-  created_at: string
-  category?: {
-    id: number
-    name: string
-    slug: string
-  } | null
-}
-
-interface BlogCategory {
-  id: number
-  name: string
-  slug: string
-  posts_count?: number
-}
+type BlogPost = Post
+type BlogCategory = Category
 
 interface BlogSectionProps {
   locale: string

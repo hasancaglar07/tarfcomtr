@@ -8,7 +8,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidateHome } from '@/lib/content-store'
 
-type HeroActionState = { status: 'idle' | 'error'; message?: string }
+export type HeroActionState = { status: 'idle' | 'error'; message?: string }
 
 const heroSchema = z.object({
   id: z.string().optional(),

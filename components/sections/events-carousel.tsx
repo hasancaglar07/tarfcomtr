@@ -1,5 +1,7 @@
 'use client'
 
+import type { Post } from '@/lib/api'
+
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -12,21 +14,11 @@ import { motion } from 'framer-motion'
 import { useShouldReduceMotion } from '@/lib/hooks/use-reduced-motion'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
-interface Event {
-  id: number
-  title: string
-  slug: string
-  excerpt?: string
-  featured_image?: string | null
-  event_date?: string | null
-  event_time?: string | null
-  location?: string | null
-  is_featured?: boolean
-}
+type EventPost = Post & { is_featured?: boolean | null }
 
 interface EventsCarouselProps {
   locale: string
-  events: Event[]
+  events: EventPost[]
 }
 
 const defaultContent = {
@@ -226,7 +218,7 @@ function EventCard({
   content,
   locale,
 }: {
-  event: Event
+  event: EventPost
   content: typeof defaultContent[keyof typeof defaultContent]
   locale: string
 }) {
