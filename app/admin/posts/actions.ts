@@ -10,7 +10,10 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidatePostPaths } from '@/lib/content-store'
 
-export type PostActionState = { status: 'idle' | 'error'; message?: string }
+export type PostActionState =
+  | { status: 'idle'; message?: string }
+  | { status: 'success'; message?: string; redirectTo?: string }
+  | { status: 'error'; message?: string }
 
 const postSchema = z.object({
   type: z.nativeEnum(PostType),
@@ -60,6 +63,16 @@ function revalidate(type: PostType, slug?: string) {
   revalidatePostPaths(revalidatePath, type, slug)
 }
 
+const typeLabel: Record<PostType, string> = {
+  blog: 'Blog yazısı',
+  event: 'Etkinlik',
+  video: 'Video',
+  podcast: 'Podcast',
+  service: 'Hizmet/Eğitim',
+}
+
+const typeLabelFor = (type: PostType) => typeLabel[type] || 'İçerik'
+
 export async function createPostAction(
   _prev: PostActionState,
   formData: FormData,
@@ -95,16 +108,16 @@ export async function createPostAction(
     }
 
     const data = parsed.data
-  const gallery = parseGallery(data.gallery)
+    const gallery = parseGallery(data.gallery)
 
-  if (data.type === PostType.video && !data.youtubeUrl) {
-    return { status: 'error', message: 'Video için YouTube URL zorunludur' }
-  }
+    if (data.type === PostType.video && !data.youtubeUrl) {
+      return { status: 'error', message: 'Video için YouTube URL zorunludur' }
+    }
 
-  await prisma.post.create({
-    data: {
-      type: data.type,
-      slug: data.slug,
+    await prisma.post.create({
+      data: {
+        type: data.type,
+        slug: data.slug,
         title: data.title,
         excerpt: data.excerpt,
         content: data.content,
@@ -121,13 +134,20 @@ export async function createPostAction(
         eventTime: data.eventTime || null,
         location: data.location || null,
         meta: gallery ? { gallery } : undefined,
-        publishedAt:
-          data.status === 'published' || !data.status ? new Date() : null,
+        publishedAt: data.status === 'published' || !data.status ? new Date() : null,
       },
     })
 
     revalidate(data.type, data.slug)
-    redirect(`/admin/posts/${data.type}`)
+    const params = new URLSearchParams({
+      toast: `${typeLabelFor(data.type)} kaydedildi`,
+      toastType: 'success',
+    })
+    return {
+      status: 'success',
+      message: `${typeLabelFor(data.type)} kaydedildi`,
+      redirectTo: `/admin/posts/${data.type}?${params.toString()}`,
+    }
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       return {
@@ -184,16 +204,16 @@ export async function updatePostAction(
       return { status: 'error', message: 'Kayıt bulunamadı' }
     }
 
-  const gallery = parseGallery(data.gallery)
+    const gallery = parseGallery(data.gallery)
 
-  if (data.type === PostType.video && !data.youtubeUrl) {
-    return { status: 'error', message: 'Video için YouTube URL zorunludur' }
-  }
+    if (data.type === PostType.video && !data.youtubeUrl) {
+      return { status: 'error', message: 'Video için YouTube URL zorunludur' }
+    }
 
-  await prisma.post.update({
-    where: { id: existing.id },
-    data: {
-      type: data.type,
+    await prisma.post.update({
+      where: { id: existing.id },
+      data: {
+        type: data.type,
         slug: data.slug,
         title: data.title,
         excerpt: data.excerpt,
@@ -219,7 +239,15 @@ export async function updatePostAction(
     })
 
     revalidate(data.type, data.slug)
-    redirect(`/admin/posts/${data.type}`)
+    const params = new URLSearchParams({
+      toast: `${typeLabelFor(data.type)} güncellendi`,
+      toastType: 'success',
+    })
+    return {
+      status: 'success',
+      message: `${typeLabelFor(data.type)} güncellendi`,
+      redirectTo: `/admin/posts/${data.type}?${params.toString()}`,
+    }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
     return { status: 'error', message }
@@ -236,5 +264,9 @@ export async function deletePostAction(formData: FormData) {
   }
   await prisma.post.delete({ where: { id } })
   revalidate(type, slug ?? undefined)
-  redirect(`/admin/posts/${type}`)
+  const params = new URLSearchParams({
+    toast: `${typeLabelFor(type)} silindi`,
+    toastType: 'success',
+  })
+  redirect(`/admin/posts/${type}?${params.toString()}`)
 }

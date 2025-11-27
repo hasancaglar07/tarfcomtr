@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { PostType } from '@prisma/client'
 
 import { upsertCategoryAction, deleteCategoryAction } from '@/app/admin/categories/actions'
@@ -30,6 +31,12 @@ export default async function CategoriesPage() {
               Blog, etkinlik, video, podcast ve hizmetler için kategori ekleyin/düzenleyin.
             </p>
           </div>
+          <Link
+            href="/admin"
+            className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-500"
+          >
+            Panele dön
+          </Link>
         </div>
 
         <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl">

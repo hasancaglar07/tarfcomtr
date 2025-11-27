@@ -1,10 +1,12 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useFormState, useFormStatus } from 'react-dom'
 import type { ContentCategory } from '@prisma/client'
 
 import type { PageActionState } from '@/app/admin/actions'
+import { ActionToast } from '@/components/admin/action-toast'
 
 type PageFormProps = {
   mode: 'create' | 'edit'
@@ -35,10 +37,46 @@ const categories: ContentCategory[] = [
 export function PageForm({ mode, action, defaultValues }: PageFormProps) {
   const router = useRouter()
   const [state, formAction] = useFormState(action, initialState)
+  const [seoTitle, setSeoTitle] = useState(defaultValues.seoTitle || '')
+  const [seoDescription, setSeoDescription] = useState(defaultValues.seoDescription || '')
+  const [seoDirty, setSeoDirty] = useState({
+    title: Boolean(defaultValues.seoTitle),
+    description: Boolean(defaultValues.seoDescription),
+  })
 
   if (state?.status === 'error') {
     // noop, render message below
   }
+
+  useEffect(() => {
+    if (state?.status === 'success') {
+      if (state.redirectTo) {
+        router.push(state.redirectTo)
+      } else {
+        router.refresh()
+      }
+    }
+  }, [router, state])
+
+  useEffect(() => {
+    const normalize = (text: string) =>
+      text
+        .trim()
+        .replace(/ğ/g, 'g')
+        .replace(/ü/g, 'u')
+        .replace(/ş/g, 's')
+        .replace(/ı/g, 'i')
+        .replace(/ö/g, 'o')
+        .replace(/ç/g, 'c')
+    if (!seoDirty.title && defaultValues.title) {
+      const candidate = normalize(defaultValues.title).slice(0, 90)
+      if (candidate !== seoTitle) setSeoTitle(candidate)
+    }
+    if (!seoDirty.description) {
+      const candidate = normalize(defaultValues.title).slice(0, 160)
+      if (candidate !== seoDescription) setSeoDescription(candidate)
+    }
+  }, [defaultValues.title, seoTitle, seoDescription, seoDirty])
 
   const SubmitButton = () => {
     const { pending } = useFormStatus()
@@ -111,26 +149,34 @@ export function PageForm({ mode, action, defaultValues }: PageFormProps) {
           <label className="text-sm text-slate-300" htmlFor="seoTitle">
             SEO Başlık
           </label>
-          <input
-            id="seoTitle"
-            name="seoTitle"
-            defaultValue={defaultValues.seoTitle ?? ''}
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-            placeholder="SEO başlığı (opsiyonel)"
-          />
-        </div>
-        <div className="space-y-2">
-          <label className="text-sm text-slate-300" htmlFor="seoDescription">
-            SEO Açıklama
-          </label>
-          <input
-            id="seoDescription"
-            name="seoDescription"
-            defaultValue={defaultValues.seoDescription ?? ''}
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-            placeholder="Kısa açıklama"
-          />
-        </div>
+        <input
+        id="seoTitle"
+        name="seoTitle"
+        value={seoTitle}
+        onChange={(e) => {
+          setSeoDirty((prev) => ({ ...prev, title: true }))
+          setSeoTitle(e.target.value)
+        }}
+        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+        placeholder="SEO başlığı (opsiyonel)"
+      />
+      </div>
+      <div className="space-y-2">
+        <label className="text-sm text-slate-300" htmlFor="seoDescription">
+          SEO Açıklama
+        </label>
+        <input
+        id="seoDescription"
+        name="seoDescription"
+        value={seoDescription}
+        onChange={(e) => {
+          setSeoDirty((prev) => ({ ...prev, description: true }))
+          setSeoDescription(e.target.value)
+        }}
+        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+        placeholder="Kısa açıklama"
+      />
+      </div>
       </div>
 
       <div className="space-y-2">
@@ -177,6 +223,8 @@ export function PageForm({ mode, action, defaultValues }: PageFormProps) {
           {state.message || 'Kaydetme hatası'}
         </div>
       )}
+
+      <ActionToast state={state} />
     </form>
   )
 }

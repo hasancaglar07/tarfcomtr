@@ -15,6 +15,8 @@ type Copy = {
     topic: string
     message: string
   }
+  typeLabel: string
+  applicationTypes: string[]
   submit: string
   successTitle?: string
   successBody?: string
@@ -33,9 +35,15 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
     company: '',
     topic: '',
     message: '',
+    applicationType: '',
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
@@ -46,12 +54,24 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
     setError(null)
     setSuccess(false)
     try {
+      const selectedType =
+        copy.applicationTypes.find((t) => t === formData.applicationType)?.toString() ||
+        formData.applicationType
       const payload = {
         name: formData.name.trim(),
         email: formData.email.trim(),
         phone: formData.phone.trim() || undefined,
-        subject: formData.topic.trim() || formData.company.trim() || undefined,
-        message: `${formData.message}\n\nFirma: ${formData.company || '-'}`,
+        subject:
+          selectedType && formData.topic.trim()
+            ? `${selectedType} - ${formData.topic.trim()}`
+            : selectedType || formData.topic.trim() || formData.company.trim() || undefined,
+        message: [
+          `Başvuru Türü: ${selectedType || 'Belirtilmedi'}`,
+          `Konu: ${formData.topic || '-'}`,
+          `Firma: ${formData.company || '-'}`,
+          '',
+          formData.message,
+        ].join('\n'),
       }
       const res = await fetch('/api/applications', {
         method: 'POST',
@@ -70,6 +90,7 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
         company: '',
         topic: '',
         message: '',
+        applicationType: '',
       })
     } catch (err) {
       setError(
@@ -135,6 +156,25 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
         onChange={handleChange}
         className="h-12 border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
       />
+      <div className="space-y-2">
+        <label className="text-sm font-semibold text-slate-700">{copy.typeLabel}</label>
+        <select
+          name="applicationType"
+          required
+          value={formData.applicationType}
+          onChange={handleSelectChange}
+          className="h-12 w-full rounded-lg border border-white/70 bg-white/85 px-3 text-base text-slate-900 shadow-sm outline-none transition focus:border-primary/40 focus-visible:ring-primary/30"
+        >
+          <option value="" disabled>
+            {copy.typeLabel}
+          </option>
+          {copy.applicationTypes.map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+      </div>
       <Input
         type="text"
         name="topic"

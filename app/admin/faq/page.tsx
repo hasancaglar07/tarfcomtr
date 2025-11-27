@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { deleteFaqAction, upsertFaqAction } from '@/app/admin/faq/actions'
 import { FaqForm } from '@/components/admin/faq-form'
 import { prisma } from '@/lib/prisma'
@@ -20,6 +22,12 @@ export default async function FaqPage() {
               Soru-cevap ekleyin, sıralayın. Locale bazlı çalışır.
             </p>
           </div>
+          <Link
+            href="/admin"
+            className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-500"
+          >
+            Panele dön
+          </Link>
         </div>
 
         <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl">

@@ -8,7 +8,10 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidateHome } from '@/lib/content-store'
 
-export type FaqActionState = { status: 'idle' | 'error'; message?: string }
+export type FaqActionState =
+  | { status: 'idle'; message?: string }
+  | { status: 'success'; message?: string }
+  | { status: 'error'; message?: string }
 
 const faqSchema = z.object({
   id: z.string().optional(),
@@ -70,7 +73,7 @@ export async function upsertFaqAction(
       })
     }
     revalidate()
-    return { status: 'idle' }
+    return { status: 'success', message: data.id ? 'Soru güncellendi' : 'Soru eklendi' }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
     return { status: 'error', message }

@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { HeroForm } from '@/components/admin/hero-form'
 import { upsertHeroAction } from '@/app/admin/hero/actions'
 import { prisma } from '@/lib/prisma'
@@ -21,6 +23,12 @@ export default async function HeroPage() {
               Anasayfa hero başlıkları, alt metin, buton ve görselleri güncelleyin.
             </p>
           </div>
+          <Link
+            href="/admin"
+            className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-500"
+          >
+            Panele dön
+          </Link>
         </div>
 
         <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl">

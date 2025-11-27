@@ -3,6 +3,7 @@
 import { useFormState, useFormStatus } from 'react-dom'
 
 import type { FaqActionState } from '@/app/admin/faq/actions'
+import { ActionToast } from '@/components/admin/action-toast'
 
 type FaqFormProps = {
   action: (state: FaqActionState, formData: FormData) => Promise<FaqActionState>
@@ -93,6 +94,8 @@ export function FaqForm({ action, defaultValues }: FaqFormProps) {
           {state.message || 'Kaydetme hatası'}
         </div>
       )}
+
+      <ActionToast state={state} />
     </form>
   )
 }

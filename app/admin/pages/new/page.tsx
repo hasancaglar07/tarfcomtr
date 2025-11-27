@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { PageForm } from '@/components/admin/page-form'
 import { createPageAction } from '@/app/admin/actions'
 import { BlobUpload } from '@/components/admin/blob-upload'
@@ -27,7 +29,7 @@ export default function NewContentPage() {
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">
       <div className="mx-auto flex max-w-5xl flex-col gap-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-400">
               Yeni sayfa
@@ -36,6 +38,20 @@ export default function NewContentPage() {
             <p className="text-sm text-slate-400">
               Slug, kategori ve JSON içeriği ile yeni bir sayfa ekleyin.
             </p>
+          </div>
+          <div className="flex gap-2">
+            <Link
+              href="/admin"
+              className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-500"
+            >
+              Panele dön
+            </Link>
+            <Link
+              href="/admin/pages"
+              className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-500"
+            >
+              Listeye dön
+            </Link>
           </div>
         </div>
 

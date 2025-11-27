@@ -32,6 +32,16 @@ const localizedContent = {
     directions: 'Yol tarifi al',
     formTitle: 'Başvuru formu',
     formSubtitle: 'Ekibimiz 24 saat içinde dönüş yapar.',
+    typeLabel: 'Başvuru Türü',
+    applicationTypes: [
+      'Etkinlik Başvurusu',
+      'Eğitim / Program Başvurusu',
+      'Yazılım Geliştirme / Teknik Danışmanlık',
+      'Kariyer / Staj',
+      'İşbirliği / Partnerlik',
+      'Basın & Medya',
+      'Genel Soru / Diğer',
+    ],
     placeholders: {
       name: 'Adınız Soyadınız',
       email: 'E-posta adresiniz',
@@ -58,6 +68,16 @@ const localizedContent = {
     directions: 'Get directions',
     formTitle: 'Application form',
     formSubtitle: 'We reply within 24 hours.',
+    typeLabel: 'Application Type',
+    applicationTypes: [
+      'Event Application',
+      'Training / Program Application',
+      'Software / Technical Consulting',
+      'Career / Internship',
+      'Partnership / Collaboration',
+      'Press & Media',
+      'General Inquiry / Other',
+    ],
     placeholders: {
       name: 'Full name',
       email: 'Email address',
@@ -84,6 +104,16 @@ const localizedContent = {
     directions: 'الحصول على الاتجاهات',
     formTitle: 'نموذج التقديم',
     formSubtitle: 'نرد خلال 24 ساعة.',
+    typeLabel: 'نوع الطلب',
+    applicationTypes: [
+      'طلب فعالية',
+      'طلب تدريب / برنامج',
+      'استشارة برمجية / تقنية',
+      'وظيفة / تدريب',
+      'شراكة / تعاون',
+      'إعلام / صحافة',
+      'استفسار عام',
+    ],
     placeholders: {
       name: 'الاسم الكامل',
       email: 'البريد الإلكتروني',
@@ -97,6 +127,22 @@ const localizedContent = {
     mapBody: 'تعقد الورش والجلسات الهجينة من استوديو أنقرة.',
   },
 } as const
+
+type ContactCopy = (typeof localizedContent)['tr']
+
+const mergeCopy = (base: ContactCopy, override?: unknown): ContactCopy => {
+  if (!override || typeof override !== 'object' || Array.isArray(override)) return base
+  const result: any = { ...base }
+  Object.entries(override as Record<string, unknown>).forEach(([key, value]) => {
+    if (value === undefined || value === null) return
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      result[key] = mergeCopy((base as any)[key] || {}, value)
+    } else {
+      result[key] = value
+    }
+  })
+  return result as ContactCopy
+}
 
 const fallbackContact = {
   addressLine1: 'Aşağı Öveçler MH 1324. CD No:63',
@@ -117,7 +163,16 @@ export default async function ContactPage({
   const locale = normalizeLocale(rawLocale)
   const settings = await api.getSettings(locale)
 
-  const copy = localizedContent[locale as keyof typeof localizedContent] || localizedContent.en
+  const rawContactContent = settings.contact_content
+  const overrideCopy =
+    rawContactContent && typeof rawContactContent === 'object'
+      ? ((rawContactContent as Record<string, unknown>)[locale] as Record<string, unknown> | undefined) ||
+        (rawContactContent as Record<string, unknown>)
+      : undefined
+  const copy = mergeCopy(
+    localizedContent[locale as keyof typeof localizedContent] || localizedContent.en,
+    overrideCopy,
+  )
   const contactEmail = settings.contact_email || fallbackContact.email
   const contactPhone = settings.contact_phone || fallbackContact.phone
   const contactAddress =
@@ -248,6 +303,8 @@ export default async function ContactPage({
                 </div>
                 <ApplicationForm
                   copy={{
+                    typeLabel: copy.typeLabel,
+                    applicationTypes: copy.applicationTypes,
                     placeholders: copy.placeholders,
                     submit: copy.submit,
                     successTitle:

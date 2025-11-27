@@ -3,6 +3,7 @@
 import { useFormState, useFormStatus } from 'react-dom'
 
 import type { HeroActionState } from '@/app/admin/hero/actions'
+import { ActionToast } from '@/components/admin/action-toast'
 
 type HeroFormProps = {
   action: (state: HeroActionState, formData: FormData) => Promise<HeroActionState>
@@ -188,6 +189,8 @@ export function HeroForm({ action, defaultValues }: HeroFormProps) {
           {state.message || 'Kaydetme hatası'}
         </div>
       )}
+
+      <ActionToast state={state} />
     </form>
   )
 }

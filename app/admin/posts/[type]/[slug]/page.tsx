@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { PostType } from '@prisma/client'
 
@@ -54,8 +55,21 @@ export default async function EditPostPage({
               Slug: {post.slug} · Durum: {post.status === 'published' ? 'Yayında' : 'Taslak'}
             </p>
           </div>
+          <div className="flex gap-2">
+            <Link
+              href="/admin"
+              className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-500"
+            >
+              Panele dön
+            </Link>
+            <Link
+              href={`/admin/posts/${type}`}
+              className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-500"
+            >
+              Listeye dön
+            </Link>
+          </div>
         </div>
-
         <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl">
           <PostForm
             mode="edit"

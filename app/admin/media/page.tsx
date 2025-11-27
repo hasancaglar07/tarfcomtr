@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { MediaLibrary } from '@/components/admin/media-library'
 import { BlobUpload } from '@/components/admin/blob-upload'
 
@@ -16,6 +18,12 @@ export default function MediaPage() {
               kullanın.
             </p>
           </div>
+          <Link
+            href="/admin"
+            className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-500"
+          >
+            Panele dön
+          </Link>
         </div>
 
         <BlobUpload />

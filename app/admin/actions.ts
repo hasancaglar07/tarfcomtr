@@ -10,7 +10,10 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidateContentPaths } from '@/lib/content-store'
 
-export type PageActionState = { status: 'idle' | 'error'; message?: string }
+export type PageActionState =
+  | { status: 'idle'; message?: string }
+  | { status: 'success'; message?: string; redirectTo?: string }
+  | { status: 'error'; message?: string }
 
 const pageSchema = z.object({
   slug: z.string().min(1, 'Slug zorunludur'),
@@ -80,7 +83,15 @@ export async function createPageAction(
     })
 
     revalidateForSlug(slug)
-    redirect(`/admin/pages/${slug}`)
+    const params = new URLSearchParams({
+      toast: 'Sayfa oluşturuldu',
+      toastType: 'success',
+    })
+    return {
+      status: 'success',
+      message: 'Sayfa oluşturuldu',
+      redirectTo: `/admin/pages/${slug}?${params.toString()}`,
+    }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
     return { status: 'error', message }
@@ -135,7 +146,11 @@ export async function updatePageAction(
     })
 
     revalidateForSlug(slug)
-    redirect(`/admin/pages/${slug}`)
+    const params = new URLSearchParams({
+      toast: 'Sayfa güncellendi',
+      toastType: 'success',
+    })
+    return { status: 'success', message: 'Sayfa güncellendi', redirectTo: `/admin/pages/${slug}?${params.toString()}` }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
     return { status: 'error', message }
@@ -152,7 +167,11 @@ export async function deletePageAction(formData: FormData) {
 
   await prisma.contentPage.delete({ where: { slug } })
   revalidateForSlug(slug)
-  redirect('/admin/pages')
+  const params = new URLSearchParams({
+    toast: 'Sayfa silindi',
+    toastType: 'success',
+  })
+  redirect(`/admin/pages?${params.toString()}`)
 }
 
 export async function publishToggleAction(formData: FormData) {
@@ -171,5 +190,9 @@ export async function publishToggleAction(formData: FormData) {
   })
 
   revalidateForSlug(slug)
-  redirect('/admin/pages')
+  const params = new URLSearchParams({
+    toast: publish ? 'Sayfa yayınlandı' : 'Taslak olarak işaretlendi',
+    toastType: 'success',
+  })
+  redirect(`/admin/pages?${params.toString()}`)
 }

@@ -8,7 +8,10 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidateHome } from '@/lib/content-store'
 
-export type HeroActionState = { status: 'idle' | 'error'; message?: string }
+export type HeroActionState =
+  | { status: 'idle'; message?: string }
+  | { status: 'success'; message?: string }
+  | { status: 'error'; message?: string }
 
 const heroSchema = z.object({
   id: z.string().optional(),
@@ -97,7 +100,7 @@ export async function upsertHeroAction(
     })
 
     revalidate()
-    return { status: 'idle' }
+    return { status: 'success', message: 'Hero içeriği kaydedildi' }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
     return { status: 'error', message }

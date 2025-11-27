@@ -9,6 +9,7 @@ import type { PostActionState } from '@/app/admin/posts/actions'
 import { RichTextEditor } from '@/components/admin/rich-text'
 import { MediaPicker } from '@/components/admin/media-picker'
 import { BlobUpload } from '@/components/admin/blob-upload'
+import { ActionToast } from '@/components/admin/action-toast'
 
 type PostFormProps = {
   mode: 'create' | 'edit'
@@ -39,6 +40,18 @@ export function PostForm({ mode, action, type, categories, defaultValues }: Post
   const [ogImage, setOgImage] = useState(
     (defaultValues as Partial<Post> & { ogImage?: string })?.ogImage || '',
   )
+  const [seoTitle, setSeoTitle] = useState(
+    (defaultValues as Partial<Post> & { seoTitle?: string })?.seoTitle || '',
+  )
+  const [seoDescription, setSeoDescription] = useState(
+    (defaultValues as Partial<Post> & { seoDescription?: string })?.seoDescription || '',
+  )
+  const [seoTitleDirty, setSeoTitleDirty] = useState(
+    Boolean((defaultValues as Partial<Post> & { seoTitle?: string })?.seoTitle),
+  )
+  const [seoDescriptionDirty, setSeoDescriptionDirty] = useState(
+    Boolean((defaultValues as Partial<Post> & { seoDescription?: string })?.seoDescription),
+  )
 
   const autoSlug = useMemo(() => {
     if (!title) return ''
@@ -62,6 +75,78 @@ export function PostForm({ mode, action, type, categories, defaultValues }: Post
       setSlug(autoSlug)
     }
   }, [autoSlug, slug])
+
+  // Auto-fill SEO fields when empty, based on title/content
+  useEffect(() => {
+    const normalize = (text: string) =>
+      text
+        .trim()
+        .replace(/ğ/g, 'g')
+        .replace(/ü/g, 'u')
+        .replace(/ş/g, 's')
+        .replace(/ı/g, 'i')
+        .replace(/ö/g, 'o')
+        .replace(/ç/g, 'c')
+        .replace(/\s+/g, ' ')
+
+    const buildSeoTitle = () => {
+      if (!title) return ''
+      const base = normalize(title)
+      const withBrand = `${base} | TARF Akademi`
+      return withBrand.slice(0, 90)
+    }
+    const buildDescription = () => {
+      const raw =
+        (content && content.replace(/<[^>]+>/g, ' ')) || defaultValues?.excerpt || title || ''
+      if (!raw) return ''
+      const normalized = normalize(raw)
+      const cleaned = normalized.replace(/\.+/g, '.').trim()
+      const sentence = cleaned.endsWith('.') ? cleaned : `${cleaned}.`
+      // Add category hint if available
+      const categoryText =
+        type === 'blog'
+          ? 'Blog yazısı.'
+          : type === 'event'
+            ? 'Etkinlik.'
+            : type === 'service'
+              ? 'Hizmet.'
+              : type === 'podcast'
+                ? 'Podcast.'
+                : type === 'video'
+                  ? 'Video.'
+                  : ''
+      const merged =
+        sentence.length + categoryText.length < 155 ? `${sentence} ${categoryText}` : sentence
+      return merged.slice(0, 155).trim()
+    }
+    if (!seoTitleDirty && title) {
+      const candidate = buildSeoTitle()
+      if (candidate && candidate !== seoTitle) setSeoTitle(candidate)
+    }
+    if (!seoDescriptionDirty) {
+      const desc = buildDescription()
+      const candidate = desc ? desc : normalize(title).slice(0, 160)
+      if (candidate && candidate !== seoDescription) setSeoDescription(candidate)
+    }
+  }, [
+    title,
+    content,
+    seoTitleDirty,
+    seoDescriptionDirty,
+    defaultValues?.excerpt,
+    seoTitle,
+    seoDescription,
+  ])
+
+  useEffect(() => {
+    if (state?.status === 'success') {
+      if (state.redirectTo) {
+        router.push(state.redirectTo)
+      } else {
+        router.refresh()
+      }
+    }
+  }, [router, state])
 
   const SubmitButton = () => {
     const { pending } = useFormStatus()
@@ -241,28 +326,32 @@ export function PostForm({ mode, action, type, categories, defaultValues }: Post
           </label>
           <input
             id="seoTitle"
-            name="seoTitle"
-            defaultValue={
-              (defaultValues as Partial<Post> & { seoTitle?: string }).seoTitle || ''
-            }
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-            placeholder="Meta title"
-          />
-        </div>
-        <div className="space-y-2 sm:col-span-2">
-          <label className="text-sm text-slate-300" htmlFor="seoDescription">
-            SEO Açıklama
-          </label>
-          <input
-            id="seoDescription"
-            name="seoDescription"
-            defaultValue={
-              (defaultValues as Partial<Post> & { seoDescription?: string }).seoDescription || ''
-            }
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-            placeholder="Meta description"
-          />
-        </div>
+        name="seoTitle"
+        value={seoTitle}
+        onChange={(e) => {
+          setSeoTitleDirty(true)
+          setSeoTitle(e.target.value)
+        }}
+        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+        placeholder="Meta title"
+      />
+    </div>
+    <div className="space-y-2 sm:col-span-2">
+      <label className="text-sm text-slate-300" htmlFor="seoDescription">
+        SEO Açıklama
+      </label>
+      <input
+        id="seoDescription"
+        name="seoDescription"
+        value={seoDescription}
+        onChange={(e) => {
+          setSeoDescriptionDirty(true)
+          setSeoDescription(e.target.value)
+        }}
+        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+        placeholder="Meta description"
+      />
+    </div>
       </div>
 
       <div className="space-y-2">
@@ -388,6 +477,8 @@ export function PostForm({ mode, action, type, categories, defaultValues }: Post
           {state.message || 'Kaydetme hatası'}
         </div>
       )}
+
+      <ActionToast state={state} />
     </form>
   )
 }

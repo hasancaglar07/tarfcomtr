@@ -179,6 +179,47 @@ export default async function EventDetailPage({
                   className="prose prose-lg dark:prose-invert max-w-none text-foreground"
                   dangerouslySetInnerHTML={{ __html: event.content ?? event.content_raw ?? event.excerpt ?? '' }}
                 />
+
+                {(event.youtube_url || event.audio_url) && (
+                  <div className="mt-8 grid gap-6 md:grid-cols-2">
+                    {event.youtube_url && (
+                      <div className="space-y-3">
+                        <p className="text-sm font-semibold text-primary">
+                          {locale === 'tr' ? 'Video' : locale === 'ar' ? 'فيديو' : 'Video'}
+                        </p>
+                        <div className="aspect-video overflow-hidden rounded-xl border bg-black/60">
+                          <iframe
+                            src={event.youtube_url.replace('watch?v=', 'embed/')}
+                            title={event.title}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="h-full w-full"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {event.audio_url && (
+                      <div className="space-y-3">
+                        <p className="text-sm font-semibold text-primary">
+                          {locale === 'tr' ? 'Podcast / Ses' : locale === 'ar' ? 'بودكاست / صوت' : 'Podcast / Audio'}
+                        </p>
+                        <div className="rounded-xl border bg-muted/40 p-4">
+                          <audio controls className="w-full">
+                            <source src={event.audio_url} />
+                            {locale === 'tr'
+                              ? 'Tarayıcınız audio etiketini desteklemiyor.'
+                              : locale === 'ar'
+                                ? 'المتصفح لا يدعم تشغيل الصوت.'
+                                : 'Your browser does not support the audio element.'}
+                          </audio>
+                          <div className="mt-2 text-xs text-muted-foreground break-all">
+                            {event.audio_url}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </Card>
             </Animate>
 

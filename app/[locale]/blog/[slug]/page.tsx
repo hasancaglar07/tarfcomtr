@@ -140,6 +140,47 @@ export default async function BlogPost({
                   className="prose prose-lg dark:prose-invert max-w-none text-foreground"
                   dangerouslySetInnerHTML={{ __html: post.content ?? post.content_raw ?? post.excerpt ?? '' }}
                 />
+
+                {(post.youtube_url || post.audio_url) && (
+                  <div className="mt-8 grid gap-6 md:grid-cols-2">
+                    {post.youtube_url && (
+                      <div className="space-y-3">
+                        <p className="text-sm font-semibold text-primary">
+                          {locale === 'tr' ? 'Video' : locale === 'ar' ? 'فيديو' : 'Video'}
+                        </p>
+                        <div className="aspect-video overflow-hidden rounded-xl border bg-black/60">
+                          <iframe
+                            src={post.youtube_url.replace('watch?v=', 'embed/')}
+                            title={post.title}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="h-full w-full"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {post.audio_url && (
+                      <div className="space-y-3">
+                        <p className="text-sm font-semibold text-primary">
+                          {locale === 'tr' ? 'Podcast / Ses' : locale === 'ar' ? 'بودكاست / صوت' : 'Podcast / Audio'}
+                        </p>
+                        <div className="rounded-xl border bg-muted/40 p-4">
+                          <audio controls className="w-full">
+                            <source src={post.audio_url} />
+                            {locale === 'tr'
+                              ? 'Tarayıcınız audio etiketini desteklemiyor.'
+                              : locale === 'ar'
+                                ? 'المتصفح لا يدعم تشغيل الصوت.'
+                                : 'Your browser does not support the audio element.'}
+                          </audio>
+                          <div className="mt-2 text-xs text-muted-foreground break-all">
+                            {post.audio_url}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </Card>
             </Animate>
           </div>

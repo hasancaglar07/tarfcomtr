@@ -9,7 +9,10 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidateHome } from '@/lib/content-store'
 
-export type CategoryActionState = { status: 'idle' | 'error'; message?: string }
+export type CategoryActionState =
+  | { status: 'idle'; message?: string }
+  | { status: 'success'; message?: string }
+  | { status: 'error'; message?: string }
 
 const categorySchema = z.object({
   id: z.string().optional(),
@@ -70,7 +73,7 @@ export async function upsertCategoryAction(
       })
     }
     revalidate()
-    return { status: 'idle' }
+    return { status: 'success', message: data.id ? 'Kategori güncellendi' : 'Kategori eklendi' }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
     return { status: 'error', message }

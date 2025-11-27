@@ -32,6 +32,7 @@ export interface Post {
   og_image?: string | null
   youtube_url?: string | null
   youtube_video_id?: string | null
+  audio_url?: string | null
   event_date?: string | null
   event_time?: string | null
   location?: string | null
@@ -74,6 +75,7 @@ export interface Settings {
   contact_phone: string | null
   contact_address: string | null
   contact_map_url?: string | null
+  contact_content?: unknown | null
 }
 
 export interface HomeData {
@@ -120,6 +122,7 @@ const defaultSettings: Settings = {
   contact_email: 'iletisim@tarf.org',
   contact_phone: '+90 212 000 00 00',
   contact_address: 'İstanbul, Türkiye',
+  contact_content: null,
 }
 
 const mapPostType = (type: PostType): PostTypeRef => {
@@ -150,6 +153,7 @@ type PostRecord = {
   seoDescription: string | null
   ogImage: string | null
   youtubeUrl: string | null
+  audioUrl: string | null
   eventDate: Date | null
   eventTime: string | null
   location: string | null
@@ -180,6 +184,7 @@ const mapPost = (post: PostRecord): Post => {
     og_image: post.ogImage ?? null,
     youtube_url: post.youtubeUrl ?? null,
     youtube_video_id: null,
+    audio_url: post.audioUrl ?? null,
     event_date: post.eventDate ? post.eventDate.toISOString() : null,
     event_time: post.eventTime ?? null,
     location: post.location ?? null,
@@ -229,6 +234,7 @@ async function getSettings(locale: string = 'tr'): Promise<Settings> {
       contact_phone: setting.contactPhone,
       contact_address: setting.contactAddress,
       contact_map_url: null,
+      contact_content: setting.contactContent,
     }
   } catch (error) {
     console.error('Settings fetch failed, using defaults:', error)

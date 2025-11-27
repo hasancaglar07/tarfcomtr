@@ -352,7 +352,7 @@ export function Header({ locale, settings }: HeaderProps) {
   ].filter(Boolean) as Array<{ icon: typeof Phone; label: string; href?: string }>
 
   const socialLinks = [
-    { label: 'Facebook', href: 'https://www.facebook.com/tarfdergisii/', icon: Facebook },
+    { label: 'Facebook', href: 'https://www.facebook.com/tarfakademi', icon: Facebook },
     { label: 'X', href: 'https://x.com/tarfakademi', icon: Twitter },
     { label: 'Instagram', href: 'https://www.instagram.com/tarfdergisi/', icon: Instagram },
     { label: 'YouTube', href: 'https://www.youtube.com/@tarfakademi', icon: Youtube },

@@ -135,6 +135,7 @@ model Setting {
   contactPhone    String?
   contactAddress  String?
   social          Json?
+  contactContent  Json?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

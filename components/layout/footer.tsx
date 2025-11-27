@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { Settings } from '@/lib/api'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Linkedin, Youtube, ArrowUpRight } from 'lucide-react'
+import { Youtube, ArrowUpRight, Twitter, Facebook } from 'lucide-react'
 
 interface FooterProps {
   locale: string
@@ -39,15 +39,12 @@ const footerNavigation = (locale: string) => ({
 
 const socialLinks = [
   {
-    icon: Linkedin,
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/company/tarf',
-  },
-  {
     icon: Youtube,
     label: 'YouTube',
     href: 'https://www.youtube.com/@tarfakademi',
   },
+  { icon: Twitter, label: 'X', href: 'https://x.com/tarfakademi' },
+  { icon: Facebook, label: 'Facebook', href: 'https://www.facebook.com/tarfakademi' },
 ]
 
 const highlightPills: Record<string, string[]> = {

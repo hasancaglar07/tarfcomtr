@@ -4,6 +4,7 @@ import { PostStatus, PostType } from '@prisma/client'
 
 import { prisma } from '@/lib/prisma'
 import { deletePostAction } from '@/app/admin/posts/actions'
+import { ActionToast } from '@/components/admin/action-toast'
 
 const typeLabels: Record<PostType, string> = {
   blog: 'Blog',
@@ -41,6 +42,13 @@ export default async function PostListPage({
   if (!type) {
     notFound()
   }
+  const initialToast =
+    typeof search.toast === 'string'
+      ? {
+          kind: search.toastType === 'error' ? 'error' : 'success',
+          message: search.toast,
+        }
+      : undefined
 
   const statusFilter = (typeof search.status === 'string' ? search.status : undefined) as
     | PostStatus
@@ -105,6 +113,8 @@ export default async function PostListPage({
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
+        <ActionToast initial={initialToast} />
+
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-400">
@@ -277,7 +287,9 @@ export default async function PostListPage({
             {hasPrev && (
               <Link
                 href={`/admin/posts/${type}?${new URLSearchParams({
-                  ...Object.fromEntries(Object.entries(search).filter(([k]) => !['page'].includes(k))),
+                  ...Object.fromEntries(
+                    Object.entries(search).filter(([k]) => !['page', 'toast', 'toastType'].includes(k)),
+                  ),
                   page: String(page - 1),
                 }).toString()}`}
                 className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-100 transition hover:border-slate-500"
@@ -288,7 +300,9 @@ export default async function PostListPage({
             {hasNext && (
               <Link
                 href={`/admin/posts/${type}?${new URLSearchParams({
-                  ...Object.fromEntries(Object.entries(search).filter(([k]) => !['page'].includes(k))),
+                  ...Object.fromEntries(
+                    Object.entries(search).filter(([k]) => !['page', 'toast', 'toastType'].includes(k)),
+                  ),
                   page: String(page + 1),
                 }).toString()}`}
                 className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-100 transition hover:border-slate-500"

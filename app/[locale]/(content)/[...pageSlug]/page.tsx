@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { ContentPageView } from '@/components/content/content-page'
@@ -40,6 +40,12 @@ export default async function ContentPage({
   const { locale: rawLocale, pageSlug } = await params
   const locale = normalizeLocale(rawLocale)
   const slug = joinSlug(pageSlug)
+  if (slug === 'dergi') {
+    redirect('https://tarfdergisi.com.tr/')
+  }
+  if (slug === 'yazilim/gelistirme') {
+    redirect('https://tarf-yazilim.vercel.app/')
+  }
   const page = await getPublishedContentPage(slug)
 
   if (!page) {

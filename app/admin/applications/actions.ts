@@ -7,6 +7,7 @@ import { ApplicationStatus } from '@prisma/client'
 
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { revalidatePath } from 'next/cache'
 
 const updateSchema = z.object({
   id: z.string().min(1),
@@ -42,4 +43,11 @@ export async function updateApplicationAction(
       adminNote: data.adminNote,
     },
   })
+
+  revalidatePath('/admin/applications')
+  const params = new URLSearchParams({
+    toast: 'Başvuru güncellendi',
+    toastType: 'success',
+  })
+  redirect(`/admin/applications?${params.toString()}`)
 }

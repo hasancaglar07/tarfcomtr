@@ -1,10 +1,12 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type { ContentPageDefinition } from '@/content/content-pages'
 
 import type { PageActionState } from '@/app/admin/actions'
 import { SectionEditor } from '@/components/admin/content-section'
+import { ActionToast } from '@/components/admin/action-toast'
 
 type ContentPageFormProps = {
   mode: 'create' | 'edit'
@@ -45,6 +47,11 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
   const [state, setState] = useState<PageActionState>(initialState)
   const [data, setData] = useState<ContentPageDefinition>(withDefaults(defaultValues))
   const [publish, setPublish] = useState(defaultValues.status !== 'draft')
+  const router = useRouter()
+  const [seoDirty, setSeoDirty] = useState({
+    title: Boolean(defaultValues.seo.title),
+    description: Boolean(defaultValues.seo.description),
+  })
 
   const safeSlug = useMemo(() => {
     const value = data.slug || ''
@@ -67,6 +74,89 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
     setData(withDefaults(defaultValues))
     setPublish(defaultValues.status !== 'draft')
   }, [defaultValues])
+
+  // Auto-fill SEO from hero title/description when empty
+  useEffect(() => {
+    const normalize = (text: string) =>
+      text
+        .trim()
+        .replace(/ğ/g, 'g')
+        .replace(/ü/g, 'u')
+        .replace(/ş/g, 's')
+        .replace(/ı/g, 'i')
+        .replace(/ö/g, 'o')
+        .replace(/ç/g, 'c')
+        .replace(/\s+/g, ' ')
+    const buildSeoTitle = () => {
+      if (!prev.hero.title) return ''
+      const base = normalize(prev.hero.title)
+      const withBrand = `${base} | TARF Akademi`
+      return withBrand.slice(0, 90)
+    }
+    const buildDescription = () => {
+      const raw =
+        prev.hero.subtitle ||
+        prev.hero.description ||
+        prev.cta.description ||
+        prev.seo.description ||
+        prev.hero.title ||
+        ''
+      const normalized = normalize(raw)
+      const cleaned = normalized.replace(/\.+/g, '.').trim()
+      const sentence = cleaned.endsWith('.') ? cleaned : `${cleaned}.`
+      return sentence.slice(0, 155).trim()
+    }
+    const buildDescription = () => {
+      const raw =
+        prev.hero.subtitle ||
+        prev.hero.description ||
+        prev.cta.description ||
+        prev.seo.description ||
+        prev.hero.title ||
+        ''
+      const normalized = normalize(raw)
+      const cleaned = normalized.replace(/\.+/g, '.').trim()
+      const sentence = cleaned.endsWith('.') ? cleaned : `${cleaned}.`
+      return sentence.slice(0, 155).trim()
+    }
+    setData((prev) => {
+      let changed = false
+      const next = { ...prev, seo: { ...prev.seo } }
+      if (!seoDirty.title) {
+        const candidate = buildSeoTitle()
+        if (candidate && candidate !== prev.seo.title) {
+          next.seo.title = candidate
+          changed = true
+        }
+      }
+      if (!seoDirty.description) {
+        const candidate = buildDescription() || normalize(prev.hero.title).slice(0, 160)
+        if (candidate && candidate !== prev.seo.description) {
+          next.seo.description = candidate
+          changed = true
+        }
+      }
+      return changed ? next : prev
+    })
+  }, [
+    seoDirty,
+    data.hero.title,
+    data.hero.subtitle,
+    data.hero.description,
+    data.cta.description,
+    data.seo.title,
+    data.seo.description,
+  ])
+
+  useEffect(() => {
+    if (state?.status === 'success') {
+      if (state.redirectTo) {
+        router.push(state.redirectTo)
+      } else {
+        router.refresh()
+      }
+    }
+  }, [router, state])
 
   const handleSubmit = async (formData: FormData) => {
     formData.set('slug', data.slug)
@@ -265,7 +355,10 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
           <label className="text-sm text-slate-300">SEO başlık</label>
           <input
             value={data.seo.title}
-            onChange={(e) => updateData({ seo: { ...data.seo, title: e.target.value } })}
+            onChange={(e) => {
+              setSeoDirty((prev) => ({ ...prev, title: true }))
+              updateData({ seo: { ...data.seo, title: e.target.value } })
+            }}
             className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
           />
         </div>
@@ -273,7 +366,10 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
           <label className="text-sm text-slate-300">SEO açıklama</label>
           <input
             value={data.seo.description}
-            onChange={(e) => updateData({ seo: { ...data.seo, description: e.target.value } })}
+            onChange={(e) => {
+              setSeoDirty((prev) => ({ ...prev, description: true }))
+              updateData({ seo: { ...data.seo, description: e.target.value } })
+            }}
             className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
           />
         </div>
@@ -302,6 +398,8 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
           {state.message || 'Kaydetme hatası'}
         </div>
       )}
+
+      <ActionToast state={state} />
     </form>
   )
 }

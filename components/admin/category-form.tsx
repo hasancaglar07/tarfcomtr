@@ -4,6 +4,7 @@ import { useFormState, useFormStatus } from 'react-dom'
 import { PostType } from '@prisma/client'
 
 import type { CategoryActionState } from '@/app/admin/categories/actions'
+import { ActionToast } from '@/components/admin/action-toast'
 
 type CategoryFormProps = {
   action: (state: CategoryActionState, formData: FormData) => Promise<CategoryActionState>
@@ -112,6 +113,8 @@ export function CategoryForm({ action, defaultValues }: CategoryFormProps) {
           {state.message || 'Kaydetme hatası'}
         </div>
       )}
+
+      <ActionToast state={state} />
     </form>
   )
 }
