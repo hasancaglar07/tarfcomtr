@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
@@ -70,7 +71,7 @@ export async function upsertSettingsAction(
     if (data.contactContentJson && data.contactContentJson.trim().length > 0) {
       try {
         contactContent = JSON.parse(data.contactContentJson) as Record<string, unknown>
-      } catch (err) {
+      } catch {
         return { status: 'error', message: 'İletişim içeriği JSON formatı hatalı' }
       }
     }
@@ -94,44 +95,51 @@ export async function upsertSettingsAction(
         !contactContent && data.contactContentJson
           ? undefined
           : contactContent && typeof contactContent === 'object'
-      const current =
-        existing ||
-        ((await prisma.setting.findUnique({ where: { locale: data.locale } }))?.contactContent as
-          | Record<string, unknown>
-          | undefined) ||
+      const currentSetting = await prisma.setting.findUnique({ where: { locale: data.locale } })
+      const current: Record<string, unknown> =
+        (existing as Record<string, unknown> | undefined) ||
+        ((currentSetting as unknown as { contactContent?: Record<string, unknown> | null })?.contactContent ??
+          undefined) ||
         {}
       contactContent = {
         ...current,
         [data.locale]: { ...(current?.[data.locale] as Record<string, unknown> | undefined), ...localeContent },
       }
     }
+    const updateData: Prisma.SettingUncheckedUpdateInput & {
+      contactContent?: Prisma.InputJsonValue
+    } = {
+      siteName: data.siteName,
+      siteDescription: data.siteDescription,
+      contactEmail: data.contactEmail,
+      contactPhone: data.contactPhone,
+      contactAddress: data.contactAddress,
+      social: {
+        twitter: data.socialTwitter,
+        youtube: data.socialYoutube,
+      } as unknown as Prisma.InputJsonValue,
+      contactContent: contactContent as Prisma.InputJsonValue,
+    }
+    const createData: Prisma.SettingUncheckedCreateInput & {
+      contactContent?: Prisma.InputJsonValue
+    } = {
+      locale: data.locale,
+      siteName: data.siteName,
+      siteDescription: data.siteDescription,
+      contactEmail: data.contactEmail,
+      contactPhone: data.contactPhone,
+      contactAddress: data.contactAddress,
+      social: {
+        twitter: data.socialTwitter,
+        youtube: data.socialYoutube,
+      } as unknown as Prisma.InputJsonValue,
+      contactContent: contactContent as Prisma.InputJsonValue,
+    }
+
     await prisma.setting.upsert({
       where: { locale: data.locale },
-      update: {
-        siteName: data.siteName,
-        siteDescription: data.siteDescription,
-        contactEmail: data.contactEmail,
-        contactPhone: data.contactPhone,
-        contactAddress: data.contactAddress,
-        social: {
-          twitter: data.socialTwitter,
-          youtube: data.socialYoutube,
-        },
-        contactContent,
-      },
-      create: {
-        locale: data.locale,
-        siteName: data.siteName,
-        siteDescription: data.siteDescription,
-        contactEmail: data.contactEmail,
-        contactPhone: data.contactPhone,
-        contactAddress: data.contactAddress,
-        social: {
-          twitter: data.socialTwitter,
-          youtube: data.socialYoutube,
-        },
-        contactContent,
-      },
+      update: updateData,
+      create: createData,
     })
 
     revalidate()

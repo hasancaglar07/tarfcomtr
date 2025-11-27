@@ -87,32 +87,19 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
         .replace(/ö/g, 'o')
         .replace(/ç/g, 'c')
         .replace(/\s+/g, ' ')
-    const buildSeoTitle = () => {
-      if (!prev.hero.title) return ''
-      const base = normalize(prev.hero.title)
+    const buildSeoTitle = (page: ContentPageDefinition) => {
+      if (!page.hero.title) return ''
+      const base = normalize(page.hero.title)
       const withBrand = `${base} | TARF Akademi`
       return withBrand.slice(0, 90)
     }
-    const buildDescription = () => {
+    const buildDescription = (page: ContentPageDefinition) => {
       const raw =
-        prev.hero.subtitle ||
-        prev.hero.description ||
-        prev.cta.description ||
-        prev.seo.description ||
-        prev.hero.title ||
-        ''
-      const normalized = normalize(raw)
-      const cleaned = normalized.replace(/\.+/g, '.').trim()
-      const sentence = cleaned.endsWith('.') ? cleaned : `${cleaned}.`
-      return sentence.slice(0, 155).trim()
-    }
-    const buildDescription = () => {
-      const raw =
-        prev.hero.subtitle ||
-        prev.hero.description ||
-        prev.cta.description ||
-        prev.seo.description ||
-        prev.hero.title ||
+        page.hero.subtitle ||
+        page.hero.description ||
+        page.cta.description ||
+        page.seo.description ||
+        page.hero.title ||
         ''
       const normalized = normalize(raw)
       const cleaned = normalized.replace(/\.+/g, '.').trim()
@@ -123,14 +110,14 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
       let changed = false
       const next = { ...prev, seo: { ...prev.seo } }
       if (!seoDirty.title) {
-        const candidate = buildSeoTitle()
+        const candidate = buildSeoTitle(prev)
         if (candidate && candidate !== prev.seo.title) {
           next.seo.title = candidate
           changed = true
         }
       }
       if (!seoDirty.description) {
-        const candidate = buildDescription() || normalize(prev.hero.title).slice(0, 160)
+        const candidate = buildDescription(prev) || normalize(prev.hero.title).slice(0, 160)
         if (candidate && candidate !== prev.seo.description) {
           next.seo.description = candidate
           changed = true

@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { AdminDashboard } from '@/components/admin/admin-dashboard'
 
-const quickLinks = [
+const quickLinks: Parameters<typeof AdminDashboard>[0]['quickLinks'] = [
   { href: '/admin/posts/blog', label: 'Blog / Yazılar', icon: 'BookOpen' },
   { href: '/admin/posts/event', label: 'Etkinlikler', icon: 'CalendarRange' },
   { href: '/admin/posts/video', label: 'Video kütüphanesi', icon: 'Video' },

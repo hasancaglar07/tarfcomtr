@@ -18,6 +18,7 @@ const statusColors: Record<ApplicationStatus, string> = {
   in_review: 'bg-amber-500/20 text-amber-200 border-amber-500/40',
   closed: 'bg-slate-500/20 text-slate-200 border-slate-500/40',
 }
+const statusOptions: ApplicationStatus[] = ['new', 'in_review', 'closed']
 
 export default async function ApplicationsPage({
   searchParams,
@@ -28,12 +29,12 @@ export default async function ApplicationsPage({
   const initialToast =
     typeof search.toast === 'string'
       ? {
-          kind: search.toastType === 'error' ? 'error' : 'success',
+          kind: (search.toastType === 'error' ? 'error' : 'success') as 'success' | 'error',
           message: search.toast,
         }
       : undefined
   const statusFilter =
-    typeof search.status === 'string' && ['new', 'in_review', 'closed'].includes(search.status)
+    typeof search.status === 'string' && statusOptions.includes(search.status as ApplicationStatus)
       ? (search.status as ApplicationStatus)
       : undefined
   const subjectFilter =
@@ -45,14 +46,14 @@ export default async function ApplicationsPage({
 
   const where = {
     ...(statusFilter ? { status: statusFilter } : {}),
-    ...(subjectFilter ? { subject: { contains: subjectFilter, mode: 'insensitive' } } : {}),
+    ...(subjectFilter ? { subject: { contains: subjectFilter, mode: 'insensitive' as const } } : {}),
     ...(q
       ? {
           OR: [
-            { name: { contains: q, mode: 'insensitive' } },
-            { email: { contains: q, mode: 'insensitive' } },
-            { subject: { contains: q, mode: 'insensitive' } },
-            { message: { contains: q, mode: 'insensitive' } },
+            { name: { contains: q, mode: 'insensitive' as const } },
+            { email: { contains: q, mode: 'insensitive' as const } },
+            { subject: { contains: q, mode: 'insensitive' as const } },
+            { message: { contains: q, mode: 'insensitive' as const } },
           ],
         }
       : {}),
@@ -123,9 +124,11 @@ export default async function ApplicationsPage({
                 className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
               >
                 <option value="">(Tümü)</option>
-                <option value="new">Yeni</option>
-                <option value="in_review">İncelemede</option>
-                <option value="closed">Kapatıldı</option>
+                {statusOptions.map((status) => (
+                  <option key={status} value={status}>
+                    {statusLabels[status]}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="space-y-1">
@@ -185,12 +188,11 @@ export default async function ApplicationsPage({
                     <td className="px-4 py-3 text-sm text-slate-200 align-top">
                       <div className="space-y-1">
                         <div>{format(app.createdAt, 'dd.MM.yyyy HH:mm')}</div>
-                        <Badge variant="outline" className="border-slate-700 text-[11px] text-slate-200">
-                          {app.status === 'new'
-                            ? 'Yeni'
-                            : app.status === 'in_review'
-                              ? 'İncelemede'
-                              : 'Kapatıldı'}
+                        <Badge
+                          variant="outline"
+                          className={`text-[11px] ${statusColors[app.status]}`}
+                        >
+                          {statusLabels[app.status]}
                         </Badge>
                       </div>
                     </td>

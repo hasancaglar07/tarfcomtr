@@ -45,7 +45,7 @@ export default async function PostListPage({
   const initialToast =
     typeof search.toast === 'string'
       ? {
-          kind: search.toastType === 'error' ? 'error' : 'success',
+          kind: (search.toastType === 'error' ? 'error' : 'success') as 'success' | 'error',
           message: search.toast,
         }
       : undefined

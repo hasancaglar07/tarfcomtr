@@ -25,7 +25,7 @@ export default async function AdminPagesList({
   const initialToast =
     typeof search.toast === 'string'
       ? {
-          kind: search.toastType === 'error' ? 'error' : 'success',
+          kind: (search.toastType === 'error' ? 'error' : 'success') as 'success' | 'error',
           message: search.toast,
         }
       : undefined
@@ -46,8 +46,8 @@ export default async function AdminPagesList({
     ...(q
       ? {
           OR: [
-            { slug: { contains: q, mode: 'insensitive' } },
-            { title: { contains: q, mode: 'insensitive' } },
+            { slug: { contains: q, mode: 'insensitive' as const } },
+            { title: { contains: q, mode: 'insensitive' as const } },
           ],
         }
       : {}),

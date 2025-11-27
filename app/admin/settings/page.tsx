@@ -16,10 +16,13 @@ export default async function SettingsPage() {
     formTitle: 'Başvuru formu',
     formSubtitle: 'Ekibimiz 24 saat içinde dönüş yapar.',
   }
-  const contactCopy =
-    settings?.contactContent && typeof settings.contactContent === 'object'
-      ? ((settings.contactContent as Record<string, any>)['tr'] as Record<string, string> | undefined)
+  const contactContent =
+    settings?.contactContent &&
+    typeof settings.contactContent === 'object' &&
+    !Array.isArray(settings.contactContent)
+      ? (settings.contactContent as Record<string, Record<string, string>>)
       : undefined
+  const contactCopy = contactContent?.tr
 
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">

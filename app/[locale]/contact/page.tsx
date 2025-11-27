@@ -17,7 +17,34 @@ export async function generateMetadata({
   return buildPageMetadata({ locale, page: 'contact', pathSegments: ['contact'] })
 }
 
-const localizedContent = {
+type ContactCopy = {
+  heroEyebrow: string
+  heroTitle: string
+  heroSubtitle: string
+  heroBody: string
+  emailLabel: string
+  phoneLabel: string
+  addressLabel: string
+  plusCodeLabel: string
+  directions: string
+  formTitle: string
+  formSubtitle: string
+  typeLabel: string
+  applicationTypes: string[]
+  placeholders: {
+    name: string
+    email: string
+    phone: string
+    company: string
+    topic: string
+    message: string
+  }
+  submit: string
+  mapTitle: string
+  mapBody: string
+}
+
+const localizedContent: Record<'tr' | 'en' | 'ar', ContactCopy> = {
   tr: {
     heroEyebrow: 'TARF Akademi',
     heroTitle: 'Bilim, teknoloji ve etik ekseninde ortaklık kurun',
@@ -126,22 +153,59 @@ const localizedContent = {
     mapTitle: 'مركز TARF في أنقرة',
     mapBody: 'تعقد الورش والجلسات الهجينة من استوديو أنقرة.',
   },
-} as const
+}
 
-type ContactCopy = (typeof localizedContent)['tr']
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+type ContactCopyOverride = Partial<ContactCopy> & {
+  placeholders?: Partial<ContactCopy['placeholders']>
+  applicationTypes?: string[]
+}
 
 const mergeCopy = (base: ContactCopy, override?: unknown): ContactCopy => {
-  if (!override || typeof override !== 'object' || Array.isArray(override)) return base
-  const result: any = { ...base }
-  Object.entries(override as Record<string, unknown>).forEach(([key, value]) => {
-    if (value === undefined || value === null) return
-    if (typeof value === 'object' && !Array.isArray(value)) {
-      result[key] = mergeCopy((base as any)[key] || {}, value)
-    } else {
-      result[key] = value
-    }
-  })
-  return result as ContactCopy
+  if (!isRecord(override)) return base
+  const overrideCopy = override as ContactCopyOverride
+
+  const placeholdersOverride = isRecord(overrideCopy.placeholders)
+    ? (overrideCopy.placeholders as Partial<ContactCopy['placeholders']>)
+    : undefined
+  const mergedPlaceholders: ContactCopy['placeholders'] = {
+    ...base.placeholders,
+    ...(typeof placeholdersOverride?.name === 'string' ? { name: placeholdersOverride.name } : {}),
+    ...(typeof placeholdersOverride?.email === 'string' ? { email: placeholdersOverride.email } : {}),
+    ...(typeof placeholdersOverride?.phone === 'string' ? { phone: placeholdersOverride.phone } : {}),
+    ...(typeof placeholdersOverride?.company === 'string' ? { company: placeholdersOverride.company } : {}),
+    ...(typeof placeholdersOverride?.topic === 'string' ? { topic: placeholdersOverride.topic } : {}),
+    ...(typeof placeholdersOverride?.message === 'string' ? { message: placeholdersOverride.message } : {}),
+  }
+
+  const mergedApplicationTypes =
+    Array.isArray(overrideCopy.applicationTypes) &&
+    overrideCopy.applicationTypes.every((item) => typeof item === 'string')
+      ? (overrideCopy.applicationTypes as ContactCopy['applicationTypes'])
+      : base.applicationTypes
+
+  return {
+    ...base,
+    ...(typeof overrideCopy.heroEyebrow === 'string' ? { heroEyebrow: overrideCopy.heroEyebrow } : {}),
+    ...(typeof overrideCopy.heroTitle === 'string' ? { heroTitle: overrideCopy.heroTitle } : {}),
+    ...(typeof overrideCopy.heroSubtitle === 'string' ? { heroSubtitle: overrideCopy.heroSubtitle } : {}),
+    ...(typeof overrideCopy.heroBody === 'string' ? { heroBody: overrideCopy.heroBody } : {}),
+    ...(typeof overrideCopy.emailLabel === 'string' ? { emailLabel: overrideCopy.emailLabel } : {}),
+    ...(typeof overrideCopy.phoneLabel === 'string' ? { phoneLabel: overrideCopy.phoneLabel } : {}),
+    ...(typeof overrideCopy.addressLabel === 'string' ? { addressLabel: overrideCopy.addressLabel } : {}),
+    ...(typeof overrideCopy.plusCodeLabel === 'string' ? { plusCodeLabel: overrideCopy.plusCodeLabel } : {}),
+    ...(typeof overrideCopy.directions === 'string' ? { directions: overrideCopy.directions } : {}),
+    ...(typeof overrideCopy.formTitle === 'string' ? { formTitle: overrideCopy.formTitle } : {}),
+    ...(typeof overrideCopy.formSubtitle === 'string' ? { formSubtitle: overrideCopy.formSubtitle } : {}),
+    ...(typeof overrideCopy.typeLabel === 'string' ? { typeLabel: overrideCopy.typeLabel } : {}),
+    ...(typeof overrideCopy.submit === 'string' ? { submit: overrideCopy.submit } : {}),
+    ...(typeof overrideCopy.mapTitle === 'string' ? { mapTitle: overrideCopy.mapTitle } : {}),
+    ...(typeof overrideCopy.mapBody === 'string' ? { mapBody: overrideCopy.mapBody } : {}),
+    placeholders: mergedPlaceholders,
+    applicationTypes: mergedApplicationTypes,
+  }
 }
 
 const fallbackContact = {

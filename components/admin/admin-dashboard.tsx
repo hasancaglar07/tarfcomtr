@@ -38,7 +38,7 @@ type QuickLink = {
 }
 
 type RecentPost = {
-  id: number
+  id: string
   title: string
   slug: string
   type: string

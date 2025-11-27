@@ -136,6 +136,7 @@ export function PostForm({ mode, action, type, categories, defaultValues }: Post
     defaultValues?.excerpt,
     seoTitle,
     seoDescription,
+    type,
   ])
 
   useEffect(() => {
