@@ -71,7 +71,7 @@ export function StatsShowcase({
   }
 
   return (
-    <section className="py-16 bg-gradient-to-b from-primary/10 via-background to-background">
+    <section className="py-10">
       <div className="container space-y-10">
         <Animate variant="fadeIn">
           <div className="flex flex-col gap-4 text-center">

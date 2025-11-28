@@ -105,7 +105,7 @@ export function ValuePillars({ locale }: ValuePillarsProps) {
   const content = copy[locale as keyof typeof copy] || copy.en
 
   return (
-    <section className="bg-secondary/50 py-16 lg:py-20">
+    <section className="py-12 lg:py-16">
       <div className="container space-y-10">
         <Animate variant="fadeIn">
           <div className="text-center space-y-4 max-w-3xl mx-auto">

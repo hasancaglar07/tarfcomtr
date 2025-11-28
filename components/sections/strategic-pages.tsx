@@ -15,11 +15,7 @@ const groupOrder: ContentPageCategory[] = ['kurumsal', 'dusunce', 'akademi', 'ya
 
 export function StrategicPages({ locale, groups }: StrategicPagesProps) {
   return (
-    <section className="relative isolate overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white py-24">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[50rem] bg-[radial-gradient(circle_at_top,_rgba(250,180,70,0.18),_transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,0.8)_0%,rgba(255,255,255,0)_40%)]" />
-      <div className="pointer-events-none absolute inset-y-0 left-1/2 w-[60rem] -translate-x-1/2 bg-[radial-gradient(circle,_rgba(33,62,72,0.05),_transparent_65%)]" />
-
+    <section className="relative isolate overflow-hidden py-14">
       <div className="container relative space-y-12">
         <Animate variant="slideUp">
           <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">

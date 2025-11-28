@@ -51,7 +51,7 @@ export function BlogSection({ locale, posts, categories = [] }: BlogSectionProps
 
   if (posts.length === 0) {
     return (
-      <section className="py-20">
+      <section className="py-16">
         <div className="container text-center">
           <p className="text-muted-foreground">{content.no_posts}</p>
         </div>
@@ -103,7 +103,7 @@ export function BlogSection({ locale, posts, categories = [] }: BlogSectionProps
   )
 
   return (
-    <section className="py-20">
+    <section className="py-14">
       <div className="container">
         {/* Header */}
         <Animate variant="slideUp" className="text-center mb-12">

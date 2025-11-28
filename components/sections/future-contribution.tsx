@@ -132,7 +132,7 @@ export function FutureContribution({ locale }: FutureContributionProps) {
   const content = defaultContent[locale as keyof typeof defaultContent] || defaultContent.en
 
   return (
-    <section className="py-20 bg-gradient-to-b from-background via-primary/5 to-background">
+    <section className="py-12">
       <div className="container">
         {/* Header */}
         <Animate variant="fadeIn">

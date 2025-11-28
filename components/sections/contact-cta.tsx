@@ -67,7 +67,7 @@ export function ContactCTA({ locale, settings }: ContactCTAProps) {
   }
 
   return (
-    <section className="py-20 bg-gradient-to-br from-primary/10 via-background to-primary/5">
+    <section className="py-12">
       <div className="container">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Side - Info */}

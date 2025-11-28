@@ -134,9 +134,9 @@ export function VideoSection({ locale, videos }: VideoSectionProps) {
 
   if (curatedVideos.length === 0) {
     return (
-      <section className="py-20 bg-[#f8f3ed] text-[#2c1a0f]">
+      <section className="py-12">
         <div className="container text-center">
-          <p className="text-[#2c1a0f]/70">{content.no_videos}</p>
+          <p className="text-muted-foreground">{content.no_videos}</p>
         </div>
       </section>
     )
@@ -165,7 +165,7 @@ export function VideoSection({ locale, videos }: VideoSectionProps) {
   const hasMultipleVideos = curatedVideos.length > 1
 
   return (
-    <section className="bg-gradient-to-b from-[#fdf8f3] to-[#f6efe6] py-24">
+    <section className="py-14">
       <div className="container">
         <Animate variant="fadeIn">
           <div className="text-center">

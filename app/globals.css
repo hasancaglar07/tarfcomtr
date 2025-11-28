@@ -269,6 +269,28 @@
       opacity: 1;
     }
   }
+
+  @keyframes admin-skeleton-shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    50% {
+      transform: translateX(40%);
+    }
+    100% {
+      transform: translateX(120%);
+    }
+  }
+
+  .admin-skeleton {
+    position: relative;
+    overflow: hidden;
+    background-image: none;
+  }
+
+  .admin-skeleton::after {
+    display: none;
+  }
   
   .animate-fade-in {
     animation: fade-in 0.5s ease-out;
@@ -395,5 +417,21 @@
   
   ::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--primary) / 0.8);
+  }
+
+  /* Responsive amber background (lighter on mobile) */
+  .bg-amber-pattern {
+    background-image: radial-gradient(120% 120% at 50% 16%, #ffffff 45%, rgba(245, 158, 11, 0.55) 100%);
+    background-size: 140% 140%;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+  }
+
+  @media (min-width: 768px) {
+    .bg-amber-pattern {
+      background-image: radial-gradient(125% 125% at 50% 10%, #ffffff 40%, #f59e0b 100%);
+      background-size: 100% 100%;
+      background-attachment: fixed;
+    }
   }
 }

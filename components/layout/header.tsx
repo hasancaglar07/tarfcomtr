@@ -765,7 +765,7 @@ export function Header({ locale, settings }: HeaderProps) {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="container flex h-20 items-center justify-between"
+          className="container flex h-16 items-center justify-between lg:h-20"
         >
           <motion.div whileHover={{ scale: 1.02 }} className="flex items-center">
             <Link href={`/${locale}`} className="flex items-center">

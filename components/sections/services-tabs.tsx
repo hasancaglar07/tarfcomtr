@@ -53,7 +53,7 @@ export function ServicesTabs({ locale, services }: ServicesTabsProps) {
 
   if (services.length === 0) {
     return (
-      <section className="py-20 bg-secondary/30">
+      <section className="py-20">
         <div className="container text-center">
           <p className="text-muted-foreground">
             {locale === 'tr' ? 'Henüz hizmet eklenmedi.' : 'No services available yet.'}
@@ -64,7 +64,7 @@ export function ServicesTabs({ locale, services }: ServicesTabsProps) {
   }
 
   return (
-    <section className="py-20 bg-secondary/30" id="services">
+    <section className="py-20" id="services">
       <div className="container">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">

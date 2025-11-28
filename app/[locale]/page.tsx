@@ -138,57 +138,64 @@ export default async function Home({
     <>
       <Header locale={locale} settings={data.settings} />
       
-      <main className="min-h-screen bg-[linear-gradient(180deg,#fff4e7_0%,#fffefb_40%,#f7f7ff_100%)]">
-        {/* Hero Section - Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz */}
-        <Hero locale={locale} data={heroContent} />
-
-        {/* Events Carousel - Aktif etkinliklerimiz ve seminerler */}
-        {data.events && data.events.length > 0 && (
-          <EventsCarousel
-            locale={locale}
-            events={data.events}
-          />
-        )}
-
-        {/* Blog Section - Düşünce yazıları, araştırmalar ve makaleler */}
-        {data.blog_posts && data.blog_posts.length > 0 && (
-          <BlogSection
-            locale={locale}
-            posts={data.blog_posts}
-            categories={data.categories || []}
-          />
-        )}
-
-        {/* Future Contribution - Projelerimiz ve teknoloji takımları */}
-        <FutureContribution locale={locale} />
-
-        {/* Value Pillars - Vizyonumuz ve değerlerimiz */}
-        <ValuePillars locale={locale} />
-
-        {/* Strategic Pages - Alt sayfalara giden bağlantılar */}
-        <StrategicPages locale={locale} groups={contentPageGroups} />
-
-        {/* Video Section - Eğitim videoları ve konuşmalar */}
-        {data.videos && data.videos.length > 0 && (
-          <VideoSection
-            locale={locale}
-            videos={data.videos}
-          />
-        )}
-
-        {/* Stats Showcase - Sayılarla TARF ekosistemi */}
-        <StatsShowcase
-          locale={locale}
-          servicesCount={data.services?.length || 0}
-          eventsCount={data.events?.length || 0}
-          blogCount={data.blog_posts?.length || 0}
-          videosCount={data.videos?.length || 0}
-          podcastsCount={data.podcasts?.length || 0}
-          categories={data.categories}
+      <main className="relative min-h-screen overflow-hidden bg-white">
+        <div
+          className="fixed inset-0 z-0 opacity-90 pointer-events-none bg-amber-pattern"
+          aria-hidden="true"
         />
 
-        {/* Contact CTA - Bize ulaşın ve projelerimize katılın */}
-        <ContactCTA locale={locale} settings={data.settings} />
+        <div className="relative z-10 flex flex-col gap-4 lg:gap-6">
+          {/* Hero Section - Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz */}
+          <Hero locale={locale} data={heroContent} />
+
+          {/* Events Carousel - Aktif etkinliklerimiz ve seminerler */}
+          {data.events && data.events.length > 0 && (
+            <EventsCarousel
+              locale={locale}
+              events={data.events}
+            />
+          )}
+
+          {/* Blog Section - Düşünce yazıları, araştırmalar ve makaleler */}
+          {data.blog_posts && data.blog_posts.length > 0 && (
+            <BlogSection
+              locale={locale}
+              posts={data.blog_posts}
+              categories={data.categories || []}
+            />
+          )}
+
+          {/* Future Contribution - Projelerimiz ve teknoloji takımları */}
+          <FutureContribution locale={locale} />
+
+          {/* Value Pillars - Vizyonumuz ve değerlerimiz */}
+          <ValuePillars locale={locale} />
+
+          {/* Strategic Pages - Alt sayfalara giden bağlantılar */}
+          <StrategicPages locale={locale} groups={contentPageGroups} />
+
+          {/* Video Section - Eğitim videoları ve konuşmalar */}
+          {data.videos && data.videos.length > 0 && (
+            <VideoSection
+              locale={locale}
+              videos={data.videos}
+            />
+          )}
+
+          {/* Stats Showcase - Sayılarla TARF ekosistemi */}
+          <StatsShowcase
+            locale={locale}
+            servicesCount={data.services?.length || 0}
+            eventsCount={data.events?.length || 0}
+            blogCount={data.blog_posts?.length || 0}
+            videosCount={data.videos?.length || 0}
+            podcastsCount={data.podcasts?.length || 0}
+            categories={data.categories}
+          />
+
+          {/* Contact CTA - Bize ulaşın ve projelerimize katılın */}
+          <ContactCTA locale={locale} settings={data.settings} />
+        </div>
       </main>
 
       <Footer locale={locale} settings={data.settings} />
