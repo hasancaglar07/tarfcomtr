@@ -5,6 +5,7 @@ import { PostType } from '@prisma/client'
 
 import type { CategoryActionState } from '@/app/admin/categories/actions'
 import { ActionToast } from '@/components/admin/action-toast'
+import { useInvalidToast } from '@/components/admin/use-invalid-toast'
 
 type CategoryFormProps = {
   action: (state: CategoryActionState, formData: FormData) => Promise<CategoryActionState>
@@ -29,6 +30,7 @@ const typeLabels: Record<PostType, string> = {
 
 export function CategoryForm({ action, defaultValues }: CategoryFormProps) {
   const [state, formAction] = useFormState(action, initialState)
+  const onInvalid = useInvalidToast()
 
   const SubmitButton = () => {
     const { pending } = useFormStatus()
@@ -44,7 +46,7 @@ export function CategoryForm({ action, defaultValues }: CategoryFormProps) {
   }
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-4" onInvalid={onInvalid}>
       {defaultValues?.id ? <input type="hidden" name="id" value={defaultValues.id} /> : null}
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-1">

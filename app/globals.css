@@ -357,11 +357,34 @@
     animation: brand-marquee-shimmer 12s linear infinite;
   }
 
+  /* Hero: Planlanan etkinlikler marquee */
+  @keyframes hero-events-marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .hero-events-marquee-track {
+    animation: hero-events-marquee-scroll 22s linear infinite;
+  }
+
+  .hero-events-marquee:hover .hero-events-marquee-track,
+  .hero-events-marquee:focus-within .hero-events-marquee-track {
+    animation-play-state: paused;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .brand-marquee-track,
     .brand-marquee-shimmer {
       animation-duration: 20s !important;
       animation-iteration-count: infinite !important;
+    }
+
+    .hero-events-marquee-track {
+      animation: none !important;
     }
   }
 

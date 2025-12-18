@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { ContentCategory } from '@prisma/client'
 
 import { categoryLabels } from '@/content/content-pages'
-import { ActionToast } from '@/components/admin/action-toast'
 import { prisma } from '@/lib/prisma'
 import { publishToggleAction } from '@/app/admin/actions'
 
@@ -22,13 +21,6 @@ export default async function AdminPagesList({
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   const search = await searchParams
-  const initialToast =
-    typeof search.toast === 'string'
-      ? {
-          kind: (search.toastType === 'error' ? 'error' : 'success') as 'success' | 'error',
-          message: search.toast,
-        }
-      : undefined
   const category =
     typeof search.category === 'string' && search.category.length > 0
       ? (search.category as ContentCategory)
@@ -90,8 +82,6 @@ export default async function AdminPagesList({
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
-        <ActionToast initial={initialToast} />
-
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-400">

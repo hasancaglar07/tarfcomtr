@@ -22,13 +22,20 @@ export async function generateMetadata({
 
 export default async function EventsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   const { locale: rawLocale } = await params
+  const search = await searchParams
   const locale = normalizeLocale(rawLocale)
-  const [events, settings] = await Promise.all([
-    api.getEvents(locale),
+  const pastPage = Number(typeof search.pastPage === 'string' ? search.pastPage : '') || 1
+  const pastPerPage = 12
+
+  const [upcomingEvents, pastEvents, settings] = await Promise.all([
+    api.getUpcomingEvents(locale),
+    api.getPastEvents(locale, pastPage, pastPerPage),
     api.getSettings(locale),
   ])
 
@@ -43,6 +50,37 @@ export default async function EventsPage({
     en: 'Explore summits, seminars and learning sessions',
     ar: 'اكتشف القمم والندوات وجلسات التعلم',
   }
+
+  const sectionLabels = {
+    tr: {
+      upcoming: 'Planlanan Etkinlikler',
+      past: 'Gerçekleşen Etkinlikler',
+      noUpcoming: 'Henüz planlanmış etkinlik bulunmuyor.',
+      noPast: 'Henüz gerçekleşmiş etkinlik bulunmuyor.',
+      page: 'Sayfa',
+      prev: 'Önceki',
+      next: 'Sonraki',
+    },
+    en: {
+      upcoming: 'Upcoming Events',
+      past: 'Past Events',
+      noUpcoming: 'No upcoming events yet.',
+      noPast: 'No past events yet.',
+      page: 'Page',
+      prev: 'Previous',
+      next: 'Next',
+    },
+    ar: {
+      upcoming: 'الفعاليات القادمة',
+      past: 'الفعاليات السابقة',
+      noUpcoming: 'لا توجد فعاليات مجدولة بعد.',
+      noPast: 'لا توجد فعاليات سابقة بعد.',
+      page: 'الصفحة',
+      prev: 'السابق',
+      next: 'التالي',
+    },
+  }
+  const labels = sectionLabels[locale as keyof typeof sectionLabels] || sectionLabels.en
 
   return (
     <>
@@ -66,61 +104,180 @@ export default async function EventsPage({
         </section>
 
         <div className="container py-16">
-          {events.length === 0 ? (
-            <div className="text-center text-muted-foreground">
-              {locale === 'tr' ? 'Henüz planlanmış etkinlik bulunmuyor.' : locale === 'ar' ? 'لا توجد فعاليات مجدولة بعد.' : 'No upcoming events yet.'}
-            </div>
-          ) : (
-            <StaggerContainer className="grid gap-8 md:grid-cols-2">
-              {events.map((event) => (
-                <StaggerItem key={event.id}>
-                  <AnimatedCard className="h-full">
-                    <Card className="overflow-hidden group h-full">
-                  <div className="grid gap-6 p-6 lg:grid-cols-[120px_1fr]">
-                    <div className="flex flex-col items-center justify-center rounded-2xl border bg-muted text-center shadow-inner">
-                      <div className="text-3xl font-bold text-primary">
-                        {event.event_date ? new Date(event.event_date).getDate() : '--'}
+          <div className="space-y-16">
+            <section className="space-y-6">
+              <div className="flex items-end justify-between gap-4 flex-wrap">
+                <h2 className="text-2xl md:text-3xl font-bold">{labels.upcoming}</h2>
+              </div>
+
+              {upcomingEvents.length === 0 ? (
+                <div className="text-center text-muted-foreground">{labels.noUpcoming}</div>
+              ) : (
+                <StaggerContainer className="grid gap-8 md:grid-cols-2">
+                  {upcomingEvents.map((event) => (
+                    <StaggerItem key={event.id}>
+                      <AnimatedCard className="h-full">
+                        <Card className="overflow-hidden group h-full">
+                          <div className="grid gap-6 p-6 lg:grid-cols-[120px_1fr]">
+                            <div className="flex flex-col items-center justify-center rounded-2xl border bg-muted text-center shadow-inner">
+                              <div className="text-3xl font-bold text-primary">
+                                {event.event_date ? new Date(event.event_date).getDate() : '--'}
+                              </div>
+                              <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                                {event.event_date
+                                  ? new Date(event.event_date).toLocaleDateString(locale, { month: 'short' })
+                                  : ''}
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              {event.category && <Badge variant="outline">{event.category.name}</Badge>}
+                              <Link
+                                href={`/${locale}/events/${event.slug}`}
+                                className="text-2xl font-semibold hover:text-primary transition-colors"
+                              >
+                                {event.title}
+                              </Link>
+                              <p className="text-sm text-muted-foreground line-clamp-3">{event.excerpt}</p>
+                              <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                                {event.event_time && (
+                                  <span className="inline-flex items-center gap-2">
+                                    <Clock3 className="h-4 w-4" />
+                                    {event.event_time}
+                                  </span>
+                                )}
+                                {event.location && (
+                                  <span className="inline-flex items-center gap-2">
+                                    <MapPin className="h-4 w-4" />
+                                    {event.location}
+                                  </span>
+                                )}
+                              </div>
+                              <Button variant="secondary" className="w-full" asChild>
+                                <Link href={`/${locale}/events/${event.slug}`}>
+                                  {locale === 'tr'
+                                    ? 'Detayları Gör'
+                                    : locale === 'ar'
+                                      ? 'عرض التفاصيل'
+                                      : 'View details'}
+                                  <ArrowRight className="ml-2 h-4 w-4" />
+                                </Link>
+                              </Button>
+                            </div>
+                          </div>
+                        </Card>
+                      </AnimatedCard>
+                    </StaggerItem>
+                  ))}
+                </StaggerContainer>
+              )}
+            </section>
+
+            <section className="space-y-6">
+              <div className="flex items-end justify-between gap-4 flex-wrap">
+                <h2 className="text-2xl md:text-3xl font-bold">{labels.past}</h2>
+                {pastEvents.total > 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    {labels.page} {pastEvents.page} / {pastEvents.totalPages}
+                  </p>
+                ) : null}
+              </div>
+
+              {pastEvents.total === 0 ? (
+                <div className="text-center text-muted-foreground">{labels.noPast}</div>
+              ) : (
+                <>
+                  <StaggerContainer className="grid gap-8 md:grid-cols-2">
+                    {pastEvents.items.map((event) => (
+                      <StaggerItem key={event.id}>
+                        <AnimatedCard className="h-full">
+                          <Card className="overflow-hidden group h-full">
+                            <div className="grid gap-6 p-6 lg:grid-cols-[120px_1fr]">
+                              <div className="flex flex-col items-center justify-center rounded-2xl border bg-muted text-center shadow-inner">
+                                <div className="text-3xl font-bold text-primary">
+                                  {event.event_date ? new Date(event.event_date).getDate() : '--'}
+                                </div>
+                                <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                                  {event.event_date
+                                    ? new Date(event.event_date).toLocaleDateString(locale, { month: 'short' })
+                                    : ''}
+                                </div>
+                              </div>
+                              <div className="space-y-3">
+                                {event.category && <Badge variant="outline">{event.category.name}</Badge>}
+                                <Link
+                                  href={`/${locale}/events/${event.slug}`}
+                                  className="text-2xl font-semibold hover:text-primary transition-colors"
+                                >
+                                  {event.title}
+                                </Link>
+                                <p className="text-sm text-muted-foreground line-clamp-3">{event.excerpt}</p>
+                                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                                  {event.event_time && (
+                                    <span className="inline-flex items-center gap-2">
+                                      <Clock3 className="h-4 w-4" />
+                                      {event.event_time}
+                                    </span>
+                                  )}
+                                  {event.location && (
+                                    <span className="inline-flex items-center gap-2">
+                                      <MapPin className="h-4 w-4" />
+                                      {event.location}
+                                    </span>
+                                  )}
+                                </div>
+                                <Button variant="secondary" className="w-full" asChild>
+                                  <Link href={`/${locale}/events/${event.slug}`}>
+                                    {locale === 'tr'
+                                      ? 'Detayları Gör'
+                                      : locale === 'ar'
+                                        ? 'عرض التفاصيل'
+                                        : 'View details'}
+                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                  </Link>
+                                </Button>
+                              </div>
+                            </div>
+                          </Card>
+                        </AnimatedCard>
+                      </StaggerItem>
+                    ))}
+                  </StaggerContainer>
+
+                  {pastEvents.totalPages > 1 ? (
+                    <div className="flex items-center justify-between pt-6">
+                      <div className="text-sm text-muted-foreground">
+                        {labels.page} {pastEvents.page} / {pastEvents.totalPages}
                       </div>
-                      <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                        {event.event_date ? new Date(event.event_date).toLocaleDateString(locale, { month: 'short' }) : ''}
+                      <div className="flex gap-2">
+                        {pastEvents.page > 1 ? (
+                          <Button variant="outline" asChild>
+                            <Link
+                              href={`/${locale}/events?${new URLSearchParams({
+                                pastPage: String(pastEvents.page - 1),
+                              }).toString()}`}
+                            >
+                              {labels.prev}
+                            </Link>
+                          </Button>
+                        ) : null}
+                        {pastEvents.page < pastEvents.totalPages ? (
+                          <Button variant="outline" asChild>
+                            <Link
+                              href={`/${locale}/events?${new URLSearchParams({
+                                pastPage: String(pastEvents.page + 1),
+                              }).toString()}`}
+                            >
+                              {labels.next}
+                            </Link>
+                          </Button>
+                        ) : null}
                       </div>
                     </div>
-                    <div className="space-y-3">
-                      {event.category && (
-                        <Badge variant="outline">{event.category.name}</Badge>
-                      )}
-                      <Link href={`/${locale}/events/${event.slug}`} className="text-2xl font-semibold hover:text-primary transition-colors">
-                        {event.title}
-                      </Link>
-                      <p className="text-sm text-muted-foreground line-clamp-3">{event.excerpt}</p>
-                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                        {event.event_time && (
-                          <span className="inline-flex items-center gap-2">
-                            <Clock3 className="h-4 w-4" />
-                            {event.event_time}
-                          </span>
-                        )}
-                        {event.location && (
-                          <span className="inline-flex items-center gap-2">
-                            <MapPin className="h-4 w-4" />
-                            {event.location}
-                          </span>
-                        )}
-                      </div>
-                      <Button variant="secondary" className="w-full" asChild>
-                        <Link href={`/${locale}/events/${event.slug}`}>
-                          {locale === 'tr' ? 'Detayları Gör' : locale === 'ar' ? 'عرض التفاصيل' : 'View details'}
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
-                      </Button>
-                      </div>
-                    </div>
-                  </Card>
-                </AnimatedCard>
-              </StaggerItem>
-              ))}
-            </StaggerContainer>
-          )}
+                  ) : null}
+                </>
+              )}
+            </section>
+          </div>
         </div>
       </main>
       <Footer locale={locale} settings={settings} />

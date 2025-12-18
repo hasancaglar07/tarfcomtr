@@ -4,7 +4,6 @@ import { format } from 'date-fns'
 
 import { prisma } from '@/lib/prisma'
 import { updateApplicationAction } from '@/app/admin/applications/actions'
-import { ActionToast } from '@/components/admin/action-toast'
 import { Badge } from '@/components/ui/badge'
 
 const statusLabels: Record<ApplicationStatus, string> = {
@@ -26,13 +25,6 @@ export default async function ApplicationsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   const search = await searchParams
-  const initialToast =
-    typeof search.toast === 'string'
-      ? {
-          kind: (search.toastType === 'error' ? 'error' : 'success') as 'success' | 'error',
-          message: search.toast,
-        }
-      : undefined
   const statusFilter =
     typeof search.status === 'string' && statusOptions.includes(search.status as ApplicationStatus)
       ? (search.status as ApplicationStatus)
@@ -85,8 +77,6 @@ export default async function ApplicationsPage({
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
-        <ActionToast initial={initialToast} />
-
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-400">

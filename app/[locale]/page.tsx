@@ -25,6 +25,11 @@ type StaticHeroContent = {
   background_image?: string | null
   video_cover?: string | null
   video_url?: string | null
+  video_url_2?: string | null
+  video_cover_2?: string | null
+  video_url_3?: string | null
+  video_url_4?: string | null
+  video_url_5?: string | null
 }
 
 const STATIC_HERO_CONTENT: Record<string, StaticHeroContent> = {
@@ -131,6 +136,9 @@ export default async function Home({
           video_cover: heroFromDb.video_cover || heroFromDb.background_image || STATIC_HERO_CONTENT[locale].background_image,
           video_url_2: heroFromDb.video_url_2,
           video_cover_2: heroFromDb.video_cover_2,
+          video_url_3: heroFromDb.video_url_3,
+          video_url_4: heroFromDb.video_url_4,
+          video_url_5: heroFromDb.video_url_5,
         }
       : STATIC_HERO_CONTENT[locale] || STATIC_HERO_CONTENT.tr
 
@@ -146,15 +154,16 @@ export default async function Home({
 
         <div className="relative z-10 flex flex-col gap-4 lg:gap-6">
           {/* Hero Section - Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz */}
-          <Hero locale={locale} data={heroContent} />
+          <Hero locale={locale} data={heroContent} events={data.events} />
 
           {/* Events Carousel - Aktif etkinliklerimiz ve seminerler */}
-          {data.events && data.events.length > 0 && (
+          {(data.events && data.events.length > 0) || (data.past_events && data.past_events.length > 0) ? (
             <EventsCarousel
               locale={locale}
-              events={data.events}
+              upcomingEvents={data.events}
+              pastEvents={data.past_events}
             />
-          )}
+          ) : null}
 
           {/* Blog Section - Düşünce yazıları, araştırmalar ve makaleler */}
           {data.blog_posts && data.blog_posts.length > 0 && (

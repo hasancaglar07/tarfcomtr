@@ -26,6 +26,9 @@ const heroSchema = z.object({
   videoCover: z.string().optional(),
   videoUrl2: z.string().optional(),
   videoCover2: z.string().optional(),
+  videoUrl3: z.string().optional(),
+  videoUrl4: z.string().optional(),
+  videoUrl5: z.string().optional(),
 })
 
 async function requireAdmin() {
@@ -59,6 +62,9 @@ export async function upsertHeroAction(
       videoCover: formData.get('videoCover')?.toString() || '',
       videoUrl2: formData.get('videoUrl2')?.toString() || '',
       videoCover2: formData.get('videoCover2')?.toString() || '',
+      videoUrl3: formData.get('videoUrl3')?.toString() || '',
+      videoUrl4: formData.get('videoUrl4')?.toString() || '',
+      videoUrl5: formData.get('videoUrl5')?.toString() || '',
     })
 
     if (!parsed.success) {
@@ -82,6 +88,9 @@ export async function upsertHeroAction(
         videoCover: data.videoCover,
         videoUrl2: data.videoUrl2,
         videoCover2: data.videoCover2,
+        videoUrl3: data.videoUrl3,
+        videoUrl4: data.videoUrl4,
+        videoUrl5: data.videoUrl5,
       },
       create: {
         id,
@@ -96,6 +105,9 @@ export async function upsertHeroAction(
         videoCover: data.videoCover,
         videoUrl2: data.videoUrl2,
         videoCover2: data.videoCover2,
+        videoUrl3: data.videoUrl3,
+        videoUrl4: data.videoUrl4,
+        videoUrl5: data.videoUrl5,
       },
     })
 

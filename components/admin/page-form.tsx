@@ -7,6 +7,7 @@ import type { ContentCategory } from '@prisma/client'
 
 import type { PageActionState } from '@/app/admin/actions'
 import { ActionToast } from '@/components/admin/action-toast'
+import { useInvalidToast } from '@/components/admin/use-invalid-toast'
 
 type PageFormProps = {
   mode: 'create' | 'edit'
@@ -37,6 +38,7 @@ const categories: ContentCategory[] = [
 export function PageForm({ mode, action, defaultValues }: PageFormProps) {
   const router = useRouter()
   const [state, formAction] = useFormState(action, initialState)
+  const onInvalid = useInvalidToast()
   const [seoTitle, setSeoTitle] = useState(defaultValues.seoTitle || '')
   const [seoDescription, setSeoDescription] = useState(defaultValues.seoDescription || '')
   const [seoDirty, setSeoDirty] = useState({
@@ -92,7 +94,7 @@ export function PageForm({ mode, action, defaultValues }: PageFormProps) {
   }
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-6" onInvalid={onInvalid}>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <label className="text-sm text-slate-300" htmlFor="slug">

@@ -2,11 +2,13 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Play, ShieldCheck, BookOpen, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowRight, Play, ShieldCheck, MapPin, Sparkles, ChevronLeft, ChevronRight, Calendar } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
 import { BrandMarquee } from '@/components/sections/brand-marquee'
+import type { Post } from '@/lib/api'
+import { useShouldReduceMotion } from '@/lib/hooks/use-reduced-motion'
 
 interface HeroProps {
   locale: string
@@ -27,7 +29,11 @@ interface HeroProps {
     video_url?: string | null
     video_cover_2?: string | null
     video_url_2?: string | null
+    video_url_3?: string | null
+    video_url_4?: string | null
+    video_url_5?: string | null
   } | null
+  events?: Post[] | null
 }
 
 const defaultContent = {
@@ -88,13 +94,25 @@ const getYouTubeVideoId = (url?: string | null) => {
   return match && match[2].length === 11 ? match[2] : null
 }
 
-export function Hero({ locale, data }: HeroProps) {
+export function Hero({ locale, data, events }: HeroProps) {
   const content = {
     ...(defaultContent[locale as keyof typeof defaultContent] || defaultContent.en),
     ...data,
   }
 
-  const stats = content.stats?.slice(0, 4) || defaultContent[locale as keyof typeof defaultContent]?.stats || []
+  const upcomingEvents = useMemo(() => {
+    const list = Array.isArray(events) ? events : []
+    return list
+      .filter((e) => Boolean(e?.event_date))
+      .slice(0, 8)
+  }, [events])
+
+  const marqueeLabels = {
+    tr: { title: 'Planlanan Etkinlikler', all: 'Tümü', empty: 'Henüz planlanmış etkinlik yok.' },
+    en: { title: 'Upcoming Events', all: 'All', empty: 'No upcoming events yet.' },
+    ar: { title: 'الفعاليات القادمة', all: 'الكل', empty: 'لا توجد فعاليات مجدولة بعد.' },
+  }
+  const labels = marqueeLabels[locale as keyof typeof marqueeLabels] || marqueeLabels.en
 
   const heroVideos = useMemo(() => {
     const fallbackVideos = [
@@ -112,38 +130,35 @@ export function Hero({ locale, data }: HeroProps) {
       },
     ]
 
-    const customVideo = content.video_url
-      ? [
-          {
-            id: 'hero-custom',
-            title: content.title || 'Tanıtım Filmi',
-            youtube_url: content.video_url,
-            cover: content.video_cover || null,
-          },
-        ]
-      : []
+    const customVideos = [
+      content.video_url ? { id: 'hero-custom-1', title: content.title || 'Tanıtım Filmi', youtube_url: content.video_url, cover: content.video_cover || null } : null,
+      content.video_url_2 ? { id: 'hero-custom-2', title: content.title || 'Tanıtım Filmi 2', youtube_url: content.video_url_2, cover: content.video_cover_2 || null } : null,
+      content.video_url_3 ? { id: 'hero-custom-3', title: content.title || 'Tanıtım Filmi 3', youtube_url: content.video_url_3, cover: null } : null,
+      content.video_url_4 ? { id: 'hero-custom-4', title: content.title || 'Tanıtım Filmi 4', youtube_url: content.video_url_4, cover: null } : null,
+      content.video_url_5 ? { id: 'hero-custom-5', title: content.title || 'Tanıtım Filmi 5', youtube_url: content.video_url_5, cover: null } : null,
+    ].filter(Boolean) as Array<{ id: string; title: string; youtube_url: string; cover: string | null }>
 
-    const customVideo2 = content.video_url_2
-      ? [
-          {
-            id: 'hero-custom-2',
-            title: content.title || 'Tanıtım Filmi 2',
-            youtube_url: content.video_url_2,
-            cover: content.video_cover_2 || content.background_image || null,
-          },
-        ]
-      : []
-
-    const combined = [...customVideo, ...customVideo2, ...fallbackVideos]
+    const combined = customVideos.length > 0 ? customVideos : fallbackVideos
     const seen = new Set<string>()
-    return combined.filter((video) => {
+    const unique = combined.filter((video) => {
       const id = getYouTubeVideoId(video.youtube_url)
       if (!id) return true
       if (seen.has(id)) return false
       seen.add(id)
       return true
     })
-  }, [content.title, content.video_cover, content.video_cover_2, content.video_url, content.video_url_2, content.background_image])
+
+    return unique.slice(0, 5)
+  }, [
+    content.title,
+    content.video_cover,
+    content.video_cover_2,
+    content.video_url,
+    content.video_url_2,
+    content.video_url_3,
+    content.video_url_4,
+    content.video_url_5,
+  ])
 
   const [heroVideoIndex, setHeroVideoIndex] = useState(0)
   const [heroVideoPlaying, setHeroVideoPlaying] = useState(false)
@@ -218,19 +233,28 @@ export function Hero({ locale, data }: HeroProps) {
             </StaggerItem>
 
             <StaggerItem>
-              <div className="grid gap-4 rounded-3xl border border-dashed border-border/60 bg-white/80 p-6 shadow-xl sm:grid-cols-2 lg:grid-cols-2">
-                {stats.slice(0, 4).map((stat, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <div className="rounded-full bg-primary/10 p-3 text-primary">
-                      <BookOpen className="h-5 w-5" />
+              {upcomingEvents.length > 0 ? (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                      <Calendar className="h-4 w-4 text-primary" />
+                      {labels.title}
                     </div>
-                    <div>
-                      <p className="text-2xl font-extrabold text-foreground">{stat.value}</p>
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">{stat.label}</p>
-                    </div>
+                    <Link
+                      href={`/${locale}/events`}
+                      className="text-xs font-semibold text-primary hover:underline underline-offset-4"
+                    >
+                      {labels.all}
+                    </Link>
                   </div>
-                ))}
-              </div>
+
+                  <HeroEventsMarquee locale={locale} events={upcomingEvents} />
+                </div>
+              ) : (
+                <div className="rounded-3xl border border-dashed border-border/60 bg-white/80 p-5 shadow-xl">
+                  <p className="text-sm text-muted-foreground">{labels.empty}</p>
+                </div>
+              )}
             </StaggerItem>
             </StaggerContainer>
 
@@ -367,5 +391,87 @@ export function Hero({ locale, data }: HeroProps) {
         <BrandMarquee locale={locale} variant="overlay" />
       </div>
     </>
+  )
+}
+
+function HeroEventsMarquee({ locale, events }: { locale: string; events: Post[] }) {
+  const shouldReduceMotion = useShouldReduceMotion(768)
+  const displayEvents = Array.isArray(events) ? events : []
+
+  return (
+    <div
+      className={`hero-events-marquee relative rounded-3xl border border-white/30 bg-gradient-to-r from-white/85 via-white/95 to-white/85 py-3 shadow-[0_22px_60px_rgba(15,23,42,0.12)] backdrop-blur-2xl ${
+        shouldReduceMotion ? 'overflow-x-auto' : 'overflow-hidden'
+      }`}
+      style={{
+        WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+        maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+      }}
+    >
+      <div
+        className={`flex w-max items-center gap-3 px-4 ${shouldReduceMotion ? '' : 'hero-events-marquee-track'}`}
+      >
+        <div className="flex items-center gap-3 pr-3">
+          {displayEvents.map((event) => (
+            <Link
+              key={`a-${event.id}`}
+              href={`/${locale}/events/${event.slug}`}
+              className="group flex h-12 shrink-0 items-center gap-3 rounded-full border border-border/60 bg-white/80 px-4 shadow-sm transition hover:-translate-y-0.5 hover:bg-white hover:shadow-md"
+            >
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                  {event.event_date
+                    ? new Intl.DateTimeFormat(locale, { day: '2-digit', month: 'short' }).format(
+                        new Date(event.event_date),
+                      )
+                    : '--'}
+                </span>
+              </div>
+              <div className="flex flex-col leading-tight">
+                <span className="max-w-[260px] truncate text-sm font-semibold text-foreground group-hover:text-primary">
+                  {event.title}
+                </span>
+                <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                  <MapPin className="h-3.5 w-3.5" />
+                  <span className="max-w-[240px] truncate">{event.location || '-'}</span>
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {!shouldReduceMotion ? (
+          <div className="flex items-center gap-3 pr-3" aria-hidden="true">
+            {displayEvents.map((event) => (
+              <Link
+                key={`b-${event.id}`}
+                href={`/${locale}/events/${event.slug}`}
+                tabIndex={-1}
+                className="group flex h-12 shrink-0 items-center gap-3 rounded-full border border-border/60 bg-white/80 px-4 shadow-sm transition hover:-translate-y-0.5 hover:bg-white hover:shadow-md"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                    {event.event_date
+                      ? new Intl.DateTimeFormat(locale, { day: '2-digit', month: 'short' }).format(
+                          new Date(event.event_date),
+                        )
+                      : '--'}
+                  </span>
+                </div>
+                <div className="flex flex-col leading-tight">
+                  <span className="max-w-[260px] truncate text-sm font-semibold text-foreground group-hover:text-primary">
+                    {event.title}
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                    <MapPin className="h-3.5 w-3.5" />
+                    <span className="max-w-[240px] truncate">{event.location || '-'}</span>
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
   )
 }

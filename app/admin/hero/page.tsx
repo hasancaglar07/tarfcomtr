@@ -49,6 +49,9 @@ export default async function HeroPage() {
                     videoCover: current.videoCover ?? '',
                     videoUrl2: current.videoUrl2 ?? '',
                     videoCover2: current.videoCover2 ?? '',
+                    videoUrl3: current.videoUrl3 ?? '',
+                    videoUrl4: current.videoUrl4 ?? '',
+                    videoUrl5: current.videoUrl5 ?? '',
                   }
                 : { locale: 'tr' }
             }

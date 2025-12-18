@@ -10,6 +10,7 @@ import { RichTextEditor } from '@/components/admin/rich-text'
 import { MediaPicker } from '@/components/admin/media-picker'
 import { BlobUpload } from '@/components/admin/blob-upload'
 import { ActionToast } from '@/components/admin/action-toast'
+import { useInvalidToast } from '@/components/admin/use-invalid-toast'
 
 type PostFormProps = {
   mode: 'create' | 'edit'
@@ -26,6 +27,7 @@ const initialState: PostActionState = { status: 'idle' }
 export function PostForm({ mode, action, type, categories, defaultValues }: PostFormProps) {
   const router = useRouter()
   const [state, formAction] = useFormState(action, initialState)
+  const onInvalid = useInvalidToast()
   const galleryValue =
     defaultValues?.meta && typeof defaultValues.meta === 'object'
       ? Array.isArray((defaultValues.meta as { gallery?: string[] }).gallery)
@@ -163,7 +165,7 @@ export function PostForm({ mode, action, type, categories, defaultValues }: Post
   }
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-6" onInvalid={onInvalid}>
       <input type="hidden" name="type" value={type} />
       {mode === 'edit' && defaultValues?.slug ? (
         <input type="hidden" name="originalSlug" value={defaultValues.slug} />

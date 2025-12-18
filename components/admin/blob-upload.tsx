@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { useAdminToast } from '@/components/admin/admin-toast-provider'
 
 export function BlobUpload() {
+  const { showToast } = useAdminToast()
   const [uploading, setUploading] = useState(false)
   const [url, setUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -40,12 +42,15 @@ export function BlobUpload() {
 
       const data = await res.json()
       setUrl(data.url || data.downloadUrl || null)
+      showToast('success', 'Dosya yüklendi')
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new Event('media:uploaded'))
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Yükleme hatası')
+      const message = err instanceof Error ? err.message : 'Yükleme hatası'
+      setError(message)
       setUrl(null)
+      showToast('error', message)
     } finally {
       setUploading(false)
     }

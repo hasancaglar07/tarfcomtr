@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useAdminToast } from '@/components/admin/admin-toast-provider'
 
 type MediaCardProps = {
   id: string
@@ -12,13 +13,12 @@ type MediaCardProps = {
 }
 
 export function MediaCard({ id, url, locale, type, altText: initialAlt }: MediaCardProps) {
+  const { showToast } = useAdminToast()
   const [altText, setAltText] = useState(initialAlt || '')
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState<string | null>(null)
 
   const saveAlt = async () => {
     setSaving(true)
-    setMessage(null)
     const body = new FormData()
     body.append('id', id)
     body.append('altText', altText)
@@ -29,9 +29,9 @@ export function MediaCard({ id, url, locale, type, altText: initialAlt }: MediaC
         const txt = await res.text()
         throw new Error(txt || 'Kaydedilemedi')
       }
-      setMessage('Kaydedildi')
+      showToast('success', 'Alt metin kaydedildi')
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : 'Hata')
+      showToast('error', err instanceof Error ? err.message : 'Hata')
     } finally {
       setSaving(false)
     }
@@ -40,9 +40,9 @@ export function MediaCard({ id, url, locale, type, altText: initialAlt }: MediaC
   const copyUrl = async () => {
     try {
       await navigator.clipboard.writeText(url)
-      setMessage('Kopyalandı')
+      showToast('success', 'URL kopyalandı')
     } catch {
-      setMessage('Kopyalanamadı')
+      showToast('error', 'Kopyalanamadı')
     }
   }
 
@@ -80,7 +80,6 @@ export function MediaCard({ id, url, locale, type, altText: initialAlt }: MediaC
           Kopyala
         </button>
       </div>
-      {message && <p className="text-[11px] text-slate-400">{message}</p>}
     </div>
   )
 }

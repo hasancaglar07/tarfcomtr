@@ -3,6 +3,7 @@ import { PostType } from '@prisma/client'
 
 import { upsertCategoryAction, deleteCategoryAction } from '@/app/admin/categories/actions'
 import { CategoryForm } from '@/components/admin/category-form'
+import { ConfirmAction } from '@/components/admin/confirm-action'
 import { prisma } from '@/lib/prisma'
 
 const typeLabels: Record<PostType, string> = {
@@ -93,15 +94,15 @@ export default async function CategoriesPage() {
                           />
                         </div>
                       </details>
-                      <form action={deleteCategoryAction}>
-                        <input type="hidden" name="id" value={cat.id} />
-                        <button
-                          type="submit"
-                          className="rounded-lg border border-red-500/50 px-3 py-1.5 text-xs font-semibold text-red-100 transition hover:bg-red-500/10"
-                        >
-                          Sil
-                        </button>
-                      </form>
+                      <ConfirmAction
+                        action={deleteCategoryAction}
+                        fields={{ id: cat.id }}
+                        title="Kategoriyi sil?"
+                        description="Bu kategori kalıcı olarak silinir. Bu işlem geri alınamaz."
+                        triggerLabel="Sil"
+                        triggerClassName="rounded-lg border border-red-500/50 px-3 py-1.5 text-xs font-semibold text-red-100 transition hover:bg-red-500/10"
+                        confirmLabel="Evet, sil"
+                      />
                     </div>
                   </td>
                 </tr>

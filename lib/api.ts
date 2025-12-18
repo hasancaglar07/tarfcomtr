@@ -1,6 +1,7 @@
 import { PostStatus, PostType } from '@prisma/client'
 
 import { prisma } from '@/lib/prisma'
+import { getEventsTodayStart } from '@/lib/events'
 
 export interface Category {
   id: string
@@ -59,6 +60,9 @@ export interface Hero {
   video_cover?: string | null
   video_url_2?: string | null
   video_cover_2?: string | null
+  video_url_3?: string | null
+  video_url_4?: string | null
+  video_url_5?: string | null
 }
 
 export interface Faq {
@@ -83,11 +87,20 @@ export interface HomeData {
   blog_posts: Post[]
   services: Post[]
   events: Post[]
+  past_events: Post[]
   videos: Post[]
   podcasts: Post[]
   faqs: Faq[]
   categories: Category[]
   settings: Settings
+}
+
+export interface Paginated<T> {
+  items: T[]
+  total: number
+  page: number
+  perPage: number
+  totalPages: number
 }
 
 export interface BlogPostDetail {
@@ -208,6 +221,57 @@ async function getPostsByType(type: PostType, locale: string, take?: number) {
   return posts.map(mapPost)
 }
 
+async function getUpcomingEvents(locale: string, take?: number) {
+  const todayStart = getEventsTodayStart()
+  const posts = await prisma.post.findMany({
+    where: {
+      type: PostType.event,
+      status: PostStatus.published,
+      locale,
+      eventDate: { gte: todayStart },
+    },
+    orderBy: [{ eventDate: 'asc' }, { eventTime: 'asc' }, { publishedAt: 'desc' }],
+    include: { category: true },
+    take,
+  })
+  return posts.map(mapPost)
+}
+
+async function getPastEvents(locale: string, page: number = 1, perPage: number = 12): Promise<Paginated<Post>> {
+  const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1
+  const safePerPage =
+    Number.isFinite(perPage) && perPage > 0 && perPage <= 50 ? Math.floor(perPage) : 12
+  const todayStart = getEventsTodayStart()
+
+  const where = {
+    type: PostType.event,
+    status: PostStatus.published,
+    locale,
+    eventDate: { lt: todayStart as Date },
+  } as const
+
+  const total = await prisma.post.count({ where })
+  const totalPages = Math.max(1, Math.ceil(total / safePerPage))
+  const clampedPage = Math.min(safePage, totalPages)
+  const skip = (clampedPage - 1) * safePerPage
+
+  const posts = await prisma.post.findMany({
+    where,
+    orderBy: [{ eventDate: 'desc' }, { eventTime: 'desc' }, { publishedAt: 'desc' }],
+    include: { category: true },
+    skip,
+    take: safePerPage,
+  })
+
+  return {
+    items: posts.map(mapPost),
+    total,
+    page: clampedPage,
+    perPage: safePerPage,
+    totalPages,
+  }
+}
+
 async function getPostDetail(type: PostType, slug: string, locale: string) {
   const post = await prisma.post.findFirst({
     where: { type, slug, locale, status: PostStatus.published },
@@ -274,6 +338,9 @@ async function getHeroes(locale: string = 'tr') {
     video_cover: h.videoCover,
     video_url_2: h.videoUrl2,
     video_cover_2: h.videoCover2,
+    video_url_3: h.videoUrl3,
+    video_url_4: h.videoUrl4,
+    video_url_5: h.videoUrl5,
   }))
 }
 
@@ -293,12 +360,13 @@ async function getCategories(type?: PostType, locale: string = 'tr') {
 export const api = {
   // Home page with all sections
   getHome: async (locale: string = 'tr') => {
-    const [heroes, blog_posts, services, events, videos, podcasts, faqs, categories, settings] =
+    const [heroes, blog_posts, services, events, pastEvents, videos, podcasts, faqs, categories, settings] =
       await Promise.all([
         getHeroes(locale),
         getPostsByType(PostType.blog, locale, 3),
         getPostsByType(PostType.service, locale, 4),
-        getPostsByType(PostType.event, locale, 6),
+        getUpcomingEvents(locale, 6),
+        getPastEvents(locale, 1, 6),
         getPostsByType(PostType.video, locale, 6),
         getPostsByType(PostType.podcast, locale, 6),
         getFaqs(locale),
@@ -310,6 +378,7 @@ export const api = {
       blog_posts,
       services,
       events,
+      past_events: pastEvents.items,
       videos,
       podcasts,
       faqs,
@@ -328,7 +397,12 @@ export const api = {
   },
 
   // Events
-  getEvents: (locale: string = 'tr') => getPostsByType(PostType.event, locale),
+  // Upcoming events (today and later)
+  getEvents: (locale: string = 'tr') => getUpcomingEvents(locale),
+  getUpcomingEvents: (locale: string = 'tr', take?: number) => getUpcomingEvents(locale, take),
+  // Past events (new -> old), paginated
+  getPastEvents: (locale: string = 'tr', page: number = 1, perPage: number = 12) =>
+    getPastEvents(locale, page, perPage),
 
   getEvent: async (slug: string, locale: string = 'tr') => {
     const data = await getPostDetail(PostType.event, slug, locale)

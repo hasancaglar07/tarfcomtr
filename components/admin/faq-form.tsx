@@ -4,6 +4,7 @@ import { useFormState, useFormStatus } from 'react-dom'
 
 import type { FaqActionState } from '@/app/admin/faq/actions'
 import { ActionToast } from '@/components/admin/action-toast'
+import { useInvalidToast } from '@/components/admin/use-invalid-toast'
 
 type FaqFormProps = {
   action: (state: FaqActionState, formData: FormData) => Promise<FaqActionState>
@@ -20,6 +21,7 @@ const initialState: FaqActionState = { status: 'idle' }
 
 export function FaqForm({ action, defaultValues }: FaqFormProps) {
   const [state, formAction] = useFormState(action, initialState)
+  const onInvalid = useInvalidToast()
 
   const SubmitButton = () => {
     const { pending } = useFormStatus()
@@ -35,7 +37,7 @@ export function FaqForm({ action, defaultValues }: FaqFormProps) {
   }
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-4" onInvalid={onInvalid}>
       {defaultValues?.id ? <input type="hidden" name="id" value={defaultValues.id} /> : null}
       <div className="space-y-1">
         <label className="text-sm text-slate-300" htmlFor="question">

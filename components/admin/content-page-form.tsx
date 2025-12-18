@@ -7,6 +7,7 @@ import type { ContentPageDefinition } from '@/content/content-pages'
 import type { PageActionState } from '@/app/admin/actions'
 import { SectionEditor } from '@/components/admin/content-section'
 import { ActionToast } from '@/components/admin/action-toast'
+import { useInvalidToast } from '@/components/admin/use-invalid-toast'
 
 type ContentPageFormProps = {
   mode: 'create' | 'edit'
@@ -48,6 +49,7 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
   const [data, setData] = useState<ContentPageDefinition>(withDefaults(defaultValues))
   const [publish, setPublish] = useState(defaultValues.status !== 'draft')
   const router = useRouter()
+  const onInvalid = useInvalidToast()
   const [seoDirty, setSeoDirty] = useState({
     title: Boolean(defaultValues.seo.title),
     description: Boolean(defaultValues.seo.description),
@@ -167,7 +169,7 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
   }
 
   return (
-    <form action={handleSubmit} className="space-y-6">
+    <form action={handleSubmit} className="space-y-6" onInvalid={onInvalid}>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <label className="text-sm text-slate-300" htmlFor="slug">
@@ -177,6 +179,7 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
             id="slug"
             value={data.slug}
             onChange={(e) => updateData({ slug: e.target.value })}
+            required
             className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
           />
           <p className="text-xs text-slate-500">
@@ -198,13 +201,16 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
             id="category"
             value={data.category}
             onChange={(e) => updateData({ category: e.target.value as ContentPageDefinition['category'] })}
+            required
             className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm text-slate-300">Hero başlık</label>
+        <label className="text-sm text-slate-300" htmlFor="heroTitle">
+          Hero başlık
+        </label>
         <div className="grid gap-2 sm:grid-cols-2">
           <input
             value={data.hero.backgroundImage || ''}
@@ -226,8 +232,10 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
           placeholder="Eyebrow"
         />
         <input
+          id="heroTitle"
           value={data.hero.title}
           onChange={(e) => updateData({ hero: { ...data.hero, title: e.target.value } })}
+          required
           className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
         />
         <input

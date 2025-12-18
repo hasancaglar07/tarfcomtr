@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
 
@@ -81,9 +82,17 @@ export async function upsertFaqAction(
 }
 
 export async function deleteFaqAction(formData: FormData) {
-  await requireAdmin()
-  const id = formData.get('id')?.toString()
-  if (!id) throw new Error('ID eksik')
-  await prisma.fAQ.delete({ where: { id } })
-  revalidate()
+  try {
+    await requireAdmin()
+    const id = formData.get('id')?.toString()
+    if (!id) throw new Error('ID eksik')
+    await prisma.fAQ.delete({ where: { id } })
+    revalidate()
+    const params = new URLSearchParams({ toast: 'Kayıt silindi', toastType: 'success' })
+    redirect(`/admin/faq?${params.toString()}`)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
+    const params = new URLSearchParams({ toast: message, toastType: 'error' })
+    redirect(`/admin/faq?${params.toString()}`)
+  }
 }

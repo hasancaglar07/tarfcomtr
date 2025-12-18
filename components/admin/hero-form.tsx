@@ -1,9 +1,12 @@
 'use client'
 
+import Image from 'next/image'
+import { useMemo, useState } from 'react'
 import { useFormState, useFormStatus } from 'react-dom'
 
 import type { HeroActionState } from '@/app/admin/hero/actions'
 import { ActionToast } from '@/components/admin/action-toast'
+import { useInvalidToast } from '@/components/admin/use-invalid-toast'
 
 type HeroFormProps = {
   action: (state: HeroActionState, formData: FormData) => Promise<HeroActionState>
@@ -20,13 +23,45 @@ type HeroFormProps = {
     videoCover?: string
     videoUrl2?: string
     videoCover2?: string
+    videoUrl3?: string
+    videoUrl4?: string
+    videoUrl5?: string
   }
 }
 
 const initialState: HeroActionState = { status: 'idle' }
 
+type VideoKey = 'videoUrl' | 'videoUrl2' | 'videoUrl3' | 'videoUrl4' | 'videoUrl5'
+
+const getYouTubeVideoId = (url?: string) => {
+  if (!url) return null
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
+  const match = url.match(regExp)
+  return match && match[2].length === 11 ? match[2] : null
+}
+
 export function HeroForm({ action, defaultValues }: HeroFormProps) {
   const [state, formAction] = useFormState(action, initialState)
+  const onInvalid = useInvalidToast()
+  const [videoUrls, setVideoUrls] = useState(() => ({
+    videoUrl: defaultValues?.videoUrl || '',
+    videoUrl2: defaultValues?.videoUrl2 || '',
+    videoUrl3: defaultValues?.videoUrl3 || '',
+    videoUrl4: defaultValues?.videoUrl4 || '',
+    videoUrl5: defaultValues?.videoUrl5 || '',
+  }))
+
+  const videoFields = useMemo(
+    () =>
+      [
+        { key: 'videoUrl' as const, label: 'Video 1 URL', value: videoUrls.videoUrl },
+        { key: 'videoUrl2' as const, label: 'Video 2 URL', value: videoUrls.videoUrl2 },
+        { key: 'videoUrl3' as const, label: 'Video 3 URL', value: videoUrls.videoUrl3 },
+        { key: 'videoUrl4' as const, label: 'Video 4 URL', value: videoUrls.videoUrl4 },
+        { key: 'videoUrl5' as const, label: 'Video 5 URL', value: videoUrls.videoUrl5 },
+      ] as const,
+    [videoUrls],
+  )
 
   const SubmitButton = () => {
     const { pending } = useFormStatus()
@@ -42,7 +77,7 @@ export function HeroForm({ action, defaultValues }: HeroFormProps) {
   }
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-4" onInvalid={onInvalid}>
       {defaultValues?.id ? <input type="hidden" name="id" value={defaultValues.id} /> : null}
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -136,49 +171,90 @@ export function HeroForm({ action, defaultValues }: HeroFormProps) {
         </div>
         <div className="space-y-1">
           <label className="text-sm text-slate-300" htmlFor="videoUrl">
-            Video URL (opsiyonel)
+            Video URL’leri (1 → 5 sıralı)
           </label>
-          <input
-            id="videoUrl"
-            name="videoUrl"
-            defaultValue={defaultValues?.videoUrl || ''}
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-          />
-          <p className="text-xs text-slate-500">Hero üst kısmındaki video bağlantısı (YouTube).</p>
-          <input
-            id="videoCover"
-            name="videoCover"
-            placeholder="Video kapak görseli URL"
-            defaultValue={defaultValues?.videoCover || ''}
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-          />
+          <p className="text-xs text-slate-500">
+            Anasayfa hero’daki kayan videoları bu sıraya göre gösterilir. Kapak görseli otomatik olarak YouTube’dan çekilir.
+          </p>
         </div>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <div className="space-y-1">
-          <label className="text-sm text-slate-300" htmlFor="videoUrl2">
-            İkinci video URL (opsiyonel)
-          </label>
-          <input
-            id="videoUrl2"
-            name="videoUrl2"
-            defaultValue={defaultValues?.videoUrl2 || ''}
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="text-sm text-slate-300" htmlFor="videoCover2">
-            İkinci video kapak URL
-          </label>
-          <input
-            id="videoCover2"
-            name="videoCover2"
-            defaultValue={defaultValues?.videoCover2 || ''}
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-          />
-        </div>
+        {videoFields.map((field) => {
+          const id = getYouTubeVideoId(field.value)
+          const cover = id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : null
+          return (
+            <div key={field.key} className="space-y-2 rounded-xl border border-slate-800 bg-slate-950/40 p-3">
+              <div className="space-y-1">
+                <label className="text-sm text-slate-300" htmlFor={field.key}>
+                  {field.label}
+                </label>
+                <input
+                  id={field.key}
+                  name={field.key}
+                  placeholder="https://www.youtube.com/watch?v=..."
+                  defaultValue={field.value}
+                  onChange={(e) =>
+                    setVideoUrls((prev) => ({
+                      ...prev,
+                      [field.key as VideoKey]: e.target.value,
+                    }))
+                  }
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+                />
+              </div>
+
+              {field.value.trim() ? (
+                <div className="flex items-center gap-3">
+                  <div className="relative h-14 w-24 overflow-hidden rounded-md border border-slate-800 bg-slate-900">
+                    {cover ? (
+                      <Image src={cover} alt={`${field.label} kapak`} fill className="object-cover" />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-xs text-slate-500">
+                        Kapak yok
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate text-xs text-slate-400">{id ? `Video ID: ${id}` : 'Geçerli YouTube URL bulunamadı'}</p>
+                    <p className="text-xs text-slate-500">Boş bırakırsanız otomatik olarak sonraki videoya geçer.</p>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          )
+        })}
       </div>
+
+      <details className="rounded-xl border border-slate-800 bg-slate-950/40 p-3">
+        <summary className="cursor-pointer text-sm text-slate-300">
+          İleri düzey (kapak URL’leri) – genelde gerekmez
+        </summary>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <div className="space-y-1">
+            <label className="text-sm text-slate-300" htmlFor="videoCover">
+              Video 1 kapak URL (opsiyonel)
+            </label>
+            <input
+              id="videoCover"
+              name="videoCover"
+              defaultValue={defaultValues?.videoCover || ''}
+              className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm text-slate-300" htmlFor="videoCover2">
+              Video 2 kapak URL (opsiyonel)
+            </label>
+            <input
+              id="videoCover2"
+              name="videoCover2"
+              defaultValue={defaultValues?.videoCover2 || ''}
+              className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+            />
+          </div>
+        </div>
+      </details>
 
       <div className="flex justify-end">
         <SubmitButton />

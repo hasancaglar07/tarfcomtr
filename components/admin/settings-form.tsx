@@ -4,6 +4,7 @@ import { useFormState, useFormStatus } from 'react-dom'
 
 import type { SettingsActionState } from '@/app/admin/settings/actions'
 import { ActionToast } from '@/components/admin/action-toast'
+import { useInvalidToast } from '@/components/admin/use-invalid-toast'
 
 type SettingsFormProps = {
   action: (state: SettingsActionState, formData: FormData) => Promise<SettingsActionState>
@@ -30,6 +31,7 @@ const initialState: SettingsActionState = { status: 'idle' }
 
 export function SettingsForm({ action, defaultValues }: SettingsFormProps) {
   const [state, formAction] = useFormState(action, initialState)
+  const onInvalid = useInvalidToast()
 
   const SubmitButton = () => {
     const { pending } = useFormStatus()
@@ -45,7 +47,7 @@ export function SettingsForm({ action, defaultValues }: SettingsFormProps) {
   }
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-4" onInvalid={onInvalid}>
       <div className="grid gap-3 sm:grid-cols-3">
         <div className="space-y-1">
           <label className="text-sm text-slate-300" htmlFor="locale">

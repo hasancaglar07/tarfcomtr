@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
 import { PostType } from '@prisma/client'
@@ -81,11 +82,19 @@ export async function upsertCategoryAction(
 }
 
 export async function deleteCategoryAction(formData: FormData) {
-  await requireAdmin()
-  const id = formData.get('id')?.toString()
-  if (!id) {
-    throw new Error('ID eksik')
+  try {
+    await requireAdmin()
+    const id = formData.get('id')?.toString()
+    if (!id) {
+      throw new Error('ID eksik')
+    }
+    await prisma.category.delete({ where: { id } })
+    revalidate()
+    const params = new URLSearchParams({ toast: 'Kategori silindi', toastType: 'success' })
+    redirect(`/admin/categories?${params.toString()}`)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
+    const params = new URLSearchParams({ toast: message, toastType: 'error' })
+    redirect(`/admin/categories?${params.toString()}`)
   }
-  await prisma.category.delete({ where: { id } })
-  revalidate()
 }

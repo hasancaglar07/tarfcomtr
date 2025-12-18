@@ -2,6 +2,7 @@ import Link from 'next/link'
 
 import { deleteFaqAction, upsertFaqAction } from '@/app/admin/faq/actions'
 import { FaqForm } from '@/components/admin/faq-form'
+import { ConfirmAction } from '@/components/admin/confirm-action'
 import { prisma } from '@/lib/prisma'
 
 export default async function FaqPage() {
@@ -67,15 +68,15 @@ export default async function FaqPage() {
                       />
                     </div>
                   </details>
-                  <form action={deleteFaqAction}>
-                    <input type="hidden" name="id" value={faq.id} />
-                    <button
-                      type="submit"
-                      className="rounded-lg border border-red-500/50 px-3 py-1.5 text-xs font-semibold text-red-100 transition hover:bg-red-500/10"
-                    >
-                      Sil
-                    </button>
-                  </form>
+                  <ConfirmAction
+                    action={deleteFaqAction}
+                    fields={{ id: faq.id }}
+                    title="Kaydı sil?"
+                    description="SSS kaydı kalıcı olarak silinir. Bu işlem geri alınamaz."
+                    triggerLabel="Sil"
+                    triggerClassName="rounded-lg border border-red-500/50 px-3 py-1.5 text-xs font-semibold text-red-100 transition hover:bg-red-500/10"
+                    confirmLabel="Evet, sil"
+                  />
                 </div>
               </div>
             </div>
