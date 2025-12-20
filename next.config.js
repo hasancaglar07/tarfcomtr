@@ -33,6 +33,21 @@ const nextConfig = {
     ],
   },
   output: 'standalone',
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/tr',
+        permanent: false,
+      },
+      {
+        source:
+          '/:path((?!tr|en|ar|api|_next|admin|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)',
+        destination: '/tr/:path',
+        permanent: false,
+      },
+    ]
+  },
   webpack: (config) => {
     config.resolve.alias['framer-motion'] = path.resolve(__dirname, 'lib/framer-motion-stub.tsx')
     return config

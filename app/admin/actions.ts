@@ -146,6 +146,9 @@ export async function updatePageAction(
     })
 
     revalidateForSlug(slug)
+    if (originalSlug && originalSlug !== slug) {
+      revalidateForSlug(originalSlug)
+    }
     const params = new URLSearchParams({
       toast: 'Sayfa güncellendi',
       toastType: 'success',

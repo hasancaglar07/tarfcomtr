@@ -1,4 +1,4 @@
-import { api } from '@/lib/api'
+import { api, listPublishedPostSlugs } from '@/lib/api'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Badge } from '@/components/ui/badge'
@@ -10,6 +10,19 @@ import { notFound } from 'next/navigation'
 import { normalizeLocale } from '@/lib/i18n'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
 import { buildPageMetadata } from '@/lib/seo'
+import { cache } from 'react'
+import { PostType } from '@prisma/client'
+
+const getVideo = cache((slug: string, locale: string) => api.getVideo(slug, locale))
+
+export async function generateStaticParams() {
+  try {
+    const posts = await listPublishedPostSlugs(PostType.video)
+    return posts.map((post) => ({ locale: post.locale, slug: post.slug }))
+  } catch {
+    return []
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -19,7 +32,7 @@ export async function generateMetadata({
   const { locale: rawLocale, slug } = await params
   const locale = normalizeLocale(rawLocale)
   try {
-    const { video } = await api.getVideo(slug, locale)
+    const { video } = await getVideo(slug, locale)
     return buildPageMetadata({
       locale,
       title: video.title,
@@ -48,7 +61,7 @@ export default async function VideoPage({
   
   try {
     const [{ video, related_videos }, settings] = await Promise.all([
-      api.getVideo(slug, locale),
+      getVideo(slug, locale),
       api.getSettings(locale),
     ])
 

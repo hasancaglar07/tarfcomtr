@@ -6,6 +6,7 @@ import { categoryLabels } from '@/content/content-pages'
 import { prisma } from '@/lib/prisma'
 
 const locales = ['tr', 'en', 'ar']
+const resolveLocales = (locale?: string) => (locale ? [locale] : locales)
 
 type GroupedPages = Record<
   ContentPageCategory,
@@ -81,13 +82,10 @@ export async function getContentPageGroups() {
 }
 
 export function revalidateContentPaths(revalidatePath: (path: string) => void, slug: string) {
-  revalidatePath('/')
   for (const locale of locales) {
     revalidatePath(`/${locale}`)
     revalidatePath(`/${locale}/${slug}`)
   }
-  revalidatePath('/admin')
-  revalidatePath('/admin/pages')
 }
 
 const typePathMap: Record<string, string> = {
@@ -98,28 +96,44 @@ const typePathMap: Record<string, string> = {
   service: 'services',
 }
 
+export function revalidatePostListPaths(
+  revalidatePath: (path: string) => void,
+  type: string,
+  locale?: string,
+) {
+  const segment = typePathMap[type] ?? type
+  for (const targetLocale of resolveLocales(locale)) {
+    revalidatePath(`/${targetLocale}`)
+    revalidatePath(`/${targetLocale}/${segment}`)
+  }
+}
+
+export function revalidatePostDetailPath(
+  revalidatePath: (path: string) => void,
+  type: string,
+  slug: string,
+  locale?: string,
+) {
+  const segment = typePathMap[type] ?? type
+  for (const targetLocale of resolveLocales(locale)) {
+    revalidatePath(`/${targetLocale}/${segment}/${slug}`)
+  }
+}
+
 export function revalidatePostPaths(
   revalidatePath: (path: string) => void,
   type: string,
   slug?: string,
+  locale?: string,
 ) {
-  const segment = typePathMap[type] ?? type
-  revalidatePath('/')
-  for (const locale of locales) {
-    revalidatePath(`/${locale}`)
-    revalidatePath(`/${locale}/${segment}`)
-    if (slug) {
-      revalidatePath(`/${locale}/${segment}/${slug}`)
-    }
+  revalidatePostListPaths(revalidatePath, type, locale)
+  if (slug) {
+    revalidatePostDetailPath(revalidatePath, type, slug, locale)
   }
-  revalidatePath('/admin')
-  revalidatePath(`/admin/posts/${type}`)
 }
 
-export function revalidateHome(revalidatePath: (path: string) => void) {
-  revalidatePath('/')
-  for (const locale of locales) {
-    revalidatePath(`/${locale}`)
+export function revalidateHome(revalidatePath: (path: string) => void, locale?: string) {
+  for (const targetLocale of resolveLocales(locale)) {
+    revalidatePath(`/${targetLocale}`)
   }
-  revalidatePath('/admin')
 }

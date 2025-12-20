@@ -1,4 +1,4 @@
-import { api } from '@/lib/api'
+import { api, listPublishedPostSlugs } from '@/lib/api'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Badge } from '@/components/ui/badge'
@@ -12,6 +12,19 @@ import { normalizeLocale } from '@/lib/i18n'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
 import { buildPageMetadata } from '@/lib/seo'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
+import { cache } from 'react'
+import { PostType } from '@prisma/client'
+
+const getBlogPost = cache((slug: string, locale: string) => api.getBlogPost(slug, locale))
+
+export async function generateStaticParams() {
+  try {
+    const posts = await listPublishedPostSlugs(PostType.blog)
+    return posts.map((post) => ({ locale: post.locale, slug: post.slug }))
+  } catch {
+    return []
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -22,7 +35,7 @@ export async function generateMetadata({
   const locale = normalizeLocale(rawLocale)
 
   try {
-    const { post } = await api.getBlogPost(slug, locale)
+    const { post } = await getBlogPost(slug, locale)
     return buildPageMetadata({
       locale,
       title: post.seo_title || post.title,
@@ -50,7 +63,7 @@ export default async function BlogPost({
   const locale = normalizeLocale(rawLocale)
   
   try {
-    const { post, related_posts } = await api.getBlogPost(slug, locale)
+    const { post, related_posts } = await getBlogPost(slug, locale)
     const settings = await api.getSettings(locale)
 
     return (

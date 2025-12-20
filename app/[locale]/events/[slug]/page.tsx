@@ -1,4 +1,4 @@
-import { api } from '@/lib/api'
+import { api, listPublishedPostSlugs } from '@/lib/api'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Badge } from '@/components/ui/badge'
@@ -12,6 +12,19 @@ import { normalizeLocale } from '@/lib/i18n'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
 import { buildPageMetadata } from '@/lib/seo'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
+import { cache } from 'react'
+import { PostType } from '@prisma/client'
+
+const getEvent = cache((slug: string, locale: string) => api.getEvent(slug, locale))
+
+export async function generateStaticParams() {
+  try {
+    const posts = await listPublishedPostSlugs(PostType.event)
+    return posts.map((post) => ({ locale: post.locale, slug: post.slug }))
+  } catch {
+    return []
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -21,7 +34,7 @@ export async function generateMetadata({
   const { locale: rawLocale, slug } = await params
   const locale = normalizeLocale(rawLocale)
   try {
-    const { event } = await api.getEvent(slug, locale)
+    const { event } = await getEvent(slug, locale)
     return buildPageMetadata({
       locale,
       title: event.seo_title || event.title,
@@ -50,7 +63,7 @@ export default async function EventDetailPage({
 
   try {
     const [{ event, related_events }, settings] = await Promise.all([
-      api.getEvent(slug, locale),
+      getEvent(slug, locale),
       api.getSettings(locale),
     ])
 

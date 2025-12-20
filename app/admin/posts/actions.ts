@@ -7,8 +7,9 @@ import { getServerSession } from 'next-auth'
 import { z } from 'zod'
 
 import { authOptions } from '@/lib/auth'
+import { getPastEventsTotalPages } from '@/lib/api'
 import { prisma } from '@/lib/prisma'
-import { revalidatePostPaths } from '@/lib/content-store'
+import { revalidatePostDetailPath, revalidatePostListPaths } from '@/lib/content-store'
 
 export type PostActionState =
   | { status: 'idle'; message?: string }
@@ -59,8 +60,33 @@ function parseDate(value?: string | null) {
   return Number.isNaN(d.getTime()) ? undefined : d
 }
 
-function revalidate(type: PostType, slug?: string) {
-  revalidatePostPaths(revalidatePath, type, slug)
+async function revalidate(
+  type: PostType,
+  locale: string,
+  slug?: string,
+  previous?: { locale?: string; slug?: string },
+) {
+  revalidatePostListPaths(revalidatePath, type, locale)
+  if (slug) {
+    revalidatePostDetailPath(revalidatePath, type, slug, locale)
+  }
+
+  if (previous?.slug && (previous.slug !== slug || previous.locale !== locale)) {
+    const previousLocale = previous.locale ?? locale
+    revalidatePostListPaths(revalidatePath, type, previousLocale)
+    revalidatePostDetailPath(revalidatePath, type, previous.slug, previousLocale)
+  }
+
+  if (type === PostType.event) {
+    const localesToRevalidate =
+      previous?.locale && previous.locale !== locale ? [locale, previous.locale] : [locale]
+    for (const targetLocale of localesToRevalidate) {
+      const totalPages = await getPastEventsTotalPages(targetLocale, 12)
+      for (let page = 2; page <= totalPages; page += 1) {
+        revalidatePath(`/${targetLocale}/events/page/${page}`)
+      }
+    }
+  }
 }
 
 const typeLabel: Record<PostType, string> = {
@@ -138,7 +164,7 @@ export async function createPostAction(
       },
     })
 
-    revalidate(data.type, data.slug)
+    await revalidate(data.type, data.locale, data.slug)
     const params = new URLSearchParams({
       toast: `${typeLabelFor(data.type)} kaydedildi`,
       toastType: 'success',
@@ -238,7 +264,10 @@ export async function updatePostAction(
       },
     })
 
-    revalidate(data.type, data.slug)
+    await revalidate(data.type, data.locale, data.slug, {
+      locale: existing.locale,
+      slug: existing.slug,
+    })
     const params = new URLSearchParams({
       toast: `${typeLabelFor(data.type)} güncellendi`,
       toastType: 'success',
@@ -258,12 +287,18 @@ export async function deletePostAction(formData: FormData) {
   await requireAdmin()
   const id = formData.get('id')?.toString()
   const type = formData.get('type')?.toString() as PostType
-  const slug = formData.get('slug')?.toString()
   if (!id || !type) {
     throw new Error('Eksik bilgi')
   }
+  const existing = await prisma.post.findUnique({
+    where: { id },
+    select: { locale: true, slug: true },
+  })
+  if (!existing) {
+    throw new Error('Kayıt bulunamadı')
+  }
   await prisma.post.delete({ where: { id } })
-  revalidate(type, slug ?? undefined)
+  await revalidate(type, existing.locale, existing.slug)
   const params = new URLSearchParams({
     toast: `${typeLabelFor(type)} silindi`,
     toastType: 'success',

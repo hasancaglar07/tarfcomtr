@@ -1,4 +1,4 @@
-import { api } from '@/lib/api'
+import { api, listPublishedPostSlugs } from '@/lib/api'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
@@ -11,6 +11,19 @@ import { normalizeLocale } from '@/lib/i18n'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
 import { buildPageMetadata } from '@/lib/seo'
 import { stripImages } from '@/lib/html'
+import { cache } from 'react'
+import { PostType } from '@prisma/client'
+
+const getPodcast = cache((slug: string, locale: string) => api.getPodcast(slug, locale))
+
+export async function generateStaticParams() {
+  try {
+    const posts = await listPublishedPostSlugs(PostType.podcast)
+    return posts.map((post) => ({ locale: post.locale, slug: post.slug }))
+  } catch {
+    return []
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -20,7 +33,7 @@ export async function generateMetadata({
   const { locale: rawLocale, slug } = await params
   const locale = normalizeLocale(rawLocale)
   try {
-    const { podcast } = await api.getPodcast(slug, locale)
+    const { podcast } = await getPodcast(slug, locale)
     return buildPageMetadata({
       locale,
       title: podcast.title,
@@ -49,7 +62,7 @@ export default async function PodcastDetailPage({
 
   try {
     const [{ podcast, related_podcasts }, settings] = await Promise.all([
-      api.getPodcast(slug, locale),
+      getPodcast(slug, locale),
       api.getSettings(locale),
     ])
 

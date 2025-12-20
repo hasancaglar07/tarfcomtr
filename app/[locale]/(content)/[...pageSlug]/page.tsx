@@ -4,11 +4,27 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { ContentPageView } from '@/components/content/content-page'
 import { api } from '@/lib/api'
-import { getPublishedContentPage } from '@/lib/content-store'
-import { normalizeLocale } from '@/lib/i18n'
+import { getPublishedContentPage, listPublishedSlugs } from '@/lib/content-store'
+import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
+import { cache } from 'react'
 
 const joinSlug = (segments?: string[]) => (segments && segments.length > 0 ? segments.join('/') : '')
+const getContentPage = cache((slug: string) => getPublishedContentPage(slug))
+
+export async function generateStaticParams() {
+  try {
+    const slugs = await listPublishedSlugs()
+    return SUPPORTED_LOCALES.flatMap((locale) =>
+      slugs.map((slug) => ({
+        locale,
+        pageSlug: slug.split('/'),
+      })),
+    )
+  } catch {
+    return []
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -18,7 +34,7 @@ export async function generateMetadata({
   const { pageSlug, locale: rawLocale } = await params
   const locale = normalizeLocale(rawLocale)
   const slug = joinSlug(pageSlug)
-  const page = await getPublishedContentPage(slug)
+  const page = await getContentPage(slug)
   if (!page) {
     return buildPageMetadata({ locale })
   }
@@ -44,7 +60,7 @@ export default async function ContentPage({
   if (slug === 'yazilim/gelistirme') {
     redirect('https://tarf-yazilim.vercel.app/')
   }
-  const page = await getPublishedContentPage(slug)
+  const page = await getContentPage(slug)
 
   if (!page) {
     notFound()

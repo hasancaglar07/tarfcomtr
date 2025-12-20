@@ -3,11 +3,12 @@
 import { revalidatePath } from 'next/cache'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
-import { Prisma } from '@prisma/client'
+import { PostType, Prisma } from '@prisma/client'
 
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { revalidateHome } from '@/lib/content-store'
+import { getPastEventsTotalPages, listPublishedPostSlugs } from '@/lib/api'
+import { listPublishedSlugs, revalidateHome } from '@/lib/content-store'
 
 export type SettingsActionState =
   | { status: 'idle'; message?: string }
@@ -39,9 +40,45 @@ async function requireAdmin() {
   }
 }
 
-function revalidate() {
-  revalidateHome(revalidatePath)
-  revalidatePath('/admin/settings')
+async function revalidate(locale: string) {
+  const segmentMap: Record<PostType, string> = {
+    blog: 'blog',
+    event: 'events',
+    video: 'videos',
+    podcast: 'podcasts',
+    service: 'services',
+  }
+
+  revalidateHome(revalidatePath, locale)
+  revalidatePath(`/${locale}/faq`)
+  revalidatePath(`/${locale}/contact`)
+
+  const contentSlugs = await listPublishedSlugs()
+  for (const slug of contentSlugs) {
+    revalidatePath(`/${locale}/${slug}`)
+  }
+
+  const types: PostType[] = [
+    PostType.blog,
+    PostType.event,
+    PostType.video,
+    PostType.podcast,
+    PostType.service,
+  ]
+
+  for (const type of types) {
+    const segment = segmentMap[type] ?? type
+    revalidatePath(`/${locale}/${segment}`)
+    const slugs = await listPublishedPostSlugs(type, locale)
+    for (const post of slugs) {
+      revalidatePath(`/${locale}/${segment}/${post.slug}`)
+    }
+  }
+
+  const totalEventPages = await getPastEventsTotalPages(locale, 12)
+  for (let page = 2; page <= totalEventPages; page += 1) {
+    revalidatePath(`/${locale}/events/page/${page}`)
+  }
 }
 
 export async function upsertSettingsAction(
@@ -142,7 +179,7 @@ export async function upsertSettingsAction(
       create: createData,
     })
 
-    revalidate()
+    await revalidate(data.locale)
     return { status: 'success', message: 'Ayarlar kaydedildi' }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'

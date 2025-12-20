@@ -7,7 +7,6 @@ import { z } from 'zod'
 
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { revalidateHome } from '@/lib/content-store'
 
 export type FaqActionState =
   | { status: 'idle'; message?: string }
@@ -29,9 +28,8 @@ async function requireAdmin() {
   }
 }
 
-function revalidate() {
-  revalidateHome(revalidatePath)
-  revalidatePath('/admin/faq')
+function revalidate(locale: string) {
+  revalidatePath(`/${locale}/faq`)
 }
 
 export async function upsertFaqAction(
@@ -73,7 +71,7 @@ export async function upsertFaqAction(
         },
       })
     }
-    revalidate()
+    revalidate(data.locale)
     return { status: 'success', message: data.id ? 'Soru güncellendi' : 'Soru eklendi' }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
@@ -86,8 +84,10 @@ export async function deleteFaqAction(formData: FormData) {
     await requireAdmin()
     const id = formData.get('id')?.toString()
     if (!id) throw new Error('ID eksik')
+    const existing = await prisma.fAQ.findUnique({ where: { id }, select: { locale: true } })
+    if (!existing) throw new Error('Kayıt bulunamadı')
     await prisma.fAQ.delete({ where: { id } })
-    revalidate()
+    revalidate(existing.locale)
     const params = new URLSearchParams({ toast: 'Kayıt silindi', toastType: 'success' })
     redirect(`/admin/faq?${params.toString()}`)
   } catch (error) {

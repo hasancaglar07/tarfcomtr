@@ -272,6 +272,21 @@ async function getPastEvents(locale: string, page: number = 1, perPage: number =
   }
 }
 
+export async function getPastEventsTotalPages(locale: string, perPage: number = 12) {
+  const safePerPage =
+    Number.isFinite(perPage) && perPage > 0 && perPage <= 50 ? Math.floor(perPage) : 12
+  const todayStart = getEventsTodayStart()
+  const total = await prisma.post.count({
+    where: {
+      type: PostType.event,
+      status: PostStatus.published,
+      locale,
+      eventDate: { lt: todayStart as Date },
+    },
+  })
+  return Math.max(1, Math.ceil(total / safePerPage))
+}
+
 async function getPostDetail(type: PostType, slug: string, locale: string) {
   const post = await prisma.post.findFirst({
     where: { type, slug, locale, status: PostStatus.published },
@@ -355,6 +370,19 @@ async function getCategories(type?: PostType, locale: string = 'tr') {
     slug: c.slug,
     posts_count: 0,
   }))
+}
+
+export async function listPublishedPostSlugs(type: PostType, locale?: string) {
+  const posts = await prisma.post.findMany({
+    where: {
+      type,
+      status: PostStatus.published,
+      ...(locale ? { locale } : {}),
+    },
+    select: { slug: true, locale: true },
+    orderBy: { publishedAt: 'desc' },
+  })
+  return posts
 }
 
 export const api = {

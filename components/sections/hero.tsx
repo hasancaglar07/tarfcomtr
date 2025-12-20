@@ -196,7 +196,7 @@ export function Hero({ locale, data, events }: HeroProps) {
         <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
         <div className="container relative z-10 pt-10 pb-16 lg:pt-14 lg:pb-22">
           <div className="grid items-center gap-12 lg:grid-cols-2">
-            <StaggerContainer className="space-y-8">
+            <StaggerContainer className="min-w-0 space-y-8">
               <StaggerItem>
                 <div className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-background/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground mx-auto lg:mx-0">
                   <ShieldCheck className="h-3.5 w-3.5 text-primary" />
@@ -233,28 +233,33 @@ export function Hero({ locale, data, events }: HeroProps) {
             </StaggerItem>
 
             <StaggerItem>
-              {upcomingEvents.length > 0 ? (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-                      <Calendar className="h-4 w-4 text-primary" />
+              <div className="w-full rounded-[28px] border border-primary/15 bg-gradient-to-br from-white/95 via-white/90 to-amber-50/80 p-5 shadow-[0_26px_80px_rgba(15,23,42,0.16)] sm:p-6">
+                <div className="flex flex-col items-center gap-3 pb-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary shadow-sm">
+                      <Calendar className="h-5 w-5" />
+                    </span>
+                    <span className="text-balance text-sm font-semibold uppercase tracking-[0.14em] text-foreground sm:text-base sm:tracking-[0.25em]">
                       {labels.title}
-                    </div>
-                    <Link
-                      href={`/${locale}/events`}
-                      className="text-xs font-semibold text-primary hover:underline underline-offset-4"
-                    >
-                      {labels.all}
-                    </Link>
+                    </span>
                   </div>
+                  <Link
+                    href={`/${locale}/events`}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl sm:w-auto sm:text-xs sm:tracking-[0.22em]"
+                  >
+                    {labels.all}
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
 
+                {upcomingEvents.length > 0 ? (
                   <HeroEventsMarquee locale={locale} events={upcomingEvents} />
-                </div>
-              ) : (
-                <div className="rounded-3xl border border-dashed border-border/60 bg-white/80 p-5 shadow-xl">
-                  <p className="text-sm text-muted-foreground">{labels.empty}</p>
-                </div>
-              )}
+                ) : (
+                  <div className="rounded-2xl border border-dashed border-border/60 bg-white/80 p-5 text-center shadow-sm sm:p-6">
+                    <p className="text-sm text-muted-foreground sm:text-base">{labels.empty}</p>
+                  </div>
+                )}
+              </div>
             </StaggerItem>
             </StaggerContainer>
 
@@ -400,57 +405,54 @@ function HeroEventsMarquee({ locale, events }: { locale: string; events: Post[] 
 
   return (
     <div
-      className={`hero-events-marquee relative rounded-3xl border border-white/30 bg-gradient-to-r from-white/85 via-white/95 to-white/85 py-3 shadow-[0_22px_60px_rgba(15,23,42,0.12)] backdrop-blur-2xl ${
-        shouldReduceMotion ? 'overflow-x-auto' : 'overflow-hidden'
-      }`}
-      style={{
-        WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
-        maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
-      }}
+      className="hero-events-marquee relative w-full max-w-full rounded-3xl border border-primary/15 bg-gradient-to-r from-white/95 via-white to-amber-50/85 py-4 shadow-[0_24px_70px_rgba(15,23,42,0.18)] backdrop-blur-2xl overflow-hidden"
+      style={
+        shouldReduceMotion
+          ? undefined
+          : {
+              WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+              maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+            }
+      }
     >
-      <div
-        className={`flex w-max items-center gap-3 px-4 ${shouldReduceMotion ? '' : 'hero-events-marquee-track'}`}
-      >
-        <div className="flex items-center gap-3 pr-3">
-          {displayEvents.map((event) => (
+      {shouldReduceMotion ? (
+        <div className="grid gap-3 px-4 sm:grid-cols-2 sm:px-5">
+          {displayEvents.slice(0, 4).map((event) => (
             <Link
-              key={`a-${event.id}`}
+              key={`m-${event.id}`}
               href={`/${locale}/events/${event.slug}`}
-              className="group flex h-12 shrink-0 items-center gap-3 rounded-full border border-border/60 bg-white/80 px-4 shadow-sm transition hover:-translate-y-0.5 hover:bg-white hover:shadow-md"
+              className="group flex items-center gap-3 rounded-2xl border border-border/70 bg-white/95 p-3 shadow-md transition hover:-translate-y-0.5 hover:bg-white hover:shadow-lg"
             >
-              <div className="flex items-center gap-2">
-                <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                  {event.event_date
-                    ? new Intl.DateTimeFormat(locale, { day: '2-digit', month: 'short' }).format(
-                        new Date(event.event_date),
-                      )
-                    : '--'}
-                </span>
-              </div>
-              <div className="flex flex-col leading-tight">
-                <span className="max-w-[260px] truncate text-sm font-semibold text-foreground group-hover:text-primary">
+              <span className="shrink-0 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                {event.event_date
+                  ? new Intl.DateTimeFormat(locale, { day: '2-digit', month: 'short' }).format(
+                      new Date(event.event_date),
+                    )
+                  : '--'}
+              </span>
+              <div className="min-w-0">
+                <span className="block truncate text-sm font-semibold text-foreground group-hover:text-primary">
                   {event.title}
                 </span>
                 <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
                   <MapPin className="h-3.5 w-3.5" />
-                  <span className="max-w-[240px] truncate">{event.location || '-'}</span>
+                  <span className="truncate">{event.location || '-'}</span>
                 </span>
               </div>
             </Link>
           ))}
         </div>
-
-        {!shouldReduceMotion ? (
-          <div className="flex items-center gap-3 pr-3" aria-hidden="true">
+      ) : (
+        <div className="flex w-max items-center gap-3 px-4 sm:gap-4 sm:px-5 hero-events-marquee-track">
+          <div className="flex items-center gap-3 pr-3">
             {displayEvents.map((event) => (
               <Link
-                key={`b-${event.id}`}
+                key={`a-${event.id}`}
                 href={`/${locale}/events/${event.slug}`}
-                tabIndex={-1}
-                className="group flex h-12 shrink-0 items-center gap-3 rounded-full border border-border/60 bg-white/80 px-4 shadow-sm transition hover:-translate-y-0.5 hover:bg-white hover:shadow-md"
+                className="group flex h-12 shrink-0 items-center gap-3 rounded-full border border-border/70 bg-white/90 px-4 shadow-md transition hover:-translate-y-1 hover:bg-white hover:shadow-lg sm:h-14 sm:px-5"
               >
                 <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                  <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary sm:px-3.5 sm:py-1.5 sm:text-sm">
                     {event.event_date
                       ? new Intl.DateTimeFormat(locale, { day: '2-digit', month: 'short' }).format(
                           new Date(event.event_date),
@@ -459,19 +461,49 @@ function HeroEventsMarquee({ locale, events }: { locale: string; events: Post[] 
                   </span>
                 </div>
                 <div className="flex flex-col leading-tight">
-                  <span className="max-w-[260px] truncate text-sm font-semibold text-foreground group-hover:text-primary">
+                  <span className="max-w-[220px] truncate text-sm font-semibold text-foreground group-hover:text-primary sm:max-w-[300px] sm:text-base">
                     {event.title}
                   </span>
-                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                    <MapPin className="h-3.5 w-3.5" />
-                    <span className="max-w-[240px] truncate">{event.location || '-'}</span>
+                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground sm:text-sm">
+                    <MapPin className="h-4 w-4" />
+                    <span className="max-w-[200px] truncate sm:max-w-[260px]">{event.location || '-'}</span>
                   </span>
                 </div>
               </Link>
             ))}
           </div>
-        ) : null}
-      </div>
+
+          <div className="flex items-center gap-3 pr-3" aria-hidden="true">
+            {displayEvents.map((event) => (
+              <Link
+                key={`b-${event.id}`}
+                href={`/${locale}/events/${event.slug}`}
+                tabIndex={-1}
+                className="group flex h-12 shrink-0 items-center gap-3 rounded-full border border-border/70 bg-white/90 px-4 shadow-md transition hover:-translate-y-1 hover:bg-white hover:shadow-lg sm:h-14 sm:px-5"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary sm:px-3.5 sm:py-1.5 sm:text-sm">
+                    {event.event_date
+                      ? new Intl.DateTimeFormat(locale, { day: '2-digit', month: 'short' }).format(
+                          new Date(event.event_date),
+                        )
+                      : '--'}
+                  </span>
+                </div>
+                <div className="flex flex-col leading-tight">
+                  <span className="max-w-[220px] truncate text-sm font-semibold text-foreground group-hover:text-primary sm:max-w-[300px] sm:text-base">
+                    {event.title}
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground sm:text-sm">
+                    <MapPin className="h-4 w-4" />
+                    <span className="max-w-[200px] truncate sm:max-w-[260px]">{event.location || '-'}</span>
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

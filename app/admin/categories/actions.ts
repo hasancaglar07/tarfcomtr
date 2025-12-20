@@ -8,7 +8,8 @@ import { PostType } from '@prisma/client'
 
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { revalidateHome } from '@/lib/content-store'
+import { getPastEventsTotalPages, listPublishedPostSlugs } from '@/lib/api'
+import { revalidatePostDetailPath, revalidatePostListPaths } from '@/lib/content-store'
 
 export type CategoryActionState =
   | { status: 'idle'; message?: string }
@@ -30,9 +31,18 @@ async function requireAdmin() {
   }
 }
 
-function revalidate() {
-  revalidateHome(revalidatePath)
-  revalidatePath('/admin/categories')
+async function revalidate(type: PostType, locale: string) {
+  revalidatePostListPaths(revalidatePath, type, locale)
+  const slugs = await listPublishedPostSlugs(type, locale)
+  for (const post of slugs) {
+    revalidatePostDetailPath(revalidatePath, type, post.slug, locale)
+  }
+  if (type === PostType.event) {
+    const totalPages = await getPastEventsTotalPages(locale, 12)
+    for (let page = 2; page <= totalPages; page += 1) {
+      revalidatePath(`/${locale}/events/page/${page}`)
+    }
+  }
 }
 
 export async function upsertCategoryAction(
@@ -73,7 +83,7 @@ export async function upsertCategoryAction(
         },
       })
     }
-    revalidate()
+    await revalidate(data.type, data.locale)
     return { status: 'success', message: data.id ? 'Kategori güncellendi' : 'Kategori eklendi' }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
@@ -88,8 +98,15 @@ export async function deleteCategoryAction(formData: FormData) {
     if (!id) {
       throw new Error('ID eksik')
     }
+    const category = await prisma.category.findUnique({
+      where: { id },
+      select: { type: true, locale: true },
+    })
+    if (!category) {
+      throw new Error('Kategori bulunamadı')
+    }
     await prisma.category.delete({ where: { id } })
-    revalidate()
+    await revalidate(category.type, category.locale ?? 'tr')
     const params = new URLSearchParams({ toast: 'Kategori silindi', toastType: 'success' })
     redirect(`/admin/categories?${params.toString()}`)
   } catch (error) {

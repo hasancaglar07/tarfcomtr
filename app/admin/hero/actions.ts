@@ -38,9 +38,8 @@ async function requireAdmin() {
   }
 }
 
-function revalidate() {
-  revalidateHome(revalidatePath)
-  revalidatePath('/admin/hero')
+function revalidate(locale: string) {
+  revalidateHome(revalidatePath, locale)
 }
 
 export async function upsertHeroAction(
@@ -111,7 +110,7 @@ export async function upsertHeroAction(
       },
     })
 
-    revalidate()
+    revalidate(data.locale)
     return { status: 'success', message: 'Hero içeriği kaydedildi' }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'

@@ -1,4 +1,4 @@
-import { api } from '@/lib/api'
+import { api, listPublishedPostSlugs } from '@/lib/api'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Badge } from '@/components/ui/badge'
@@ -11,6 +11,19 @@ import { notFound } from 'next/navigation'
 import { normalizeLocale } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
+import { cache } from 'react'
+import { PostType } from '@prisma/client'
+
+const getService = cache((slug: string, locale: string) => api.getService(slug, locale))
+
+export async function generateStaticParams() {
+  try {
+    const posts = await listPublishedPostSlugs(PostType.service)
+    return posts.map((post) => ({ locale: post.locale, slug: post.slug }))
+  } catch {
+    return []
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -21,7 +34,7 @@ export async function generateMetadata({
   const locale = normalizeLocale(rawLocale)
 
   try {
-    const { service } = await api.getService(slug, locale)
+    const { service } = await getService(slug, locale)
     return buildPageMetadata({
       locale,
       title: service.title,
@@ -50,7 +63,7 @@ export default async function ServiceDetailPage({
 
   try {
     const [{ service, child_services }, settings] = await Promise.all([
-      api.getService(slug, locale),
+      getService(slug, locale),
       api.getSettings(locale),
     ])
 
