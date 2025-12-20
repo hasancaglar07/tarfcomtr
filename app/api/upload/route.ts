@@ -10,8 +10,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Yetkisiz' }, { status: 401 })
   }
 
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    return NextResponse.json({ error: 'BLOB_READ_WRITE_TOKEN eksik' }, { status: 500 })
+  if (!process.env['yeni_blob_READ_WRITE_TOKEN']) {
+    return NextResponse.json({ error: 'yeni_blob_READ_WRITE_TOKEN eksik' }, { status: 500 })
   }
 
   const formData = await request.formData()
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
   const blob = await put(file.name, file, {
     access: 'public',
-    token: process.env.BLOB_READ_WRITE_TOKEN,
+    token: process.env['yeni_blob_READ_WRITE_TOKEN'],
   })
 
   return NextResponse.json({
