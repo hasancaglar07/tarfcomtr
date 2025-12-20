@@ -1,6 +1,5 @@
 import type { NextAuthOptions } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import bcrypt from 'bcryptjs'
 
 const adminEmail = process.env.ADMIN_EMAIL || 'admin@tarf.com'
 const adminPassword = 'Tarfyazilim123456!'
