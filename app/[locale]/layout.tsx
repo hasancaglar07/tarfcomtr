@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import { PageTransition } from '@/components/ui/page-transition'
 import { buildPageMetadata } from '@/lib/seo'
 
+export const revalidate = 300
+
 export default async function LocaleLayout({
   children,
   params,
@@ -17,12 +19,13 @@ export default async function LocaleLayout({
     notFound()
   }
 
-  normalizeLocale(locale)
+  const normalizedLocale = normalizeLocale(locale)
+  const direction = normalizedLocale === 'ar' ? 'rtl' : 'ltr'
 
   return (
-    <PageTransition>
-      {children}
-    </PageTransition>
+    <div lang={normalizedLocale} dir={direction}>
+      <PageTransition>{children}</PageTransition>
+    </div>
   )
 }
 

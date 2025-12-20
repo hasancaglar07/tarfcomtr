@@ -10,8 +10,6 @@ import { buildPageMetadata } from '@/lib/seo'
 
 const joinSlug = (segments?: string[]) => (segments && segments.length > 0 ? segments.join('/') : '')
 
-export const dynamic = 'force-dynamic'
-
 export async function generateMetadata({
   params,
 }: {
