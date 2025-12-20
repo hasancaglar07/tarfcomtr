@@ -3,8 +3,10 @@ import Credentials from 'next-auth/providers/credentials'
 
 const adminEmail = process.env.ADMIN_EMAIL || 'admin@tarf.com'
 const adminPassword = 'Tarfyazilim123456!'
+const authSecret = 'tarfakademi-fixed-secret'
 
 export const authOptions: NextAuthOptions = {
+  secret: authSecret,
   session: { strategy: 'jwt' },
   pages: { signIn: '/admin/login' },
   providers: [

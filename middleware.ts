@@ -7,6 +7,7 @@ const defaultLocale = 'tr'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+  const authSecret = 'tarfakademi-fixed-secret'
 
   // Admin auth guard
   if (pathname.startsWith('/admin')) {
@@ -14,7 +15,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next()
     }
 
-    const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
+    const token = await getToken({ req: request, secret: authSecret })
     if (!token) {
       const loginUrl = new URL('/admin/login', request.url)
       loginUrl.searchParams.set('callbackUrl', request.url)
