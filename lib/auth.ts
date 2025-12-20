@@ -3,8 +3,7 @@ import Credentials from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 
 const adminEmail = process.env.ADMIN_EMAIL || 'admin@tarf.com'
-const adminHash = process.env.ADMIN_HASHED_PASSWORD
-const adminPassword = process.env.ADMIN_PASSWORD || '123456'
+const adminPassword = 'Tarfyazilim123456!'
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
@@ -23,20 +22,7 @@ export const authOptions: NextAuthOptions = {
         const adminEmailNormalized = adminEmail.toLowerCase()
         if (inputEmail !== adminEmailNormalized) return null
 
-        console.log('[auth] attempting login', {
-          email: credentials.email,
-          hasPlain: Boolean(adminPassword),
-          hasHash: Boolean(adminHash),
-        })
-
-        if (adminPassword) {
-          if (credentials.password !== adminPassword) return null
-        } else if (adminHash) {
-          const isValid = await bcrypt.compare(credentials.password, adminHash)
-          if (!isValid) return null
-        } else {
-          return null
-        }
+        if (credentials.password !== adminPassword) return null
 
         return { id: 'admin', email: adminEmail }
       },
