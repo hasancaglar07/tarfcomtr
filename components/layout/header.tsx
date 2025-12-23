@@ -231,11 +231,6 @@ export function Header({ locale, settings }: HeaderProps) {
           description: locale === 'tr' ? 'Merak eden gençlik' : 'Learning ecosystem',
         },
         {
-          label: locale === 'tr' ? 'Lisans Eğitimleri' : 'Undergraduate Programs',
-          href: `/${locale}/akademi/egitimler`,
-          description: locale === 'tr' ? 'Derinlikli programlar' : 'Deep-dive programs',
-        },
-        {
           label: locale === 'tr' ? 'Seminerler' : locale === 'ar' ? 'الندوات' : 'Seminars',
           href: `/${locale}/akademi/seminerler`,
           description: locale === 'tr' ? 'Uzman seminerleri' : 'Expert seminars',
@@ -313,13 +308,25 @@ export function Header({ locale, settings }: HeaderProps) {
       label: locale === 'tr' ? 'Yayınlar' : locale === 'ar' ? 'المنشورات' : 'Publications',
       links: [
         {
+          label:
+            locale === 'tr'
+              ? 'Yayın Anlayışımız'
+              : locale === 'ar'
+              ? 'رؤيتنا للنشر'
+              : 'Publishing Ethos',
+          href: `/${locale}/yayin-anlayisimiz`,
+          description:
+            locale === 'tr'
+              ? 'Yayın ilkemiz'
+              : locale === 'ar'
+              ? 'رؤيتنا التحريرية'
+              : 'Editorial approach',
+        },
+        {
           label: locale === 'tr' ? 'Tarf Dergi' : locale === 'ar' ? 'مجلة تارف' : 'Tarf Magazine',
           href: `/${locale}/dergi`,
           description: locale === 'tr' ? 'Bilim ve teknoloji dergisi' : 'Science and technology magazine',
         },
-        { label: locale === 'tr' ? 'Blog' : locale === 'ar' ? 'المدونة' : 'Blog', href: `/${locale}/blog`, description: locale === 'tr' ? 'Güncel yazılar' : 'Latest articles' },
-        { label: locale === 'tr' ? 'Video' : locale === 'ar' ? 'الفيديو' : 'Video', href: `/${locale}/videos`, description: locale === 'tr' ? 'Video içerikler' : 'Video content' },
-        { label: locale === 'tr' ? 'Podcast' : locale === 'ar' ? 'البودكاست' : 'Podcast', href: `/${locale}/podcasts`, description: locale === 'tr' ? 'Podcast serileri' : 'Podcast series' },
       ],
     },
     {

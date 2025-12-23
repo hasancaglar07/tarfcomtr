@@ -189,7 +189,10 @@ export async function publishToggleAction(formData: FormData) {
 
   await prisma.contentPage.update({
     where: { slug },
-    data: { publishedAt: publish ? new Date() : null },
+    data: {
+      publishedAt: publish ? new Date() : null,
+      status: publish ? 'published' : 'draft',
+    },
   })
 
   revalidateForSlug(slug)

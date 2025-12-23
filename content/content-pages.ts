@@ -1611,10 +1611,10 @@ const akademiPages: ContentPageDefinition[] = [
     category: 'akademi',
     hero: {
       eyebrow: 'Akademi',
-      title: 'Bilimsel düşünmeyi ve üretimi besleyen akademi',
+      title: 'Akademi Ana',
       subtitle: 'Merak eden, araştıran ve çözüm üreten gençlik yetiştiriyoruz',
       description:
-        'Bilimsel içerikler, okuma listeleri, araştırma görevleri, ders videoları ve proje tabanlı eğitim modeli ile öğrencileri geleceğin becerileriyle donatıyoruz.',
+        'TARF Akademi, lisans öğrencilerine yönelik olarak; kendi akademik alanlarında derinlik kazanmalarını, etik ilkelere dayalı bir duruş geliştirmelerini ve liderlik vasfı taşıyan bireyler olarak yetişmelerini hedefleyen nitelikli bir eğitim platformudur.\n\nMisyon & Vizyon: TARF Akademi, üniversite gençliğini yalnızca mesleki bilgiyle değil; ahlâk, sorumluluk, düşünce disiplini ve toplumsal bilinçle donatmayı amaçlar. Bilginin hikmetle, bilimin irfanla buluştuğu bir anlayışla; çağın sorunlarını okuyabilen, çözüm üretebilen ve bulunduğu alana değer katan bireyler yetiştirmeyi hedefler.\n\nAkademi, öğrencilerin entelektüel birikimlerini derinleştirirken; kişisel gelişim, liderlik, etik farkındalık ve kamusal sorumluluk bilinci kazanmalarını esas alır. TARF Akademi, Türkiye’nin yarınlarını inşa edecek nitelikli insan kaynağını yetiştirmeyi stratejik bir sorumluluk olarak görür.',
       actions: [
         { label: 'Programları Keşfet', href: 'akademi' },
         { label: 'Başvuru Yap', href: 'contact', variant: 'secondary' },
@@ -1636,12 +1636,12 @@ const akademiPages: ContentPageDefinition[] = [
           {
             title: 'Misyon',
             description:
-              'TARF Akademi; lisans öğrencilerinin akademik bilgi birikimlerini güçlendirmeyi, alanlarının etik ve ahlaki ilkeleriyle donatılmış, kişisel gelişimini önemseyen, toplumsal sorumluluk bilinci yüksek bireyler yetiştirmeyi amaçlayan bir eğitim ve gelişim platformudur.',
+              'TARF Akademi, üniversite gençliğini yalnızca mesleki bilgiyle değil; ahlâk, sorumluluk, düşünce disiplini ve toplumsal bilinçle donatmayı amaçlar. Bilginin hikmetle, bilimin irfanla buluştuğu bir anlayışla; çağın sorunlarını okuyabilen, çözüm üretebilen ve bulunduğu alana değer katan bireyler yetiştirmeyi hedefler.',
           },
           {
             title: 'Vizyon',
             description:
-              'Bilimsel yetkinliği güçlü, karakteri sağlam, değer odaklı ve profesyonel dünyada etkili bir duruş sergileyen gençler yetiştirerek Türkiye’nin akademik, entelektüel ve toplumsal gelişimine öncülük eden örnek bir akademi modeli oluşturmak.',
+              'Akademi, öğrencilerin entelektüel birikimlerini derinleştirirken; kişisel gelişim, liderlik, etik farkındalık ve kamusal sorumluluk bilinci kazanmalarını esas alır. TARF Akademi, Türkiye’nin yarınlarını inşa edecek nitelikli insan kaynağını yetiştirmeyi stratejik bir sorumluluk olarak görür.',
           },
           {
             title: 'Amaçlar',
@@ -1678,10 +1678,26 @@ const akademiPages: ContentPageDefinition[] = [
         columns: 2,
         items: [
           { title: 'Eğitimler (Lisans)', description: 'Üniversite eğitimini destekleyen teknik ve sosyal modüller.' },
-          { title: 'Seminerler', description: 'Alanında uzman isimlerle düzenli buluşmalar.' },
-          { title: 'Konferanslar', description: 'Ulusal ve uluslararası çapta düzenlenen büyük buluşmalar.' },
-          { title: 'Çalıştaylar', description: 'Uygulamalı ve kısa süreli beceri geliştirme oturumları.' },
-          { title: 'Sertifika Programları', description: 'Uluslararası akreditasyonlu kapsamlı eğitim serileri.' },
+          {
+            title: 'Seminerler',
+            description:
+              'TARF Akademi seminerleri, üniversitelerde düzenlenen ve öğrencilerin hem kendi alanlarına hem de güncel meselelere dair perspektif kazanmalarını amaçlayan içeriklerden oluşur. Alanında yetkin akademisyenler ve düşünce insanlarıyla gerçekleştirilen bu seminerler, öğrencilerin eleştirel düşünme ve analiz becerilerini geliştirmeyi hedefler. Seminer programları; mesleki etik, akademik sorumluluk, toplumsal meseleler ve değerler ekseninde şekillendirilerek öğrencilerin yalnızca "bilgi sahibi" değil, aynı zamanda "bilgiyle sorumluluk taşıyan" bireyler olmalarını amaçlar.',
+          },
+          {
+            title: 'Konferanslar',
+            description:
+              'Konferanslar; üniversitelerde ve farklı entelektüel mekânlarda düzenlenen, daha geniş kitlelere hitap eden ilham verici buluşmalar olarak tasarlanır. Bu programlarda akademi, bürokrasi, sivil toplum ve düşünce dünyasından isimler, tecrübelerini ve birikimlerini gençlerle paylaşır. TARF Akademi konferansları, gençlerin ufkunu genişletmeyi; kariyer, ahlâk, liderlik ve toplumsal sorumluluk gibi başlıklarda bilinç oluşturarak onları uzun vadeli düşünmeye sevk etmeyi amaçlar.',
+          },
+          {
+            title: 'Çalıştaylar',
+            description:
+              'Çalıştaylar, öğrencilerin aktif katılım gösterdiği, fikir ürettiği ve çözüm önerileri geliştirdiği uygulamalı programlardır. Üniversitelerde ve uygun görülen diğer alanlarda düzenlenen bu çalışmalar, teori ile pratiği buluşturan bir anlayışla yürütülür. Bu süreçte öğrenciler; analiz yapma, rapor hazırlama, birlikte düşünme ve ortak akıl üretme becerileri kazanır. TARF Akademi çalıştayları, gençleri pasif dinleyici olmaktan çıkarıp düşünce üreticisi hâline getirmeyi hedefler.',
+          },
+          {
+            title: 'Sertifika Programları',
+            description:
+              'TARF Akademi Sertifika Programları, alanında duayen ve uzman isimler tarafından yürütülen; online ve yüz yüze formatlarda gerçekleştirilen nitelikli eğitimlerden oluşur. Bu programlar, öğrencilerin akademik ve mesleki gelişimlerini desteklemenin yanı sıra etik duruş ve liderlik becerilerini güçlendirmeyi amaçlar. Sertifika programları; kariyer bilinci kazandıran, değer temelli ve uzun vadeli bir kişisel gelişim sürecini esas alan bir yapı üzerine inşa edilmiştir. TARF Akademi, bu programlarla öğrencilerin hem bugününe hem de yarınına yatırım yapmayı hedefler.',
+          },
         ],
       },
       {
@@ -1807,7 +1823,7 @@ const akademiPages: ContentPageDefinition[] = [
       title: 'Uzman Seminerleri',
       subtitle: 'Alanında uzman isimlerden öğrenin',
       description:
-        'Teknoloji, bilim, girişimcilik ve değerler ekseninde düzenli seminer serileriyle öğrencilerimizi ilham veren isimlerle buluşturuyoruz.',
+        'TARF Akademi seminerleri, üniversitelerde düzenlenen ve öğrencilerin hem kendi alanlarına hem de güncel meselelere dair perspektif kazanmalarını amaçlayan içeriklerden oluşur. Alanında yetkin akademisyenler ve düşünce insanlarıyla gerçekleştirilen bu seminerler, öğrencilerin eleştirel düşünme ve analiz becerilerini geliştirmeyi hedefler.\n\nSeminer programları; mesleki etik, akademik sorumluluk, toplumsal meseleler ve değerler ekseninde şekillendirilerek öğrencilerin yalnızca "bilgi sahibi" değil, aynı zamanda "bilgiyle sorumluluk taşıyan" bireyler olmalarını amaçlar.',
       actions: [
         { label: 'Yaklaşan Seminerler', href: 'akademi/seminerler' },
         { label: 'Bildirim Al', href: 'contact', variant: 'secondary' },
@@ -1879,7 +1895,7 @@ const akademiPages: ContentPageDefinition[] = [
       title: 'TARF Konferansları',
       subtitle: 'Teknoloji, bilim, kültür, yapay zekâ ve dijitalleşme buluşmaları',
       description:
-        'Türkiye’nin önde gelen isimlerini konuşmacı olarak ağırladığımız konferanslarda öğrenciler projelerini sunuyor, yeni fikirler doğuyor.',
+        'Konferanslar; üniversitelerde ve farklı entelektüel mekânlarda düzenlenen, daha geniş kitlelere hitap eden ilham verici buluşmalar olarak tasarlanır. Bu programlarda akademi, bürokrasi, sivil toplum ve düşünce dünyasından isimler, tecrübelerini ve birikimlerini gençlerle paylaşır.\n\nTARF Akademi konferansları, gençlerin ufkunu genişletmeyi; kariyer, ahlâk, liderlik ve toplumsal sorumluluk gibi başlıklarda bilinç oluşturarak onları uzun vadeli düşünmeye sevk etmeyi amaçlar.',
       actions: [
         { label: 'Konferans Takvimi', href: 'akademi/konferanslar' },
         { label: 'Konuşmacı Ol', href: 'contact', variant: 'secondary' },
@@ -1951,7 +1967,7 @@ const akademiPages: ContentPageDefinition[] = [
       title: 'Uygulamalı Çalıştaylar',
       subtitle: 'Öğrendiğinizi pratik yapın',
       description:
-        'Kodlama, tasarım, inovasyon ve kişisel gelişim odaklı kısa süreli yoğun workshop serileri sunuyoruz.',
+        'Çalıştaylar, öğrencilerin aktif katılım gösterdiği, fikir ürettiği ve çözüm önerileri geliştirdiği uygulamalı programlardır. Üniversitelerde ve uygun görülen diğer alanlarda düzenlenen bu çalışmalar, teori ile pratiği buluşturan bir anlayışla yürütülür.\n\nBu süreçte öğrenciler; analiz yapma, rapor hazırlama, birlikte düşünme ve ortak akıl üretme becerileri kazanır. TARF Akademi çalıştayları, gençleri pasif dinleyici olmaktan çıkarıp düşünce üreticisi hâline getirmeyi hedefler.',
       actions: [
         { label: 'Takvimi Gör', href: 'akademi/calistaylar' },
         { label: 'Çalıştay Düzenle', href: 'contact', variant: 'secondary' },
@@ -2026,7 +2042,7 @@ const akademiPages: ContentPageDefinition[] = [
       title: 'Sertifika Programları',
       subtitle: 'Uluslararası geçerliliği olan sertifikalar',
       description:
-        'Yazılım, yapay zekâ, veri bilimi ve teknoloji temelli kişisel gelişim alanlarında kariyerinizi güçlendiren sertifika serileri sunuyoruz.',
+        'TARF Akademi Sertifika Programları, alanında duayen ve uzman isimler tarafından yürütülen; online ve yüz yüze formatlarda gerçekleştirilen nitelikli eğitimlerden oluşur. Bu programlar, öğrencilerin akademik ve mesleki gelişimlerini desteklemenin yanı sıra etik duruş ve liderlik becerilerini güçlendirmeyi amaçlar.\n\nSertifika programları; kariyer bilinci kazandıran, değer temelli ve uzun vadeli bir kişisel gelişim sürecini esas alan bir yapı üzerine inşa edilmiştir. TARF Akademi, bu programlarla öğrencilerin hem bugününe hem de yarınına yatırım yapmayı hedefler.',
       actions: [
         { label: 'Programları Gör', href: 'akademi/sertifika-programlari' },
         { label: 'Danışmanla Konuş', href: 'contact', variant: 'secondary' },
@@ -2660,6 +2676,81 @@ const kuluplerPages: ContentPageDefinition[] = [
 ]
 
 const yayinlarPages: ContentPageDefinition[] = [
+  {
+    slug: 'yayin-anlayisimiz',
+    category: 'yayinlar',
+    hero: {
+      eyebrow: 'Yayınlar',
+      title: 'Yayın Anlayışımız',
+      subtitle: 'Bilginin hakikate, teknolojinin iyiliğe, dönüşümün hikmete yöneldiği bir gelecek…',
+      description:
+        'Çalışmalarımızda okurları hakikate yakınlaştıran bir nazar, ölçüyü gözeten bir idrak, bilginin ötesini fark ettiren bir irfani duruş ve düşünce kazandırmak en büyük amacımızdır. Varlığı anlamlandırmak, eşyayı yerli yerine koymak ve bilginin hakikatle buluştuğu o ince çizgiyi gözetmek…',
+      actions: [
+        { label: 'TARF Dergi', href: 'dergi' },
+        { label: 'İletişime Geç', href: 'contact', variant: 'secondary' },
+      ],
+    },
+    sections: [
+      {
+        id: 'yayin-cizgisi',
+        eyebrow: 'Yayın çizgisi',
+        title: 'İrfanla merkezlenen yolculuk',
+        layout: 'list',
+        items: [
+          {
+            title: 'Bilim ve irfan dengesi',
+            description:
+              'Yayınlarımız, bu nazif ve nafiz bakışı merkeze alarak bir yolculuğa çıkmak üzere hazırlanır; bilimi irfanla, teknolojiyi insanlıkla, veriyi hikmetle, dijitalleşmeyi sorumlulukla buluşturma gayreti…',
+          },
+          {
+            title: 'Çağın dönüşümleri',
+            description:
+              'Ortaya koyduğumuz her bir çalışma, çağımızın en kritik alanlarına temas eder. İnsanlığın karşı karşıya olduğu dönüşümlerin başka bir yüzünü ele alır.',
+          },
+          {
+            title: 'Sorumluluk alanları',
+            description:
+              'Bazen teknolojik bağımsızlığın stratejik, ahlakî ve medeniyet tasavvurumuzu ilgilendiren yönlerini, bazen tabiatın ilahi düzen içindeki yerini ve insanın bu düzeni koruma sorumluluğunu ve sürdürülebilirliğin modern bir kavramdan çok daha önce, kadim irfanımızın bir gereği olduğunu; bazen de dijital dünyanın sunduğu imkânların yanında, insanın öz iradesini, mahremiyetini ve zihinsel bağımsızlığını tehdit eden boyutlarını…',
+          },
+        ],
+      },
+      {
+        id: 'istikamet',
+        eyebrow: 'İstikamet',
+        title: 'Ölçü ve sorumluluk',
+        layout: 'list',
+        items: [
+          {
+            title: 'İnsan ve ölçü',
+            description:
+              'Fakat hepsi aynı hakikate işaret eder; insan, elindeki gücü hangi maksatla ve hangi ölçü içinde kullanırsa geleceğini de o yönde şekillendirecektir.',
+          },
+          {
+            title: 'Gelecek tasavvuru',
+            description:
+              'Bilginin hakikate, teknolojinin iyiliğe, dönüşümün hikmete yöneldiği bir gelecek…',
+          },
+          {
+            title: 'Niyet ve gayret',
+            description:
+              'Bu mecrada gayretimiz, çabamız, niyetimiz hep bu yöndedir. Ortaya koyduğumuz külliyat, verdiğimiz mesajın, tuttuğumuz aynanın, sürdürdüğümüz irfani duruşun bütünüdür.',
+          },
+        ],
+      },
+    ],
+    cta: {
+      title: 'Yayınlarımızla aynı çizgide buluşalım',
+      description:
+        'Yayın ekosistemimizin parçası olmak veya iş birliği geliştirmek için bize ulaşın.',
+      primaryAction: { label: 'İletişime Geç', href: 'contact' },
+      secondaryAction: { label: 'TARF Dergi', href: 'dergi' },
+    },
+    seo: {
+      title: 'Yayın Anlayışımız | TARF',
+      description:
+        'Bilimi irfanla, teknolojiyi insanlıkla buluşturan yayın anlayışımızı ve editöryel duruşumuzu keşfedin.',
+    },
+  },
   {
     slug: 'dergi',
     category: 'yayinlar',

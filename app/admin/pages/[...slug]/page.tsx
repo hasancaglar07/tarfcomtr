@@ -20,11 +20,12 @@ export default async function EditPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string[] }>
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const { slug } = await params
+  const { slug: slugParts } = await params
   await searchParams
+  const slug = Array.isArray(slugParts) ? slugParts.join('/') : slugParts
   const page = await prisma.contentPage.findUnique({ where: { slug } })
 
   if (!page) {

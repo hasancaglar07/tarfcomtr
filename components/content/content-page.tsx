@@ -158,6 +158,16 @@ const SectionContent = ({ section }: { section: ContentSection }) => {
 }
 
 export function ContentPageView({ page, locale }: ContentPageViewProps) {
+  const description = page.hero.description?.trim() ?? ''
+  const descriptionParagraphs = description
+    ? description
+        .split(/\n+/)
+        .map((paragraph) => paragraph.trim())
+        .filter(Boolean)
+    : []
+  const showNarrative =
+    Boolean(description) && (descriptionParagraphs.length > 1 || description.length > 220)
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-slate-50">
       <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-background to-background">
@@ -166,31 +176,58 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
           <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-purple-300/20 blur-3xl" />
         </div>
         <div className="container relative py-20">
-          {page.hero.eyebrow && (
-            <span className="inline-flex text-xs uppercase tracking-[0.3em] text-primary font-semibold">
-              {page.hero.eyebrow}
-            </span>
-          )}
-          <h1 className="mt-4 text-4xl font-bold md:text-5xl">{page.hero.title}</h1>
-          <p className="mt-4 text-xl text-muted-foreground">{page.hero.subtitle}</p>
-          {page.hero.description && (
-            <p className="mt-4 max-w-3xl text-lg text-muted-foreground leading-relaxed">
-              {page.hero.description}
-            </p>
-          )}
-          {page.hero.actions && (
-            <div className="mt-8 flex flex-wrap gap-4">
-              {page.hero.actions.map((action) => (
-                <Button
-                  key={action.label}
-                  variant={action.variant === 'secondary' ? 'outline' : 'default'}
-                  asChild
-                >
-                  <Link href={localizeHref(locale, action.href)}>{action.label}</Link>
-                </Button>
-              ))}
+          <div className="space-y-6">
+            <div className="max-w-3xl space-y-5">
+              {page.hero.eyebrow && (
+                <span className="inline-flex text-xs uppercase tracking-[0.3em] text-primary font-semibold">
+                  {page.hero.eyebrow}
+                </span>
+              )}
+              <h1 className="text-4xl font-bold md:text-5xl">{page.hero.title}</h1>
+              <p className="text-xl text-muted-foreground">{page.hero.subtitle}</p>
+              {!showNarrative && description && (
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  {description}
+                </p>
+              )}
             </div>
-          )}
+            {showNarrative && description && (
+              <div className="relative max-w-5xl">
+                <div className="absolute inset-0 -z-10 rounded-[32px] bg-white/70 blur-2xl" />
+                <div className="rounded-[32px] border border-white/80 bg-white/85 p-6 shadow-[0_30px_70px_rgba(15,23,42,0.08)] backdrop-blur">
+                  <div className="h-1 w-12 rounded-full bg-primary/70" />
+                  <div className="mt-4 space-y-4 text-base leading-7 text-muted-foreground">
+                    {descriptionParagraphs.map((paragraph, index) => (
+                      <p
+                        key={`${index}-${paragraph.slice(0, 24)}`}
+                        className={
+                          index === 0
+                            ? 'first-letter:text-3xl first-letter:font-semibold first-letter:text-primary'
+                            : ''
+                        }
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            {page.hero.actions && (
+              <div className="flex flex-wrap gap-4">
+                {page.hero.actions.map((action) => (
+                  <Button
+                    key={action.label}
+                    variant={action.variant === 'secondary' ? 'outline' : 'default'}
+                    asChild
+                  >
+                    <Link href={localizeHref(locale, action.href)}>{action.label}</Link>
+                  </Button>
+                ))}
+              </div>
+            )}
+          </div>
+
           {page.hero.stats && (
             <div className="mt-10 grid gap-6 md:grid-cols-3">
               {page.hero.stats.map((stat) => (
