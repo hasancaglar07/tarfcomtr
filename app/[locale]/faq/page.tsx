@@ -6,8 +6,12 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { HelpCircle, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
-import { normalizeLocale } from '@/lib/i18n'
+import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
+
+export async function generateStaticParams() {
+  return SUPPORTED_LOCALES.map((locale) => ({ locale }))
+}
 
 export async function generateMetadata({
   params,

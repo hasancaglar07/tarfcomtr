@@ -1,6 +1,12 @@
-import { normalizeLocale } from '@/lib/i18n'
+import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
 import { EventsPage } from '@/components/pages/events-page'
+
+export const revalidate = 3600
+
+export async function generateStaticParams() {
+  return SUPPORTED_LOCALES.map((locale) => ({ locale }))
+}
 
 export async function generateMetadata({
   params,

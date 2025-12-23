@@ -1,5 +1,5 @@
 import { api } from '@/lib/api'
-import { normalizeLocale } from '@/lib/i18n'
+import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -11,6 +11,10 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Animate, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/animate'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
+
+export async function generateStaticParams() {
+  return SUPPORTED_LOCALES.map((locale) => ({ locale }))
+}
 
 export async function generateMetadata({
   params,

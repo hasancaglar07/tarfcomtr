@@ -1,5 +1,5 @@
 import { api } from '@/lib/api'
-import { normalizeLocale } from '@/lib/i18n'
+import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -31,6 +31,8 @@ type StaticHeroContent = {
   video_url_4?: string | null
   video_url_5?: string | null
 }
+
+export const revalidate = 3600
 
 const STATIC_HERO_CONTENT: Record<string, StaticHeroContent> = {
   tr: {
@@ -81,6 +83,10 @@ const STATIC_HERO_CONTENT: Record<string, StaticHeroContent> = {
       { value: '500+', label: 'المشاركون' },
     ],
   },
+}
+
+export async function generateStaticParams() {
+  return SUPPORTED_LOCALES.map((locale) => ({ locale }))
 }
 
 export async function generateMetadata({

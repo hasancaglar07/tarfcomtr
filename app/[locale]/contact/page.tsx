@@ -1,11 +1,15 @@
 import { api } from '@/lib/api'
-import { normalizeLocale } from '@/lib/i18n'
+import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Card } from '@/components/ui/card'
 import { ArrowUpRight, Mail, Phone, MapPin } from 'lucide-react'
 import { ApplicationForm } from '@/components/forms/application-form'
+
+export async function generateStaticParams() {
+  return SUPPORTED_LOCALES.map((locale) => ({ locale }))
+}
 
 export async function generateMetadata({
   params,
