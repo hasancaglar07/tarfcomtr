@@ -225,7 +225,6 @@ export function Hero({ locale, data, events }: HeroProps) {
   const heroVideoLink = currentHeroVideo?.youtube_url || (content.tertiary_cta_href as string) || '#'
   const hasMultipleHeroVideos = heroVideos.length > 1
   const activeHeadline = headlineSlides[headlineIndex] || headlineSlides[0]
-  const eyebrow = content.eyebrow?.trim()
 
   return (
     <>
