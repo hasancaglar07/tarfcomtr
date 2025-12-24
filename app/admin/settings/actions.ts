@@ -1,14 +1,14 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
 import { PostType, Prisma } from '@prisma/client'
 
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { getPastEventsTotalPages, listPublishedPostSlugs } from '@/lib/api'
-import { listPublishedSlugs, revalidateHome } from '@/lib/content-store'
+import { revalidateHome } from '@/lib/content-store'
+import { cacheTags } from '@/lib/cache-tags'
 
 export type SettingsActionState =
   | { status: 'idle'; message?: string }
@@ -41,22 +41,21 @@ async function requireAdmin() {
 }
 
 async function revalidate(locale: string) {
-  const segmentMap: Record<PostType, string> = {
-    blog: 'blog',
-    event: 'events',
-    video: 'videos',
-    podcast: 'podcasts',
-    service: 'services',
-  }
-
   revalidateHome(revalidatePath, locale)
   revalidatePath(`/${locale}/faq`)
   revalidatePath(`/${locale}/contact`)
 
-  const contentSlugs = await listPublishedSlugs()
-  for (const slug of contentSlugs) {
-    revalidatePath(`/${locale}/${slug}`)
-  }
+  revalidatePath(`/${locale}/blog`)
+  revalidatePath(`/${locale}/events`)
+  revalidatePath(`/${locale}/videos`)
+  revalidatePath(`/${locale}/podcasts`)
+  revalidatePath(`/${locale}/services`)
+
+  revalidateTag(cacheTags.settings(locale))
+  revalidateTag(cacheTags.faqs(locale))
+  revalidateTag(cacheTags.heroes(locale))
+  revalidateTag(cacheTags.categories(locale))
+  revalidateTag(cacheTags.contentPages())
 
   const types: PostType[] = [
     PostType.blog,
@@ -67,17 +66,7 @@ async function revalidate(locale: string) {
   ]
 
   for (const type of types) {
-    const segment = segmentMap[type] ?? type
-    revalidatePath(`/${locale}/${segment}`)
-    const slugs = await listPublishedPostSlugs(type, locale)
-    for (const post of slugs) {
-      revalidatePath(`/${locale}/${segment}/${post.slug}`)
-    }
-  }
-
-  const totalEventPages = await getPastEventsTotalPages(locale, 12)
-  for (let page = 2; page <= totalEventPages; page += 1) {
-    revalidatePath(`/${locale}/events/page/${page}`)
+    revalidateTag(cacheTags.posts(type, locale))
   }
 }
 

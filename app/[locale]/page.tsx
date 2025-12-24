@@ -1,8 +1,6 @@
 import { api } from '@/lib/api'
 import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Hero } from '@/components/sections/hero'
 import { BlogSection } from '@/components/sections/blog-section'
 import { VideoSection } from '@/components/sections/video-section'
@@ -150,8 +148,6 @@ export default async function Home({
 
   return (
     <>
-      <Header locale={locale} settings={data.settings} />
-      
       <main className="relative min-h-screen overflow-hidden bg-white">
         <div
           className="fixed inset-0 z-0 opacity-90 pointer-events-none bg-amber-pattern"
@@ -213,7 +209,6 @@ export default async function Home({
         </div>
       </main>
 
-      <Footer locale={locale} settings={data.settings} />
     </>
   )
 }

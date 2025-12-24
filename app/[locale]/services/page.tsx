@@ -1,8 +1,6 @@
 import { api } from '@/lib/api'
 import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -11,6 +9,8 @@ import Link from 'next/link'
 import { Layers, ArrowRight, Sparkles } from 'lucide-react'
 import { Animate, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/animate'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }))
@@ -33,10 +33,7 @@ export default async function ServicesPage({
 }) {
   const { locale: rawLocale } = await params
   const locale = normalizeLocale(rawLocale)
-  const [services, settings] = await Promise.all([
-    api.getServices(locale),
-    api.getSettings(locale),
-  ])
+  const services = await api.getServices(locale)
 
   const categories = Array.from(
     new Set(services.map((service) => service.category?.name).filter(Boolean) as string[])
@@ -56,7 +53,6 @@ export default async function ServicesPage({
 
   return (
     <>
-      <Header locale={locale} settings={settings} />
       <main className="min-h-screen">
         <section className="bg-gradient-to-b from-primary/10 via-background to-background py-16 md:py-24">
           <div className="container text-center">
@@ -172,7 +168,6 @@ export default async function ServicesPage({
           </div>
         </section>
       </main>
-      <Footer locale={locale} settings={settings} />
     </>
   )
 }

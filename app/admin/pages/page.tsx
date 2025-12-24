@@ -49,6 +49,12 @@ export default async function AdminPagesList({
     prisma.contentPage.findMany({
       where: { ...baseWhere, ...(category ? { category } : {}) },
       orderBy: { updatedAt: 'desc' },
+      select: {
+        slug: true,
+        title: true,
+        category: true,
+        publishedAt: true,
+      },
     }),
     prisma.contentPage.groupBy({
       by: ['category'],

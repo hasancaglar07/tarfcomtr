@@ -1,6 +1,4 @@
 import { api } from '@/lib/api'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -11,6 +9,8 @@ import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { Animate, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/animate'
 import { buildPageMetadata } from '@/lib/seo'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }))
@@ -34,7 +34,6 @@ export default async function BlogPage({
   const { locale: rawLocale } = await params
   const locale = normalizeLocale(rawLocale)
   const posts = await api.getBlogPosts(locale)
-  const settings = await api.getSettings(locale)
 
   const pageTitle = {
     tr: 'Blog',
@@ -50,8 +49,6 @@ export default async function BlogPage({
 
   return (
     <>
-      <Header locale={locale} settings={settings} />
-      
       <main className="min-h-screen">
         {/* Page Header */}
         <div className="bg-gradient-to-b from-primary/10 to-background py-12 md:py-20">
@@ -141,7 +138,6 @@ export default async function BlogPage({
         </div>
       </main>
 
-      <Footer locale={locale} settings={settings} />
     </>
   )
 }

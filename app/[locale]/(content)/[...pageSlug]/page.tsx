@@ -1,9 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { ContentPageView } from '@/components/content/content-page'
-import { api } from '@/lib/api'
 import { getPublishedContentPage, listPublishedSlugs } from '@/lib/content-store'
 import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
@@ -11,6 +8,8 @@ import { cache } from 'react'
 
 const joinSlug = (segments?: string[]) => (segments && segments.length > 0 ? segments.join('/') : '')
 const getContentPage = cache((slug: string) => getPublishedContentPage(slug))
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   try {
@@ -66,13 +65,9 @@ export default async function ContentPage({
     notFound()
   }
 
-  const settings = await api.getSettings(locale)
-
   return (
     <>
-      <Header locale={locale} settings={settings} />
       <ContentPageView page={page} locale={locale} />
-      <Footer locale={locale} settings={settings} />
     </>
   )
 }

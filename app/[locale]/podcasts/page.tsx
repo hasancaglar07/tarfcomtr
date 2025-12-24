@@ -1,8 +1,6 @@
 import { api } from '@/lib/api'
 import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -11,6 +9,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Animate, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/animate'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }))
@@ -33,10 +33,7 @@ export default async function PodcastsPage({
 }) {
   const { locale: rawLocale } = await params
   const locale = normalizeLocale(rawLocale)
-  const [podcasts, settings] = await Promise.all([
-    api.getPodcasts(locale),
-    api.getSettings(locale),
-  ])
+  const podcasts = await api.getPodcasts(locale)
 
   const pageTitle = {
     tr: 'Podcast Serileri',
@@ -52,7 +49,6 @@ export default async function PodcastsPage({
 
   return (
     <>
-      <Header locale={locale} settings={settings} />
       <main className="min-h-screen">
         <section className="bg-gradient-to-r from-primary via-primary/80 to-primary py-16 text-primary-foreground">
           <div className="container">
@@ -139,7 +135,6 @@ export default async function PodcastsPage({
           )}
         </div>
       </main>
-      <Footer locale={locale} settings={settings} />
     </>
   )
 }

@@ -1,12 +1,13 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
 
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { cacheTags } from '@/lib/cache-tags'
 
 export type FaqActionState =
   | { status: 'idle'; message?: string }
@@ -30,6 +31,7 @@ async function requireAdmin() {
 
 function revalidate(locale: string) {
   revalidatePath(`/${locale}/faq`)
+  revalidateTag(cacheTags.faqs(locale))
 }
 
 export async function upsertFaqAction(

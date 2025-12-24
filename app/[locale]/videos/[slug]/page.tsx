@@ -1,6 +1,4 @@
 import { api, listPublishedPostSlugs } from '@/lib/api'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -14,6 +12,8 @@ import { cache } from 'react'
 import { PostType } from '@prisma/client'
 
 const getVideo = cache((slug: string, locale: string) => api.getVideo(slug, locale))
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   try {
@@ -60,10 +60,7 @@ export default async function VideoPage({
   const locale = normalizeLocale(rawLocale)
   
   try {
-    const [{ video, related_videos }, settings] = await Promise.all([
-      getVideo(slug, locale),
-      api.getSettings(locale),
-    ])
+    const { video, related_videos } = await getVideo(slug, locale)
 
     // Extract YouTube video ID from URL
     const getYouTubeId = (url: string) => {
@@ -76,8 +73,6 @@ export default async function VideoPage({
 
     return (
       <>
-        <Header locale={locale} settings={settings} />
-        
         <main className="min-h-screen">
           {/* Back Button */}
           <div className="border-b">
@@ -197,7 +192,6 @@ export default async function VideoPage({
           </div>
         </main>
 
-        <Footer locale={locale} settings={settings} />
       </>
     )
   } catch {

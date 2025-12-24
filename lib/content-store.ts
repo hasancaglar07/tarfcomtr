@@ -4,9 +4,19 @@ import type {
 } from '@/content/content-pages'
 import { categoryLabels } from '@/content/content-pages'
 import { prisma } from '@/lib/prisma'
+import { unstable_cache } from 'next/cache'
+import { cacheTags } from '@/lib/cache-tags'
 
 const locales = ['tr', 'en', 'ar']
 const resolveLocales = (locale?: string) => (locale ? [locale] : locales)
+
+const CACHE_TTL_SECONDS = 60 * 60
+
+const cached = <T>(
+  keyParts: Array<string | number>,
+  tags: string[],
+  fn: () => Promise<T>,
+) => unstable_cache(fn, keyParts, { revalidate: CACHE_TTL_SECONDS, tags })()
 
 type GroupedPages = Record<
   ContentPageCategory,
@@ -36,22 +46,34 @@ const mapRecordToPage = (record: {
 }
 
 export async function getPublishedContentPage(slug: string) {
-  const record = await prisma.contentPage.findUnique({
-    where: { slug },
-  })
+  return cached(
+    ['content-page', slug],
+    [cacheTags.contentPage(slug)],
+    async () => {
+      const record = await prisma.contentPage.findUnique({
+        where: { slug },
+      })
 
-  if (!record || !record.publishedAt || record.status !== 'published') return null
+      if (!record || !record.publishedAt || record.status !== 'published') return null
 
-  return mapRecordToPage(record)
+      return mapRecordToPage(record)
+    },
+  )
 }
 
 export async function listPublishedContentPages() {
-  const records = await prisma.contentPage.findMany({
-    where: { publishedAt: { not: null }, status: 'published' },
-    orderBy: { updatedAt: 'desc' },
-  })
+  return cached(
+    ['content-pages'],
+    [cacheTags.contentPages()],
+    async () => {
+      const records = await prisma.contentPage.findMany({
+        where: { publishedAt: { not: null }, status: 'published' },
+        orderBy: { updatedAt: 'desc' },
+      })
 
-  return records.map(mapRecordToPage)
+      return records.map(mapRecordToPage)
+    },
+  )
 }
 
 export async function listPublishedSlugs() {

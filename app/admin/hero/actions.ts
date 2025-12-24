@@ -1,12 +1,13 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
 
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidateHome } from '@/lib/content-store'
+import { cacheTags } from '@/lib/cache-tags'
 
 export type HeroActionState =
   | { status: 'idle'; message?: string }
@@ -40,6 +41,7 @@ async function requireAdmin() {
 
 function revalidate(locale: string) {
   revalidateHome(revalidatePath, locale)
+  revalidateTag(cacheTags.heroes(locale))
 }
 
 export async function upsertHeroAction(

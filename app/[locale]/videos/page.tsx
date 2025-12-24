@@ -1,6 +1,4 @@
 import { api } from '@/lib/api'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, Play } from 'lucide-react'
@@ -10,6 +8,8 @@ import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { Animate, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/animate'
 import { buildPageMetadata } from '@/lib/seo'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }))
@@ -33,7 +33,6 @@ export default async function VideosPage({
   const { locale: rawLocale } = await params
   const locale = normalizeLocale(rawLocale)
   const videos = await api.getVideos(locale)
-  const settings = await api.getSettings(locale)
 
   const pageTitle = {
     tr: 'Videolar',
@@ -49,8 +48,6 @@ export default async function VideosPage({
 
   return (
     <>
-      <Header locale={locale} settings={settings} />
-      
       <main className="min-h-screen">
         {/* Page Header */}
         <div className="bg-gradient-to-b from-primary/10 to-background py-12 md:py-20">
@@ -134,7 +131,6 @@ export default async function VideosPage({
         </div>
       </main>
 
-      <Footer locale={locale} settings={settings} />
     </>
   )
 }

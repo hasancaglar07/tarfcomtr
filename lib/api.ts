@@ -1,7 +1,9 @@
 import { PostStatus, PostType } from '@prisma/client'
+import { unstable_cache } from 'next/cache'
 
 import { prisma } from '@/lib/prisma'
 import { getEventsTodayStart } from '@/lib/events'
+import { cacheTags } from '@/lib/cache-tags'
 
 export interface Category {
   id: string
@@ -128,6 +130,14 @@ export interface ServiceDetail {
   child_services: Post[]
 }
 
+const CACHE_TTL_SECONDS = 60 * 60
+
+const cached = <T>(
+  keyParts: Array<string | number>,
+  tags: string[],
+  fn: () => Promise<T>,
+) => unstable_cache(fn, keyParts, { revalidate: CACHE_TTL_SECONDS, tags })()
+
 const defaultSettings: Settings = {
   site_name: 'TARF Akademi',
   site_description:
@@ -212,64 +222,90 @@ const mapPost = (post: PostRecord): Post => {
 }
 
 async function getPostsByType(type: PostType, locale: string, take?: number) {
-  const posts = await prisma.post.findMany({
-    where: { type, status: PostStatus.published, locale },
-    orderBy: { publishedAt: 'desc' },
-    include: { category: true },
-    take,
-  })
-  return posts.map(mapPost)
+  const safeTake =
+    typeof take === 'number' && Number.isFinite(take) && take > 0 ? Math.floor(take) : undefined
+  return cached(
+    ['posts-by-type', type, locale, safeTake ?? 'all'],
+    [cacheTags.posts(type, locale)],
+    async () => {
+      const posts = await prisma.post.findMany({
+        where: { type, status: PostStatus.published, locale },
+        orderBy: { publishedAt: 'desc' },
+        include: { category: true },
+        take: safeTake,
+      })
+      return posts.map(mapPost)
+    },
+  )
 }
 
 async function getUpcomingEvents(locale: string, take?: number) {
+  const safeTake =
+    typeof take === 'number' && Number.isFinite(take) && take > 0 ? Math.floor(take) : undefined
   const todayStart = getEventsTodayStart()
-  const posts = await prisma.post.findMany({
-    where: {
-      type: PostType.event,
-      status: PostStatus.published,
-      locale,
-      eventDate: { gte: todayStart },
+  return cached(
+    ['events-upcoming', locale, todayStart.toISOString(), safeTake ?? 'all'],
+    [cacheTags.posts(PostType.event, locale)],
+    async () => {
+      const posts = await prisma.post.findMany({
+        where: {
+          type: PostType.event,
+          status: PostStatus.published,
+          locale,
+          eventDate: { gte: todayStart },
+        },
+        orderBy: [{ eventDate: 'asc' }, { eventTime: 'asc' }, { publishedAt: 'desc' }],
+        include: { category: true },
+        take: safeTake,
+      })
+      return posts.map(mapPost)
     },
-    orderBy: [{ eventDate: 'asc' }, { eventTime: 'asc' }, { publishedAt: 'desc' }],
-    include: { category: true },
-    take,
-  })
-  return posts.map(mapPost)
+  )
 }
 
-async function getPastEvents(locale: string, page: number = 1, perPage: number = 12): Promise<Paginated<Post>> {
+async function getPastEvents(
+  locale: string,
+  page: number = 1,
+  perPage: number = 12,
+): Promise<Paginated<Post>> {
   const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1
   const safePerPage =
     Number.isFinite(perPage) && perPage > 0 && perPage <= 50 ? Math.floor(perPage) : 12
   const todayStart = getEventsTodayStart()
 
-  const where = {
-    type: PostType.event,
-    status: PostStatus.published,
-    locale,
-    eventDate: { lt: todayStart as Date },
-  } as const
+  return cached(
+    ['events-past', locale, todayStart.toISOString(), safePage, safePerPage],
+    [cacheTags.posts(PostType.event, locale)],
+    async () => {
+      const where = {
+        type: PostType.event,
+        status: PostStatus.published,
+        locale,
+        eventDate: { lt: todayStart as Date },
+      } as const
 
-  const total = await prisma.post.count({ where })
-  const totalPages = Math.max(1, Math.ceil(total / safePerPage))
-  const clampedPage = Math.min(safePage, totalPages)
-  const skip = (clampedPage - 1) * safePerPage
+      const total = await prisma.post.count({ where })
+      const totalPages = Math.max(1, Math.ceil(total / safePerPage))
+      const clampedPage = Math.min(safePage, totalPages)
+      const skip = (clampedPage - 1) * safePerPage
 
-  const posts = await prisma.post.findMany({
-    where,
-    orderBy: [{ eventDate: 'desc' }, { eventTime: 'desc' }, { publishedAt: 'desc' }],
-    include: { category: true },
-    skip,
-    take: safePerPage,
-  })
+      const posts = await prisma.post.findMany({
+        where,
+        orderBy: [{ eventDate: 'desc' }, { eventTime: 'desc' }, { publishedAt: 'desc' }],
+        include: { category: true },
+        skip,
+        take: safePerPage,
+      })
 
-  return {
-    items: posts.map(mapPost),
-    total,
-    page: clampedPage,
-    perPage: safePerPage,
-    totalPages,
-  }
+      return {
+        items: posts.map(mapPost),
+        total,
+        page: clampedPage,
+        perPage: safePerPage,
+        totalPages,
+      }
+    },
+  )
 }
 
 export async function getPastEventsTotalPages(locale: string, perPage: number = 12) {
@@ -288,88 +324,119 @@ export async function getPastEventsTotalPages(locale: string, perPage: number = 
 }
 
 async function getPostDetail(type: PostType, slug: string, locale: string) {
-  const post = await prisma.post.findFirst({
-    where: { type, slug, locale, status: PostStatus.published },
-    include: { category: true },
-  })
-  if (!post) return null
-  const related = await prisma.post.findMany({
-    where: { type, status: PostStatus.published, locale, id: { not: post.id } },
-    orderBy: { publishedAt: 'desc' },
-    take: 3,
-    include: { category: true },
-  })
-  return { post: mapPost(post), related: related.map(mapPost) }
+  return cached(
+    ['post-detail', type, locale, slug],
+    [cacheTags.posts(type, locale), cacheTags.post(type, locale, slug)],
+    async () => {
+      const post = await prisma.post.findFirst({
+        where: { type, slug, locale, status: PostStatus.published },
+        include: { category: true },
+      })
+      if (!post) return null
+      const related = await prisma.post.findMany({
+        where: { type, status: PostStatus.published, locale, id: { not: post.id } },
+        orderBy: { publishedAt: 'desc' },
+        take: 3,
+        include: { category: true },
+      })
+      return { post: mapPost(post), related: related.map(mapPost) }
+    },
+  )
 }
 
 async function getSettings(locale: string = 'tr'): Promise<Settings> {
-  try {
-    const setting = await prisma.setting.findUnique({ where: { locale } })
-    if (!setting) return defaultSettings
-    return {
-      site_name: setting.siteName,
-      site_description: setting.siteDescription,
-      contact_email: setting.contactEmail,
-      contact_phone: setting.contactPhone,
-      contact_address: setting.contactAddress,
-      contact_map_url: null,
-      contact_content: setting.contactContent,
-    }
-  } catch (error) {
-    console.error('Settings fetch failed, using defaults:', error)
-    return defaultSettings
-  }
+  return cached(
+    ['settings', locale],
+    [cacheTags.settings(locale)],
+    async () => {
+      try {
+        const setting = await prisma.setting.findUnique({ where: { locale } })
+        if (!setting) return defaultSettings
+        return {
+          site_name: setting.siteName,
+          site_description: setting.siteDescription,
+          contact_email: setting.contactEmail,
+          contact_phone: setting.contactPhone,
+          contact_address: setting.contactAddress,
+          contact_map_url: null,
+          contact_content: setting.contactContent,
+        }
+      } catch (error) {
+        console.error('Settings fetch failed, using defaults:', error)
+        return defaultSettings
+      }
+    },
+  )
 }
 
 async function getFaqs(locale: string = 'tr') {
-  const faqs = await prisma.fAQ.findMany({
-    where: { locale },
-    orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
-  })
-  return faqs.map((f) => ({
-    id: f.id,
-    question: f.question,
-    answer: f.answer,
-    order: f.order,
-  }))
+  return cached(
+    ['faqs', locale],
+    [cacheTags.faqs(locale)],
+    async () => {
+      const faqs = await prisma.fAQ.findMany({
+        where: { locale },
+        orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+      })
+      return faqs.map((f) => ({
+        id: f.id,
+        question: f.question,
+        answer: f.answer,
+        order: f.order,
+      }))
+    },
+  )
 }
 
 async function getHeroes(locale: string = 'tr') {
-  const heroes = await prisma.hero.findMany({
-    where: { locale },
-    orderBy: { createdAt: 'desc' },
-  })
-  return heroes.map<Hero>((h) => ({
-    id: h.id,
-    title: h.title,
-    subtitle: h.subtitle,
-    eyebrow: h.description ?? null,
-    description: h.description,
-    button_text: h.buttonText,
-    button_url: h.buttonUrl,
-    image: null,
-    background_image: h.backgroundImage,
-    video_url: h.videoUrl,
-    video_cover: h.videoCover,
-    video_url_2: h.videoUrl2,
-    video_cover_2: h.videoCover2,
-    video_url_3: h.videoUrl3,
-    video_url_4: h.videoUrl4,
-    video_url_5: h.videoUrl5,
-  }))
+  return cached(
+    ['heroes', locale],
+    [cacheTags.heroes(locale)],
+    async () => {
+      const heroes = await prisma.hero.findMany({
+        where: { locale },
+        orderBy: { createdAt: 'desc' },
+      })
+      return heroes.map<Hero>((h) => ({
+        id: h.id,
+        title: h.title,
+        subtitle: h.subtitle,
+        eyebrow: h.description ?? null,
+        description: h.description,
+        button_text: h.buttonText,
+        button_url: h.buttonUrl,
+        image: null,
+        background_image: h.backgroundImage,
+        video_url: h.videoUrl,
+        video_cover: h.videoCover,
+        video_url_2: h.videoUrl2,
+        video_cover_2: h.videoCover2,
+        video_url_3: h.videoUrl3,
+        video_url_4: h.videoUrl4,
+        video_url_5: h.videoUrl5,
+      }))
+    },
+  )
 }
 
 async function getCategories(type?: PostType, locale: string = 'tr') {
-  const categories = await prisma.category.findMany({
-    where: { locale, ...(type ? { type } : {}) },
-    orderBy: { name: 'asc' },
-  })
-  return categories.map((c) => ({
-    id: c.id,
-    name: c.name,
-    slug: c.slug,
-    posts_count: 0,
-  }))
+  const cacheKey = type ?? 'all'
+  return cached(
+    ['categories', locale, cacheKey],
+    [cacheTags.categories(locale, cacheKey)],
+    async () => {
+      const categories = await prisma.category.findMany({
+        where: { locale, ...(type ? { type } : {}) },
+        orderBy: { name: 'asc' },
+      })
+      return categories.map((c) => ({
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+        posts_count: 0,
+      }))
+    },
+  )
 }
 
 export async function listPublishedPostSlugs(type: PostType, locale?: string) {

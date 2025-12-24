@@ -1,6 +1,4 @@
 import { api, listPublishedPostSlugs } from '@/lib/api'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -16,6 +14,8 @@ import { cache } from 'react'
 import { PostType } from '@prisma/client'
 
 const getBlogPost = cache((slug: string, locale: string) => api.getBlogPost(slug, locale))
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   try {
@@ -64,12 +64,8 @@ export default async function BlogPost({
   
   try {
     const { post, related_posts } = await getBlogPost(slug, locale)
-    const settings = await api.getSettings(locale)
-
     return (
       <>
-        <Header locale={locale} settings={settings} />
-        
         <main className="min-h-screen">
           {/* Back Button */}
           <div className="border-b">
@@ -228,7 +224,6 @@ export default async function BlogPost({
           )}
         </main>
 
-        <Footer locale={locale} settings={settings} />
       </>
     )
   } catch {

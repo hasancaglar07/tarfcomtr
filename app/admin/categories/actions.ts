@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
@@ -8,8 +8,8 @@ import { PostType } from '@prisma/client'
 
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { getPastEventsTotalPages, listPublishedPostSlugs } from '@/lib/api'
-import { revalidatePostDetailPath, revalidatePostListPaths } from '@/lib/content-store'
+import { revalidatePostListPaths } from '@/lib/content-store'
+import { cacheTags } from '@/lib/cache-tags'
 
 export type CategoryActionState =
   | { status: 'idle'; message?: string }
@@ -33,16 +33,9 @@ async function requireAdmin() {
 
 async function revalidate(type: PostType, locale: string) {
   revalidatePostListPaths(revalidatePath, type, locale)
-  const slugs = await listPublishedPostSlugs(type, locale)
-  for (const post of slugs) {
-    revalidatePostDetailPath(revalidatePath, type, post.slug, locale)
-  }
-  if (type === PostType.event) {
-    const totalPages = await getPastEventsTotalPages(locale, 12)
-    for (let page = 2; page <= totalPages; page += 1) {
-      revalidatePath(`/${locale}/events/page/${page}`)
-    }
-  }
+  revalidateTag(cacheTags.categories(locale))
+  revalidateTag(cacheTags.categories(locale, type))
+  revalidateTag(cacheTags.posts(type, locale))
 }
 
 export async function upsertCategoryAction(

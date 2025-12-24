@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { ContentCategory } from '@prisma/client'
 import { getServerSession } from 'next-auth'
@@ -9,6 +9,7 @@ import { z } from 'zod'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidateContentPaths } from '@/lib/content-store'
+import { cacheTags } from '@/lib/cache-tags'
 
 export type PageActionState =
   | { status: 'idle'; message?: string }
@@ -43,6 +44,8 @@ function parseJson(dataJson: string) {
 
 function revalidateForSlug(slug: string) {
   revalidateContentPaths(revalidatePath, slug)
+  revalidateTag(cacheTags.contentPage(slug))
+  revalidateTag(cacheTags.contentPages())
 }
 
 export async function createPageAction(

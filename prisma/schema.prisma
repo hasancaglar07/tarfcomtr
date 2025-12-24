@@ -51,6 +51,7 @@ model ContentPage {
   updatedAt       DateTime         @updatedAt
 
   @@index([category])
+  @@index([status, publishedAt])
 }
 
 model Category {
@@ -96,6 +97,8 @@ model Post {
   @@unique([slug, type, locale])
   @@index([type, status, locale])
   @@index([publishedAt])
+  @@index([type, status, locale, publishedAt])
+  @@index([type, status, locale, eventDate])
 }
 
 model FAQ {
@@ -106,6 +109,8 @@ model FAQ {
   locale    String   @default("tr")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([locale, order])
 }
 
 model Hero {
@@ -156,6 +161,8 @@ model Media {
   kind       String? // image, video, document, etc.
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@index([kind, locale, createdAt])
 }
 
 model Application {
@@ -169,4 +176,6 @@ model Application {
   adminNote  String?
   createdAt  DateTime           @default(now())
   updatedAt  DateTime           @updatedAt
+
+  @@index([status, createdAt])
 }

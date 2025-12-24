@@ -1,6 +1,4 @@
 import { api, listPublishedPostSlugs } from '@/lib/api'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
@@ -15,6 +13,8 @@ import { cache } from 'react'
 import { PostType } from '@prisma/client'
 
 const getPodcast = cache((slug: string, locale: string) => api.getPodcast(slug, locale))
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   try {
@@ -61,10 +61,7 @@ export default async function PodcastDetailPage({
   const locale = normalizeLocale(rawLocale)
 
   try {
-    const [{ podcast, related_podcasts }, settings] = await Promise.all([
-      getPodcast(slug, locale),
-      api.getSettings(locale),
-    ])
+    const { podcast, related_podcasts } = await getPodcast(slug, locale)
 
     const getYouTubeId = (url?: string | null) => {
       if (!url) return null
@@ -77,7 +74,6 @@ export default async function PodcastDetailPage({
 
     return (
       <>
-        <Header locale={locale} settings={settings} />
         <main className="min-h-screen">
           <div className="border-b">
             <div className="container flex items-center justify-between py-4">
@@ -191,7 +187,6 @@ export default async function PodcastDetailPage({
             )}
           </div>
         </main>
-        <Footer locale={locale} settings={settings} />
       </>
     )
   } catch {

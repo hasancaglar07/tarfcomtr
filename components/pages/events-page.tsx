@@ -1,6 +1,4 @@
 import { api } from '@/lib/api'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -20,10 +18,9 @@ export async function EventsPage({ locale, pastPage = 1 }: EventsPageProps) {
   const safePage = Number.isFinite(pastPage) && pastPage > 0 ? Math.floor(pastPage) : 1
   const pastPerPage = 12
 
-  const [upcomingEvents, pastEvents, settings] = await Promise.all([
+  const [upcomingEvents, pastEvents] = await Promise.all([
     api.getUpcomingEvents(locale),
     api.getPastEvents(locale, safePage, pastPerPage),
-    api.getSettings(locale),
   ])
 
   const pageTitle = {
@@ -70,9 +67,7 @@ export async function EventsPage({ locale, pastPage = 1 }: EventsPageProps) {
   const labels = sectionLabels[locale as keyof typeof sectionLabels] || sectionLabels.en
 
   return (
-    <>
-      <Header locale={locale} settings={settings} />
-      <main className="min-h-screen">
+    <main className="min-h-screen">
         <section className="bg-slate-900 text-white py-16">
           <div className="container">
             <Animate variant="slideUp" className="space-y-6">
@@ -259,7 +254,5 @@ export async function EventsPage({ locale, pastPage = 1 }: EventsPageProps) {
           </div>
         </div>
       </main>
-      <Footer locale={locale} settings={settings} />
-    </>
   )
 }

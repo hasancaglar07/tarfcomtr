@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { Prisma, PostStatus, PostType } from '@prisma/client'
 import { getServerSession } from 'next-auth'
@@ -10,6 +10,7 @@ import { authOptions } from '@/lib/auth'
 import { getPastEventsTotalPages } from '@/lib/api'
 import { prisma } from '@/lib/prisma'
 import { revalidatePostDetailPath, revalidatePostListPaths } from '@/lib/content-store'
+import { cacheTags } from '@/lib/cache-tags'
 
 export type PostActionState =
   | { status: 'idle'; message?: string }
@@ -67,14 +68,20 @@ async function revalidate(
   previous?: { locale?: string; slug?: string },
 ) {
   revalidatePostListPaths(revalidatePath, type, locale)
+  revalidateTag(cacheTags.posts(type, locale))
   if (slug) {
     revalidatePostDetailPath(revalidatePath, type, slug, locale)
+    revalidateTag(cacheTags.post(type, locale, slug))
   }
 
   if (previous?.slug && (previous.slug !== slug || previous.locale !== locale)) {
     const previousLocale = previous.locale ?? locale
     revalidatePostListPaths(revalidatePath, type, previousLocale)
     revalidatePostDetailPath(revalidatePath, type, previous.slug, previousLocale)
+    revalidateTag(cacheTags.posts(type, previousLocale))
+    revalidateTag(cacheTags.post(type, previousLocale, previous.slug))
+  } else if (previous?.locale && previous.locale !== locale) {
+    revalidateTag(cacheTags.posts(type, previous.locale))
   }
 
   if (type === PostType.event) {

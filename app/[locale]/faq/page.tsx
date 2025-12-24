@@ -1,6 +1,4 @@
 import { api } from '@/lib/api'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -8,6 +6,8 @@ import { HelpCircle, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
 import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }))
@@ -49,7 +49,6 @@ export default async function FaqPage({
 
   return (
     <>
-      <Header locale={locale} settings={settings} />
       <main className="min-h-screen">
         <section className="bg-gradient-to-br from-primary/10 via-background to-primary/5 py-16">
           <div className="container text-center space-y-6">
@@ -121,7 +120,6 @@ export default async function FaqPage({
           </Card>
         </div>
       </main>
-      <Footer locale={locale} settings={settings} />
     </>
   )
 }

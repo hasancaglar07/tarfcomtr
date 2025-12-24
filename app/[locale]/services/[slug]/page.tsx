@@ -1,6 +1,4 @@
 import { api, listPublishedPostSlugs } from '@/lib/api'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -15,6 +13,8 @@ import { cache } from 'react'
 import { PostType } from '@prisma/client'
 
 const getService = cache((slug: string, locale: string) => api.getService(slug, locale))
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   try {
@@ -62,14 +62,10 @@ export default async function ServiceDetailPage({
   const locale = normalizeLocale(rawLocale)
 
   try {
-    const [{ service, child_services }, settings] = await Promise.all([
-      getService(slug, locale),
-      api.getSettings(locale),
-    ])
+    const { service, child_services } = await getService(slug, locale)
 
     return (
       <>
-        <Header locale={locale} settings={settings} />
         <main className="min-h-screen">
           <div className="border-b">
             <div className="container py-4">
@@ -205,7 +201,6 @@ export default async function ServiceDetailPage({
             </div>
           </div>
         </main>
-        <Footer locale={locale} settings={settings} />
       </>
     )
   } catch {

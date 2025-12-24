@@ -1,11 +1,11 @@
 import { api } from '@/lib/api'
 import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Card } from '@/components/ui/card'
 import { ArrowUpRight, Mail, Phone, MapPin } from 'lucide-react'
 import { ApplicationForm } from '@/components/forms/application-form'
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }))
@@ -251,7 +251,6 @@ export default async function ContactPage({
 
   return (
     <>
-      <Header locale={locale} settings={settings} />
       <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f6fbff] via-white to-[#eef2ff] text-slate-900">
         <div className="pointer-events-none absolute inset-0">
           <div
@@ -438,7 +437,6 @@ export default async function ContactPage({
           </div>
         </section>
       </main>
-      <Footer locale={locale} settings={settings} />
     </>
   )
 }

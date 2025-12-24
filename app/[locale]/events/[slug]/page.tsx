@@ -1,6 +1,4 @@
 import { api, listPublishedPostSlugs } from '@/lib/api'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -16,6 +14,8 @@ import { cache } from 'react'
 import { PostType } from '@prisma/client'
 
 const getEvent = cache((slug: string, locale: string) => api.getEvent(slug, locale))
+
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   try {
@@ -62,14 +62,10 @@ export default async function EventDetailPage({
   const locale = normalizeLocale(rawLocale)
 
   try {
-    const [{ event, related_events }, settings] = await Promise.all([
-      getEvent(slug, locale),
-      api.getSettings(locale),
-    ])
+    const { event, related_events } = await getEvent(slug, locale)
 
     return (
       <>
-        <Header locale={locale} settings={settings} />
         <main className="min-h-screen">
           <div className="border-b">
             <div className="container py-4 flex items-center justify-between">
@@ -265,7 +261,6 @@ export default async function EventDetailPage({
             )}
           </div>
         </main>
-        <Footer locale={locale} settings={settings} />
       </>
     )
   } catch {

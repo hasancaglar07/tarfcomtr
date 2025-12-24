@@ -27,9 +27,17 @@ export async function POST(request: Request) {
   const file = fileEntry
   const kind = formData.get('kind')?.toString() || file.type?.split('/')[0] || null
 
-  const blob = await put(file.name, file, {
+  const safeName =
+    file.name && file.name.trim().length > 0
+      ? file.name.trim().replace(/[^a-zA-Z0-9._-]/g, '-')
+      : `upload-${Date.now()}`
+
+  const blob = await put(safeName, file, {
     access: 'public',
     token: process.env['yeni_blob_READ_WRITE_TOKEN'],
+    contentType: file.type || undefined,
+    addRandomSuffix: true,
+    cacheControlMaxAge: 60 * 60 * 24 * 365,
   })
 
   await prisma.media.create({
