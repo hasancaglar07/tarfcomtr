@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ContentCategory } from '@prisma/client'
 
-import { categoryLabels } from '@/content/content-pages'
+import { categoryLabels, headerPageSlugs } from '@/content/content-pages'
 import { prisma } from '@/lib/prisma'
 import { publishToggleAction } from '@/app/admin/actions'
 
@@ -31,8 +31,10 @@ export default async function AdminPagesList({
       : undefined
   const q =
     typeof search.q === 'string' && search.q.trim().length > 0 ? search.q.trim() : undefined
+  const previewLocale = 'tr'
 
   const baseWhere = {
+    slug: { in: headerPageSlugs },
     ...(status === 'published' ? { publishedAt: { not: null } } : {}),
     ...(status === 'draft' ? { publishedAt: null } : {}),
     ...(q
@@ -54,6 +56,9 @@ export default async function AdminPagesList({
         title: true,
         category: true,
         publishedAt: true,
+        updatedAt: true,
+        seoTitle: true,
+        seoDescription: true,
       },
     }),
     prisma.contentPage.groupBy({
@@ -94,7 +99,9 @@ export default async function AdminPagesList({
               Yönetim
             </p>
             <h1 className="text-3xl font-semibold">İçerik sayfaları</h1>
-            <p className="text-sm text-slate-400">Slug bazlı içerikleri burada yönetin.</p>
+            <p className="text-sm text-slate-400">
+              Header menüsündeki slug bazlı içerikleri burada yönetin.
+            </p>
           </div>
           <div className="flex gap-3">
             <Link
@@ -128,6 +135,26 @@ export default async function AdminPagesList({
                 className="rounded-lg border border-slate-700 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-slate-500"
               >
                 Filtreleri temizle
+              </Link>
+              <Link
+                href={`/admin/pages${buildQuery({ status: 'published' })}`}
+                className={`rounded-lg border px-3 py-2 text-xs font-semibold transition ${
+                  status === 'published'
+                    ? 'border-orange-500/80 bg-orange-500/10 text-orange-200'
+                    : 'border-slate-700 text-slate-200 hover:border-slate-500'
+                }`}
+              >
+                Yayında
+              </Link>
+              <Link
+                href={`/admin/pages${buildQuery({ status: 'draft' })}`}
+                className={`rounded-lg border px-3 py-2 text-xs font-semibold transition ${
+                  status === 'draft'
+                    ? 'border-orange-500/80 bg-orange-500/10 text-orange-200'
+                    : 'border-slate-700 text-slate-200 hover:border-slate-500'
+                }`}
+              >
+                Taslak
               </Link>
               <Link
                 href={`/admin/pages${buildQuery({ category: undefined })}`}
@@ -187,6 +214,11 @@ export default async function AdminPagesList({
             </div>
           </form>
 
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-4 py-3 text-xs text-slate-400">
+            <span className="font-semibold text-slate-200">Not:</span> Taslak sayfalar
+            sitede görünmez, sadece admin listesinde kalır.
+          </div>
+
           <div className="grid gap-3 md:grid-cols-3">
             {categoryOrder.map((cat) => {
               const active = cat === category
@@ -241,7 +273,13 @@ export default async function AdminPagesList({
                   Kategori
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
+                  Güncelleme
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
                   Yayın
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
+                  SEO
                 </th>
                 <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
                   İşlemler
@@ -249,67 +287,112 @@ export default async function AdminPagesList({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800">
-              {pages.map((page) => (
-                <tr key={page.slug} className="hover:bg-slate-800/40">
-                  <td className="px-4 py-3 text-sm font-semibold text-orange-200">
-                    {page.slug}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-slate-100">{page.title}</td>
-                  <td className="px-4 py-3 text-xs uppercase tracking-[0.2em] text-slate-400">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-sm font-semibold text-slate-50">
-                        {categoryLabels[page.category].label}
-                      </span>
-                      <span className="text-[10px] font-semibold tracking-[0.2em] text-slate-500">
-                        {page.category}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-slate-200">
-                    <div className="flex flex-col items-start gap-1">
-                      <span
-                        className={`rounded-full px-2 py-1 text-[11px] font-semibold ${
-                          page.publishedAt
-                            ? 'bg-green-500/15 text-green-200'
-                            : 'bg-slate-800 text-slate-200'
-                        }`}
-                      >
-                        {page.publishedAt ? 'Yayında' : 'Taslak'}
-                      </span>
-                      <span className="text-xs text-slate-400">
-                        {page.publishedAt ? formatDate(page.publishedAt) : 'Yayınlanmadı'}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex justify-end gap-2">
-                      <Link
-                        href={`/admin/pages/${page.slug}`}
-                        className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-100 transition hover:border-slate-500"
-                      >
-                        Düzenle
-                      </Link>
-                      <form action={publishToggleAction}>
-                        <input type="hidden" name="slug" value={page.slug} />
-                        <input
-                          type="hidden"
-                          name="publish"
-                          value={page.publishedAt ? 'false' : 'true'}
-                        />
-                        <button
-                          type="submit"
+              {pages.map((page) => {
+                const seoTitleMissing = !page.seoTitle?.trim()
+                const seoDescriptionMissing = !page.seoDescription?.trim()
+                const missingSeo: string[] = []
+                if (seoTitleMissing) missingSeo.push('Başlık')
+                if (seoDescriptionMissing) missingSeo.push('Açıklama')
+                const seoOk = missingSeo.length === 0
+                return (
+                  <tr key={page.slug} className="hover:bg-slate-800/40">
+                    <td className="px-4 py-3 text-sm font-semibold text-orange-200">
+                      {page.slug}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-slate-100">{page.title}</td>
+                    <td className="px-4 py-3 text-xs uppercase tracking-[0.2em] text-slate-400">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-sm font-semibold text-slate-50">
+                          {categoryLabels[page.category].label}
+                        </span>
+                        <span className="text-[10px] font-semibold tracking-[0.2em] text-slate-500">
+                          {page.category}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-slate-200">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-sm text-slate-100">
+                          {formatDate(page.updatedAt)}
+                        </span>
+                        <span className="text-xs text-slate-500">Son düzenleme</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-slate-200">
+                      <div className="flex flex-col items-start gap-1">
+                        <span
+                          className={`rounded-full px-2 py-1 text-[11px] font-semibold ${
+                            page.publishedAt
+                              ? 'bg-green-500/15 text-green-200'
+                              : 'bg-slate-800 text-slate-200'
+                          }`}
+                        >
+                          {page.publishedAt ? 'Yayında' : 'Taslak'}
+                        </span>
+                        <span className="text-xs text-slate-400">
+                          {page.publishedAt ? formatDate(page.publishedAt) : 'Yayınlanmadı'}
+                        </span>
+                        <span className="text-xs text-slate-500">
+                          {page.publishedAt ? 'Sitede görünür' : 'Sitede görünmez'}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-slate-200">
+                      <div className="flex flex-col items-start gap-1">
+                        <span
+                          className={`rounded-full px-2 py-1 text-[11px] font-semibold ${
+                            seoOk
+                              ? 'bg-emerald-500/15 text-emerald-200'
+                              : 'bg-amber-500/15 text-amber-200'
+                          }`}
+                        >
+                          {seoOk ? 'Tam' : 'Eksik'}
+                        </span>
+                        {!seoOk && (
+                          <span className="text-xs text-slate-500">
+                            Eksik: {missingSeo.join(', ')}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap justify-end gap-2">
+                        <Link
+                          href={`/${previewLocale}/${page.slug}`}
+                          target="_blank"
+                          rel="noreferrer"
                           className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-100 transition hover:border-slate-500"
                         >
-                          {page.publishedAt ? 'Taslak yap' : 'Yayınla'}
-                        </button>
-                      </form>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                          Önizle
+                        </Link>
+                        <Link
+                          href={`/admin/pages/${page.slug}`}
+                          className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-100 transition hover:border-slate-500"
+                        >
+                          Düzenle
+                        </Link>
+                        <form action={publishToggleAction}>
+                          <input type="hidden" name="slug" value={page.slug} />
+                          <input
+                            type="hidden"
+                            name="publish"
+                            value={page.publishedAt ? 'false' : 'true'}
+                          />
+                          <button
+                            type="submit"
+                            className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-100 transition hover:border-slate-500"
+                          >
+                            {page.publishedAt ? 'Taslak yap' : 'Yayınla'}
+                          </button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
               {pages.length === 0 && (
                 <tr>
-                  <td className="px-4 py-6 text-sm text-slate-400" colSpan={5}>
+                  <td className="px-4 py-6 text-sm text-slate-400" colSpan={7}>
                     Filtreleri değiştirerek sonuçları daraltmayı deneyin. Henüz içerik bulunamadı.
                   </td>
                 </tr>

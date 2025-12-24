@@ -15,6 +15,8 @@ type ContentPageFormProps = {
   defaultValues: ContentPageDefinition & { status?: 'draft' | 'published' }
 }
 
+type HeroAction = NonNullable<ContentPageDefinition['hero']['actions']>[number]
+
 const initialState: PageActionState = { status: 'idle' }
 
 const withDefaults = (value: ContentPageDefinition): ContentPageDefinition => {
@@ -25,6 +27,8 @@ const withDefaults = (value: ContentPageDefinition): ContentPageDefinition => {
       title: value.hero.title || '',
       subtitle: value.hero.subtitle || '',
       description: value.hero.description || '',
+      backgroundImage: value.hero.backgroundImage || '',
+      videoUrl: value.hero.videoUrl || '',
       highlight: value.hero.highlight || '',
       badge: value.hero.badge || '',
       actions: value.hero.actions || [],
@@ -71,6 +75,9 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '')
   }, [data.slug])
+
+  const showSections = data.category === 'yasal'
+  const heroActions = data.hero.actions ?? []
 
   useEffect(() => {
     setData(withDefaults(defaultValues))
@@ -168,6 +175,25 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
     setData((prev) => ({ ...prev, ...partial }))
   }
 
+  const updateHeroActions = (actions: HeroAction[]) => {
+    updateData({ hero: { ...data.hero, actions } })
+  }
+
+  const addHeroAction = () => {
+    updateHeroActions([...heroActions, { label: '', href: '', variant: 'primary' }])
+  }
+
+  const updateHeroAction = (index: number, patch: Partial<HeroAction>) => {
+    const next = [...heroActions]
+    const current = next[index] || { label: '', href: '' }
+    next[index] = { ...current, ...patch }
+    updateHeroActions(next)
+  }
+
+  const removeHeroAction = (index: number) => {
+    updateHeroActions(heroActions.filter((_, i) => i !== index))
+  }
+
   return (
     <form action={handleSubmit} className="space-y-6" onInvalid={onInvalid}>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -211,20 +237,6 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
         <label className="text-sm text-slate-300" htmlFor="heroTitle">
           Hero başlık
         </label>
-        <div className="grid gap-2 sm:grid-cols-2">
-          <input
-            value={data.hero.backgroundImage || ''}
-            onChange={(e) => updateData({ hero: { ...data.hero, backgroundImage: e.target.value } })}
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-            placeholder="Arka plan görseli URL"
-          />
-          <input
-            value={data.hero.videoUrl || ''}
-            onChange={(e) => updateData({ hero: { ...data.hero, videoUrl: e.target.value } })}
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-            placeholder="Video URL (opsiyonel)"
-          />
-        </div>
         <input
           value={data.hero.eyebrow || ''}
           onChange={(e) => updateData({ hero: { ...data.hero, eyebrow: e.target.value } })}
@@ -250,26 +262,82 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
           className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
           placeholder="Hero açıklama"
         />
-        <div className="grid gap-2 sm:grid-cols-2">
-          <input
-            value={data.hero.badge || ''}
-            onChange={(e) => updateData({ hero: { ...data.hero, badge: e.target.value } })}
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-            placeholder="Badge"
-          />
-          <input
-            value={data.hero.highlight || ''}
-            onChange={(e) => updateData({ hero: { ...data.hero, highlight: e.target.value } })}
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-            placeholder="Öne çıkan metin"
-          />
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-sm text-slate-300">Hero butonları</label>
+          <button
+            type="button"
+            onClick={addHeroAction}
+            className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-100 transition hover:border-orange-400"
+          >
+            Buton ekle
+          </button>
+        </div>
+        <div className="space-y-2">
+          {heroActions.length > 0 ? (
+            heroActions.map((action, index) => (
+              <div
+                key={`${action.label}-${index}`}
+                className="rounded-lg border border-slate-800 bg-slate-900/60 p-3"
+              >
+                <div className="grid gap-2 sm:grid-cols-3">
+                  <input
+                    value={action.label}
+                    onChange={(e) => updateHeroAction(index, { label: e.target.value })}
+                    className="w-full rounded border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-orange-400"
+                    placeholder="Buton metni"
+                  />
+                  <input
+                    value={action.href}
+                    onChange={(e) => updateHeroAction(index, { href: e.target.value })}
+                    className="w-full rounded border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-orange-400"
+                    placeholder="Buton linki"
+                  />
+                  <select
+                    value={action.variant || ''}
+                    onChange={(e) =>
+                      updateHeroAction(index, {
+                        variant: e.target.value
+                          ? (e.target.value as HeroAction['variant'])
+                          : undefined,
+                      })
+                    }
+                    className="w-full rounded border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-orange-400"
+                  >
+                    <option value="">Varsayılan</option>
+                    <option value="primary">Primary</option>
+                    <option value="secondary">Secondary</option>
+                  </select>
+                </div>
+                <div className="mt-2 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => removeHeroAction(index)}
+                    className="text-xs font-semibold text-red-200 transition hover:text-red-100"
+                  >
+                    Sil
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-xs text-slate-500">Henüz hero butonu yok.</p>
+          )}
         </div>
       </div>
 
-      <SectionEditor
-        value={data.sections || []}
-        onChange={(sections) => updateData({ sections })}
-      />
+      {showSections ? (
+        <SectionEditor value={data.sections || []} onChange={(sections) => updateData({ sections })} />
+      ) : (
+        <div className="space-y-2 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+          <h3 className="text-sm font-semibold text-slate-200">Bölümler</h3>
+          <p className="text-xs text-slate-500">
+            Bu sayfa kategorisinde bölümler sitede gösterilmiyor.
+          </p>
+        </div>
+      )}
 
       <div className="space-y-2">
         <label className="text-sm text-slate-300">CTA başlık</label>

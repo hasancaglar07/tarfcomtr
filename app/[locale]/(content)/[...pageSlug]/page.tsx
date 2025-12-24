@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { ContentPageView } from '@/components/content/content-page'
 import { getPublishedContentPage, listPublishedSlugs } from '@/lib/content-store'
 import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
@@ -53,12 +53,6 @@ export default async function ContentPage({
   const { locale: rawLocale, pageSlug } = await params
   const locale = normalizeLocale(rawLocale)
   const slug = joinSlug(pageSlug)
-  if (slug === 'dergi') {
-    redirect('https://tarfdergisi.com.tr/')
-  }
-  if (slug === 'yazilim/gelistirme') {
-    redirect('https://tarf-yazilim.vercel.app/')
-  }
   const page = await getContentPage(slug)
 
   if (!page) {

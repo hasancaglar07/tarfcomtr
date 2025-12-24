@@ -15,6 +15,10 @@ import {
   Menu,
   X,
   ChevronDown,
+  Facebook,
+  Twitter,
+  Instagram,
+  Youtube,
 } from 'lucide-react'
 
 interface HeaderProps {
@@ -27,6 +31,12 @@ interface NavSection {
   href?: string
   description?: string
   links?: Array<{ label: string; href: string; description?: string }>
+}
+
+interface LinkGroup {
+  label: string
+  href?: string
+  children?: Array<{ label: string; href: string }>
 }
 
 const MOBILE_MENU_ID = 'mobile-navigation-drawer'
@@ -131,6 +141,12 @@ export function Header({ locale, settings }: HeaderProps) {
     setActiveDropdown(null)
   }
 
+  const topbarLinks: LinkGroup[] = [
+    { label: locale === 'tr' ? 'İletişim' : 'Contact', href: `/${locale}/contact` },
+    { label: locale === 'tr' ? 'Hakkımızda' : 'About', href: `/${locale}/hakkimizda` },
+    { label: locale === 'tr' ? 'Etkinlik Takvimi' : 'Events Calendar', href: `/${locale}/events` },
+  ]
+
   const navigation: NavSection[] = [
     {
       label: locale === 'tr' ? 'Kurumsal' : locale === 'ar' ? 'مؤسسي' : 'Corporate',
@@ -144,6 +160,9 @@ export function Header({ locale, settings }: HeaderProps) {
         { label: locale === 'tr' ? 'Hakkımızda' : 'About', href: `/${locale}/hakkimizda`, description: locale === 'tr' ? 'Kuruluş hikayemiz' : 'Our story' },
         { label: locale === 'tr' ? 'Vizyon & Değerler' : 'Vision & Values', href: `/${locale}/vizyon-degerler`, description: locale === 'tr' ? 'Gelecek perspektifimiz' : 'Our long term vision' },
         { label: locale === 'tr' ? 'Yönetim İlkeleri' : 'Governance', href: `/${locale}/yonetim-ilkeleri`, description: locale === 'tr' ? 'Şeffaf yönetişim' : 'Transparent governance' },
+        { label: locale === 'tr' ? 'Etik Beyan' : 'Ethics', href: `/${locale}/etik-beyan`, description: locale === 'tr' ? 'Etik kodumuz' : 'Ethics code' },
+        { label: locale === 'tr' ? 'Basın Kiti' : 'Press Kit', href: `/${locale}/basin-kiti`, description: locale === 'tr' ? 'Medya kaynakları' : 'Media resources' },
+        { label: locale === 'tr' ? 'TARF Mekan' : 'TARF Space', href: `/${locale}/tarf-mekan`, description: locale === 'tr' ? 'Üretim alanımız' : 'Our space' },
       ],
     },
     {
@@ -207,7 +226,7 @@ export function Header({ locale, settings }: HeaderProps) {
           : 'Educational programs and certificates',
       links: [
         {
-          label: locale === 'tr' ? 'Akademi' : 'Overview',
+          label: locale === 'tr' ? 'Akademi Ana' : 'Overview',
           href: `/${locale}/akademi`,
           description: locale === 'tr' ? 'Merak eden gençlik' : 'Learning ecosystem',
         },
@@ -253,7 +272,7 @@ export function Header({ locale, settings }: HeaderProps) {
           description: locale === 'tr' ? 'Dijital dönüşüm danışmanlığı' : 'Digital transformation consulting',
         },
         {
-          label: locale === 'tr' ? 'Ürünlerimiz' : locale === 'ar' ? 'الأمن السيبراني' : 'Cybersecurity',
+          label: locale === 'tr' ? 'Siber Güvenlik' : locale === 'ar' ? 'الأمن السيبراني' : 'Cybersecurity',
           href: `/${locale}/yazilim/siber-guvenlik`,
           description: locale === 'tr' ? 'Siber güvenlik hizmetleri' : 'Cybersecurity services',
         },
@@ -277,6 +296,11 @@ export function Header({ locale, settings }: HeaderProps) {
           label: locale === 'tr' ? 'Teknoloji Takımları' : 'Technology Teams',
           href: `/${locale}/kulupler/teknoloji-takimlari`,
           description: locale === 'tr' ? 'Proje geliştirme takımları' : 'Project development teams',
+        },
+        {
+          label: locale === 'tr' ? 'Kulüpler Ana' : 'Overview',
+          href: `/${locale}/kulupler`,
+          description: locale === 'tr' ? 'Topluluk ekosistemi' : 'Community hub',
         },
       ],
     },
@@ -333,6 +357,13 @@ export function Header({ locale, settings }: HeaderProps) {
       label: settings.contact_address,
     },
   ].filter(Boolean) as Array<{ icon: typeof Phone; label: string; href?: string }>
+
+  const socialLinks = [
+    { label: 'Facebook', href: 'https://www.facebook.com/tarfakademi', icon: Facebook },
+    { label: 'X', href: 'https://x.com/tarfakademi', icon: Twitter },
+    { label: 'Instagram', href: 'https://www.instagram.com/tarfdergisi/', icon: Instagram },
+    { label: 'YouTube', href: 'https://www.youtube.com/@tarfakademi', icon: Youtube },
+  ]
 
   const renderNavLinks = (variant: 'desktop' | 'mobile' = 'desktop') => {
     const isDesktop = variant === 'desktop'
@@ -483,6 +514,11 @@ export function Header({ locale, settings }: HeaderProps) {
                           scheduleCloseDropdown(item.label)
                         }}
 	                      >
+                      {item.description && (
+                        <p className="mb-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                          {item.description}
+                        </p>
+                      )}
                       <div className="space-y-2">
                         {item.links?.map((link) => (
                           <Link
@@ -493,6 +529,9 @@ export function Header({ locale, settings }: HeaderProps) {
                             <div className="flex items-center justify-between gap-3">
                               <div>
                                 <p className="text-sm font-semibold">{link.label}</p>
+                                {link.description && (
+                                  <p className="text-xs text-muted-foreground">{link.description}</p>
+                                )}
                               </div>
                               <ChevronDown className="h-3.5 w-3.5 -rotate-90 text-muted-foreground transition-transform group-hover/link:translate-x-1 group-hover/link:text-[hsl(var(--primary))]" />
                             </div>
@@ -512,6 +551,11 @@ export function Header({ locale, settings }: HeaderProps) {
                       transition={{ duration: 0.25 }}
                       className="space-y-3 border-t border-white/15 px-4 pb-4 pt-3"
                     >
+                      {item.description && (
+                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground/80">
+                          {item.description}
+                        </p>
+                      )}
                       {item.links?.map((link) => (
                         <Link
                           key={link.href}
@@ -520,6 +564,9 @@ export function Header({ locale, settings }: HeaderProps) {
                           className="block rounded-2xl border border-white/10 bg-[hsl(var(--background)_/_0.96)] px-3 py-2 text-sm font-semibold text-foreground/90 shadow-[0_18px_45px_rgba(15,23,42,0.12)] transition hover:-translate-y-0.5 hover:border-[hsl(var(--primary)_/_0.4)] hover:text-[hsl(var(--primary))]"
                         >
                           <p className="font-semibold">{link.label}</p>
+                          {link.description && (
+                            <p className="text-xs text-muted-foreground">{link.description}</p>
+                          )}
                         </Link>
                       ))}
                     </motion.div>
@@ -648,6 +695,80 @@ export function Header({ locale, settings }: HeaderProps) {
       </div>
 
       <div className="relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="hidden border-b border-white/5 bg-white/5 text-[11px] text-foreground/70 backdrop-blur lg:block"
+        >
+          <div className="container flex items-center justify-between py-2">
+            <div className="flex items-center gap-6">
+              {topbarLinks.map((link) => (
+                <div key={link.label} className="relative group">
+                  <Link
+                    href={link.href || '#'}
+                    className="relative inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.38em] text-foreground/80"
+                  >
+                    <span className="relative z-10">{link.label}</span>
+                    <span className="pointer-events-none absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-gradient-to-r from-transparent via-[hsl(var(--primary))] to-transparent transition-transform duration-300 group-hover:scale-x-100" />
+                  </Link>
+                  {link.children && (
+                    <div className="invisible absolute left-0 top-full mt-3 min-w-[220px] rounded-2xl border border-white/20 bg-white p-3 text-foreground shadow-[0_20px_80px_rgba(15,23,42,0.3)] backdrop-blur-xl opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-1 group-hover:opacity-100">
+                      <ul className="space-y-2 text-sm">
+                        {link.children.map((child) => (
+                          <li key={child.label}>
+                              <Link
+                              href={child.href}
+                              className="flex items-center justify-between rounded-xl px-3 py-2 text-foreground/80 transition hover:bg-white"
+                            >
+                              {child.label}
+                              <ChevronDown className="h-3.5 w-3.5 -rotate-90 text-muted-foreground" />
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                {socialLinks.map((link) => (
+                  <motion.a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    whileHover={{ y: -2, scale: 1.05 }}
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/5 text-muted-foreground transition hover:text-[hsl(var(--primary))]"
+                  >
+                    <link.icon className="h-3.5 w-3.5" />
+                  </motion.a>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-1 rounded-full border border-white/10 bg-background/70 px-2 py-1 text-[11px] font-semibold shadow-inner shadow-white/5">
+                {languages.map((lang) => (
+                  <Link
+                    key={lang.code}
+                    href={`/${lang.code}`}
+                    className={cn(
+                      'flex items-center gap-1 rounded-full px-2 transition',
+                      locale === lang.code
+                        ? 'bg-[hsl(var(--primary))] text-primary-foreground shadow-[0_10px_30px_rgba(255,138,52,0.35)]'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
+                  >
+                    <span>{lang.flag}</span>
+                    {lang.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}

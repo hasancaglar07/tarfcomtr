@@ -54,6 +54,7 @@ export interface Hero {
   subtitle: string
   eyebrow?: string | null
   description: string | null
+  headline_slides?: Array<{ title: string; subtitle: string }> | null
   button_text: string | null
   button_url: string | null
   image: string | null
@@ -219,6 +220,21 @@ const mapPost = (post: PostRecord): Post => {
     created_at: post.createdAt.toISOString(),
     updated_at: post.updatedAt.toISOString(),
   }
+}
+
+const normalizeHeroSlides = (value: unknown): Array<{ title: string; subtitle: string }> | null => {
+  if (!Array.isArray(value)) return null
+  const slides = value
+    .map((item) => {
+      if (!item || typeof item !== 'object') return null
+      const record = item as Record<string, unknown>
+      const title = typeof record.title === 'string' ? record.title.trim() : ''
+      const subtitle = typeof record.subtitle === 'string' ? record.subtitle.trim() : ''
+      if (!title && !subtitle) return null
+      return { title, subtitle }
+    })
+    .filter(Boolean) as Array<{ title: string; subtitle: string }>
+  return slides.length > 0 ? slides : null
 }
 
 async function getPostsByType(type: PostType, locale: string, take?: number) {
@@ -403,6 +419,7 @@ async function getHeroes(locale: string = 'tr') {
         subtitle: h.subtitle,
         eyebrow: h.description ?? null,
         description: h.description,
+        headline_slides: normalizeHeroSlides(h.headlineSlides),
         button_text: h.buttonText,
         button_url: h.buttonUrl,
         image: null,

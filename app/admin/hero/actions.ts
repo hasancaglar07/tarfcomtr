@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
@@ -20,6 +21,17 @@ const heroSchema = z.object({
   title: z.string().min(1, 'Başlık zorunludur'),
   subtitle: z.string().min(1, 'Alt başlık zorunludur'),
   description: z.string().optional(),
+  headlineSlidesJson: z.string().optional(),
+  headlineTitle1: z.string().optional(),
+  headlineSubtitle1: z.string().optional(),
+  headlineTitle2: z.string().optional(),
+  headlineSubtitle2: z.string().optional(),
+  headlineTitle3: z.string().optional(),
+  headlineSubtitle3: z.string().optional(),
+  headlineTitle4: z.string().optional(),
+  headlineSubtitle4: z.string().optional(),
+  headlineTitle5: z.string().optional(),
+  headlineSubtitle5: z.string().optional(),
   buttonText: z.string().optional(),
   buttonUrl: z.string().optional(),
   backgroundImage: z.string().optional(),
@@ -56,6 +68,17 @@ export async function upsertHeroAction(
       title: formData.get('title')?.toString() ?? '',
       subtitle: formData.get('subtitle')?.toString() ?? '',
       description: formData.get('description')?.toString() || '',
+      headlineSlidesJson: formData.get('headlineSlidesJson')?.toString(),
+      headlineTitle1: formData.get('headlineTitle1')?.toString() || '',
+      headlineSubtitle1: formData.get('headlineSubtitle1')?.toString() || '',
+      headlineTitle2: formData.get('headlineTitle2')?.toString() || '',
+      headlineSubtitle2: formData.get('headlineSubtitle2')?.toString() || '',
+      headlineTitle3: formData.get('headlineTitle3')?.toString() || '',
+      headlineSubtitle3: formData.get('headlineSubtitle3')?.toString() || '',
+      headlineTitle4: formData.get('headlineTitle4')?.toString() || '',
+      headlineSubtitle4: formData.get('headlineSubtitle4')?.toString() || '',
+      headlineTitle5: formData.get('headlineTitle5')?.toString() || '',
+      headlineSubtitle5: formData.get('headlineSubtitle5')?.toString() || '',
       buttonText: formData.get('buttonText')?.toString() || '',
       buttonUrl: formData.get('buttonUrl')?.toString() || '',
       backgroundImage: formData.get('backgroundImage')?.toString() || '',
@@ -74,6 +97,42 @@ export async function upsertHeroAction(
 
     const data = parsed.data
     const id = data.id || `hero-${data.locale}`
+    let headlineSlides: Array<{ title: string; subtitle: string }> = []
+
+    if (data.headlineSlidesJson) {
+      try {
+        const raw = JSON.parse(data.headlineSlidesJson)
+        if (Array.isArray(raw)) {
+          headlineSlides = raw
+            .map((slide) => {
+              if (!slide || typeof slide !== 'object') return null
+              const record = slide as Record<string, unknown>
+              return {
+                title: typeof record.title === 'string' ? record.title.trim() : '',
+                subtitle: typeof record.subtitle === 'string' ? record.subtitle.trim() : '',
+              }
+            })
+            .filter((slide): slide is { title: string; subtitle: string } =>
+              Boolean(slide && (slide.title || slide.subtitle)),
+            )
+        }
+      } catch {
+        return { status: 'error', message: 'Slogan slider verisi çözümlenemedi' }
+      }
+    } else {
+      headlineSlides = [
+        { title: data.headlineTitle1, subtitle: data.headlineSubtitle1 },
+        { title: data.headlineTitle2, subtitle: data.headlineSubtitle2 },
+        { title: data.headlineTitle3, subtitle: data.headlineSubtitle3 },
+        { title: data.headlineTitle4, subtitle: data.headlineSubtitle4 },
+        { title: data.headlineTitle5, subtitle: data.headlineSubtitle5 },
+      ]
+        .map((slide) => ({
+          title: slide.title?.trim() || '',
+          subtitle: slide.subtitle?.trim() || '',
+        }))
+        .filter((slide) => slide.title || slide.subtitle)
+    }
 
     await prisma.hero.upsert({
       where: { id },
@@ -82,6 +141,7 @@ export async function upsertHeroAction(
         title: data.title,
         subtitle: data.subtitle,
         description: data.description,
+        headlineSlides: headlineSlides.length > 0 ? headlineSlides : Prisma.DbNull,
         buttonText: data.buttonText,
         buttonUrl: data.buttonUrl,
         backgroundImage: data.backgroundImage,
@@ -99,6 +159,7 @@ export async function upsertHeroAction(
         title: data.title,
         subtitle: data.subtitle,
         description: data.description,
+        headlineSlides: headlineSlides.length > 0 ? headlineSlides : Prisma.DbNull,
         buttonText: data.buttonText,
         buttonUrl: data.buttonUrl,
         backgroundImage: data.backgroundImage,

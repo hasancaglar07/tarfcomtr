@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Play, ShieldCheck, MapPin, Sparkles, ChevronLeft, ChevronRight, Calendar } from 'lucide-react'
+import { ArrowRight, Play, MapPin, Sparkles, ChevronLeft, ChevronRight, Calendar } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
-import { BrandMarquee } from '@/components/sections/brand-marquee'
+import { AnimatePresence, motion } from 'framer-motion'
 import type { Post } from '@/lib/api'
 import { useShouldReduceMotion } from '@/lib/hooks/use-reduced-motion'
 
@@ -21,6 +21,7 @@ interface HeroProps {
     tertiary_cta_label?: string | null
     tertiary_cta_href?: string | null
     background_image?: string | null
+    headlineSlides?: Array<{ title: string; subtitle: string }> | null
     stats?: Array<{
       value: string
       label: string
@@ -99,6 +100,26 @@ export function Hero({ locale, data, events }: HeroProps) {
     ...(defaultContent[locale as keyof typeof defaultContent] || defaultContent.en),
     ...data,
   }
+  const shouldReduceHeadlineMotion = useShouldReduceMotion(768)
+
+  const headlineSlides = useMemo(() => {
+    const rawSlides = Array.isArray(content.headlineSlides) ? content.headlineSlides : []
+    const cleaned = rawSlides
+      .map((slide) => ({
+        title: slide?.title?.trim() || '',
+        subtitle: slide?.subtitle?.trim() || '',
+      }))
+      .filter((slide) => slide.title || slide.subtitle)
+    if (cleaned.length > 0) {
+      return cleaned
+    }
+    return [
+      {
+        title: content.title || defaultContent.en.title,
+        subtitle: content.subtitle || defaultContent.en.subtitle,
+      },
+    ]
+  }, [content.headlineSlides, content.subtitle, content.title])
 
   const upcomingEvents = useMemo(() => {
     const list = Array.isArray(events) ? events : []
@@ -162,6 +183,7 @@ export function Hero({ locale, data, events }: HeroProps) {
 
   const [heroVideoIndex, setHeroVideoIndex] = useState(0)
   const [heroVideoPlaying, setHeroVideoPlaying] = useState(false)
+  const [headlineIndex, setHeadlineIndex] = useState(0)
 
   useEffect(() => {
     if (heroVideos.length <= 1 || heroVideoPlaying) return
@@ -181,6 +203,20 @@ export function Hero({ locale, data, events }: HeroProps) {
     setHeroVideoPlaying(false)
   }, [heroVideoIndex])
 
+  useEffect(() => {
+    if (shouldReduceHeadlineMotion || headlineSlides.length <= 1) return
+    const timer = setInterval(() => {
+      setHeadlineIndex((prev) => (prev + 1) % headlineSlides.length)
+    }, 4800)
+    return () => clearInterval(timer)
+  }, [headlineSlides.length, shouldReduceHeadlineMotion])
+
+  useEffect(() => {
+    if (headlineIndex >= headlineSlides.length) {
+      setHeadlineIndex(0)
+    }
+  }, [headlineIndex, headlineSlides.length])
+
   const currentHeroVideo = heroVideos[heroVideoIndex]
   const heroVideoId = currentHeroVideo ? getYouTubeVideoId(currentHeroVideo.youtube_url) : null
   const heroVideoCover =
@@ -188,6 +224,7 @@ export function Hero({ locale, data, events }: HeroProps) {
     (heroVideoId ? `https://img.youtube.com/vi/${heroVideoId}/maxresdefault.jpg` : content.background_image)
   const heroVideoLink = currentHeroVideo?.youtube_url || (content.tertiary_cta_href as string) || '#'
   const hasMultipleHeroVideos = heroVideos.length > 1
+  const activeHeadline = headlineSlides[headlineIndex] || headlineSlides[0]
 
   return (
     <>
@@ -198,69 +235,36 @@ export function Hero({ locale, data, events }: HeroProps) {
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <StaggerContainer className="min-w-0 space-y-8">
               <StaggerItem>
-                <div className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-background/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground mx-auto lg:mx-0">
-                  <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-                  {content.eyebrow}
+                <div className="space-y-5 max-w-2xl mx-auto lg:mx-0 text-center lg:text-left text-balance">
+                  <div className="relative min-h-[8.5rem] sm:min-h-[9.5rem] lg:min-h-[11rem]">
+                    <AnimatePresence mode="wait" initial={false}>
+                      <motion.div
+                        key={`${headlineIndex}-${activeHeadline?.title}`}
+                        className="absolute inset-0 flex flex-col gap-4"
+                        initial={
+                          shouldReduceHeadlineMotion
+                            ? { opacity: 1, y: 0 }
+                            : { opacity: 0, y: 14 }
+                        }
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={
+                          shouldReduceHeadlineMotion
+                            ? { opacity: 1, y: 0 }
+                            : { opacity: 0, y: -10 }
+                        }
+                        transition={{ duration: shouldReduceHeadlineMotion ? 0 : 0.6, ease: 'easeOut' }}
+                      >
+                        <h1 className="text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-[64px] xl:text-[70px]">
+                          {activeHeadline?.title || content.title || defaultContent.en.title}
+                        </h1>
+                        <p className="text-lg text-muted-foreground leading-relaxed sm:text-xl lg:text-[22px]">
+                          {activeHeadline?.subtitle || content.subtitle || defaultContent.en.subtitle}
+                        </p>
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
                 </div>
               </StaggerItem>
-
-            <StaggerItem>
-              <div className="space-y-5 max-w-2xl mx-auto lg:mx-0 text-center lg:text-left text-balance">
-                <h1 className="text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-[56px]">
-                  {content.title || defaultContent.en.title}
-                </h1>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  {content.subtitle || defaultContent.en.subtitle}
-                </p>
-              </div>
-            </StaggerItem>
-
-            <StaggerItem>
-              <div className="flex flex-col gap-4 sm:flex-row items-center sm:items-start justify-center sm:justify-start">
-                <Link href={(content.primary_cta_href as string) || '#'}>
-                  <Button size="lg">
-                    {content.primary_cta_label || 'Başla'}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link href={(content.tertiary_cta_href as string) || '#'}>
-                  <Button size="lg" variant="outline" className="bg-white/80">
-                    <Play className="mr-2 h-4 w-4" />
-                    {content.tertiary_cta_label || 'Videoyu İzle'}
-                  </Button>
-                </Link>
-              </div>
-            </StaggerItem>
-
-            <StaggerItem>
-              <div className="w-full rounded-[28px] border border-primary/15 bg-gradient-to-br from-white/95 via-white/90 to-amber-50/80 p-5 shadow-[0_26px_80px_rgba(15,23,42,0.16)] sm:p-6">
-                <div className="flex flex-col items-center gap-3 pb-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary shadow-sm">
-                      <Calendar className="h-5 w-5" />
-                    </span>
-                    <span className="text-balance text-sm font-semibold uppercase tracking-[0.14em] text-foreground sm:text-base sm:tracking-[0.25em]">
-                      {labels.title}
-                    </span>
-                  </div>
-                  <Link
-                    href={`/${locale}/events`}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl sm:w-auto sm:text-xs sm:tracking-[0.22em]"
-                  >
-                    {labels.all}
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-
-                {upcomingEvents.length > 0 ? (
-                  <HeroEventsMarquee locale={locale} events={upcomingEvents} />
-                ) : (
-                  <div className="rounded-2xl border border-dashed border-border/60 bg-white/80 p-5 text-center shadow-sm sm:p-6">
-                    <p className="text-sm text-muted-foreground sm:text-base">{labels.empty}</p>
-                  </div>
-                )}
-              </div>
-            </StaggerItem>
             </StaggerContainer>
 
             <Animate variant="slideInRight">
@@ -393,7 +397,39 @@ export function Hero({ locale, data, events }: HeroProps) {
         </div>
       </section>
       <div className="-mt-12">
-        <BrandMarquee locale={locale} variant="overlay" />
+        <div className="container">
+          <StaggerContainer className="min-w-0 space-y-8">
+            <StaggerItem>
+              <div className="w-full rounded-[28px] border border-primary/15 bg-gradient-to-br from-white/95 via-white/90 to-amber-50/80 p-5 shadow-[0_26px_80px_rgba(15,23,42,0.16)] sm:p-6">
+                <div className="flex flex-col items-center gap-3 pb-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary shadow-sm">
+                      <Calendar className="h-5 w-5" />
+                    </span>
+                    <span className="text-balance text-sm font-semibold uppercase tracking-[0.14em] text-foreground sm:text-base sm:tracking-[0.25em]">
+                      {labels.title}
+                    </span>
+                  </div>
+                  <Link
+                    href={`/${locale}/events`}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl sm:w-auto sm:text-xs sm:tracking-[0.22em]"
+                  >
+                    {labels.all}
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+
+                {upcomingEvents.length > 0 ? (
+                  <HeroEventsMarquee locale={locale} events={upcomingEvents} />
+                ) : (
+                  <div className="rounded-2xl border border-dashed border-border/60 bg-white/80 p-5 text-center shadow-sm sm:p-6">
+                    <p className="text-sm text-muted-foreground sm:text-base">{labels.empty}</p>
+                  </div>
+                )}
+              </div>
+            </StaggerItem>
+          </StaggerContainer>
+        </div>
       </div>
     </>
   )

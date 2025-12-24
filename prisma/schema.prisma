@@ -119,6 +119,7 @@ model Hero {
   title          String
   subtitle       String
   description    String?
+  headlineSlides Json?
   buttonText     String?
   buttonUrl      String?
   backgroundImage String?

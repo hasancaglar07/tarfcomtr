@@ -167,6 +167,7 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
     : []
   const showNarrative =
     Boolean(description) && (descriptionParagraphs.length > 1 || description.length > 220)
+  const hideExtraSections = page.category !== 'yasal'
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-slate-50">
@@ -228,7 +229,7 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
             )}
           </div>
 
-          {page.hero.stats && (
+          {!hideExtraSections && page.hero.stats && (
             <div className="mt-10 grid gap-6 md:grid-cols-3">
               {page.hero.stats.map((stat) => (
                 <div key={stat.label} className="rounded-2xl border bg-card/80 p-6 shadow-sm">
@@ -246,11 +247,12 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
         </div>
       </section>
 
-      {page.sections.map((section) => (
-        <SectionWrapper key={section.id} section={section}>
-          <SectionContent section={section} />
-        </SectionWrapper>
-      ))}
+      {!hideExtraSections &&
+        page.sections.map((section) => (
+          <SectionWrapper key={section.id} section={section}>
+            <SectionContent section={section} />
+          </SectionWrapper>
+        ))}
 
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container flex flex-col gap-6 text-center">

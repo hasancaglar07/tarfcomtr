@@ -88,6 +88,7 @@ CREATE TABLE "Hero" (
     "title" TEXT NOT NULL,
     "subtitle" TEXT NOT NULL,
     "description" TEXT,
+    "headlineSlides" JSONB,
     "buttonText" TEXT,
     "buttonUrl" TEXT,
     "backgroundImage" TEXT,
@@ -181,4 +182,3 @@ CREATE UNIQUE INDEX "Setting_locale_key" ON "Setting"("locale");
 
 -- AddForeignKey
 ALTER TABLE "Post" ADD CONSTRAINT "Post_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-

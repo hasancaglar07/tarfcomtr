@@ -9,6 +9,9 @@ export default async function HeroPage() {
     orderBy: { locale: 'asc' },
   })
   const current = heroes.find((h) => h.locale === 'tr') ?? heroes[0]
+  const headlineSlides = Array.isArray(current?.headlineSlides)
+    ? (current?.headlineSlides as Array<{ title?: string; subtitle?: string }>)
+    : []
 
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">
@@ -42,6 +45,7 @@ export default async function HeroPage() {
                     title: current.title,
                     subtitle: current.subtitle,
                     description: current.description ?? '',
+                    headlineSlides,
                     buttonText: current.buttonText ?? '',
                     buttonUrl: current.buttonUrl ?? '',
                     backgroundImage: current.backgroundImage ?? '',

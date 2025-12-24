@@ -2,9 +2,15 @@ import { api } from '@/lib/api'
 import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
 import { Hero } from '@/components/sections/hero'
+import { BlogSection } from '@/components/sections/blog-section'
+import { VideoSection } from '@/components/sections/video-section'
 import { EventsCarousel } from '@/components/sections/events-carousel'
+import { ContactCTA } from '@/components/sections/contact-cta'
 import { FutureContribution } from '@/components/sections/future-contribution'
-
+import { StatsShowcase } from '@/components/sections/stats-showcase'
+import { ValuePillars } from '@/components/sections/value-pillars'
+import { StrategicPages } from '@/components/sections/strategic-pages'
+import { getContentPageGroups } from '@/lib/content-store'
 type StaticHeroContent = {
   eyebrow?: string
   title: string
@@ -14,7 +20,6 @@ type StaticHeroContent = {
   tertiary_cta_label: string
   tertiary_cta_href: string
   stats: Array<{ value: string; label: string }>
-  headlineSlides?: Array<{ title: string; subtitle: string }>
   background_image?: string | null
   video_cover?: string | null
   video_url?: string | null
@@ -117,6 +122,7 @@ export default async function Home({
       settings,
     }
   }
+  const contentPageGroups = await getContentPageGroups()
   const heroFromDb = data.heroes && data.heroes.length > 0 ? data.heroes[0] : null
   const heroContent =
     heroFromDb
@@ -130,7 +136,6 @@ export default async function Home({
           tertiary_cta_href: STATIC_HERO_CONTENT[locale].tertiary_cta_href,
           background_image: heroFromDb.background_image || STATIC_HERO_CONTENT[locale].background_image,
           stats: STATIC_HERO_CONTENT[locale].stats,
-          headlineSlides: heroFromDb.headline_slides || STATIC_HERO_CONTENT[locale].headlineSlides,
           video_url: heroFromDb.video_url || STATIC_HERO_CONTENT[locale].video_url,
           video_cover: heroFromDb.video_cover || heroFromDb.background_image || STATIC_HERO_CONTENT[locale].background_image,
           video_url_2: heroFromDb.video_url_2,
@@ -162,8 +167,45 @@ export default async function Home({
             />
           ) : null}
 
-          {/* Join CTA */}
+          {/* Blog Section - Düşünce yazıları, araştırmalar ve makaleler */}
+          {data.blog_posts && data.blog_posts.length > 0 && (
+            <BlogSection
+              locale={locale}
+              posts={data.blog_posts}
+              categories={data.categories || []}
+            />
+          )}
+
+          {/* Future Contribution - Projelerimiz ve teknoloji takımları */}
           <FutureContribution locale={locale} />
+
+          {/* Value Pillars - Vizyonumuz ve değerlerimiz */}
+          <ValuePillars locale={locale} />
+
+          {/* Strategic Pages - Alt sayfalara giden bağlantılar */}
+          <StrategicPages locale={locale} groups={contentPageGroups} />
+
+          {/* Video Section - Eğitim videoları ve konuşmalar */}
+          {data.videos && data.videos.length > 0 && (
+            <VideoSection
+              locale={locale}
+              videos={data.videos}
+            />
+          )}
+
+          {/* Stats Showcase - Sayılarla TARF ekosistemi */}
+          <StatsShowcase
+            locale={locale}
+            servicesCount={data.services?.length || 0}
+            eventsCount={data.events?.length || 0}
+            blogCount={data.blog_posts?.length || 0}
+            videosCount={data.videos?.length || 0}
+            podcastsCount={data.podcasts?.length || 0}
+            categories={data.categories}
+          />
+
+          {/* Contact CTA - Bize ulaşın ve projelerimize katılın */}
+          <ContactCTA locale={locale} settings={data.settings} />
         </div>
       </main>
 

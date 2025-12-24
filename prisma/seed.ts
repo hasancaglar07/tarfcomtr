@@ -194,6 +194,20 @@ async function seedHero() {
       title: 'Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz',
       subtitle: 'Eğitim, üretim ve topluluk programlarıyla ekosistem kuruyoruz.',
       description: 'Gençlere yönelik eğitim, atölye, etkinlik ve teknoloji takımları.',
+      headlineSlides: [
+        {
+          title: 'Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz',
+          subtitle: 'Eğitim, üretim ve topluluk programlarıyla ekosistem kuruyoruz.',
+        },
+        {
+          title: 'Gençlerle birlikte yeni bir öğrenme kültürü kuruyoruz',
+          subtitle: 'Araştırma, atölye ve teknoloji takımlarıyla sahadayız.',
+        },
+        {
+          title: 'TARF ekosistemiyle etki alanınızı büyütün',
+          subtitle: 'Eğitim ve proje programlarımızla birlikte üretelim.',
+        },
+      ],
       buttonText: 'Başvuru Yap',
       buttonUrl: '/tr/contact',
       backgroundImage: '',
@@ -204,6 +218,20 @@ async function seedHero() {
       title: 'Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz',
       subtitle: 'Eğitim, üretim ve topluluk programlarıyla ekosistem kuruyoruz.',
       description: 'Gençlere yönelik eğitim, atölye, etkinlik ve teknoloji takımları.',
+      headlineSlides: [
+        {
+          title: 'Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz',
+          subtitle: 'Eğitim, üretim ve topluluk programlarıyla ekosistem kuruyoruz.',
+        },
+        {
+          title: 'Gençlerle birlikte yeni bir öğrenme kültürü kuruyoruz',
+          subtitle: 'Araştırma, atölye ve teknoloji takımlarıyla sahadayız.',
+        },
+        {
+          title: 'TARF ekosistemiyle etki alanınızı büyütün',
+          subtitle: 'Eğitim ve proje programlarımızla birlikte üretelim.',
+        },
+      ],
       buttonText: 'Başvuru Yap',
       buttonUrl: '/tr/contact',
       backgroundImage: '',
