@@ -16,7 +16,7 @@ const cached = <T>(
   keyParts: Array<string | number>,
   tags: string[],
   fn: () => Promise<T>,
-) => unstable_cache(fn, keyParts, { revalidate: CACHE_TTL_SECONDS, tags })()
+) => unstable_cache(fn, keyParts.map(String), { revalidate: CACHE_TTL_SECONDS, tags })()
 
 type GroupedPages = Record<
   ContentPageCategory,

@@ -136,7 +136,7 @@ const cached = <T>(
   keyParts: Array<string | number>,
   tags: string[],
   fn: () => Promise<T>,
-) => unstable_cache(fn, keyParts, { revalidate: CACHE_TTL_SECONDS, tags })()
+) => unstable_cache(fn, keyParts.map(String), { revalidate: CACHE_TTL_SECONDS, tags })()
 
 const defaultSettings: Settings = {
   site_name: 'TARF Akademi',
@@ -159,10 +159,10 @@ const mapPostType = (type: PostType): PostTypeRef => {
 const mapCategory = (category?: { id: string; name: string; slug: string } | null): Category | null =>
   category
     ? {
-        id: category.id,
-        name: category.name,
-        slug: category.slug,
-      }
+      id: category.id,
+      name: category.name,
+      slug: category.slug,
+    }
     : null
 
 type PostRecord = {
