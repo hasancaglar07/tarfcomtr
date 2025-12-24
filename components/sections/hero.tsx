@@ -283,6 +283,19 @@ export function Hero({ locale, data, events }: HeroProps) {
                                   {activeHeadline?.subtitle || content.subtitle || defaultContent.en.subtitle}
                                 </p>
                               </div>
+
+                              {/* Headline Slider Dots - Inside Card */}
+                              {headlineSlides.length > 1 && (
+                                <div className="flex justify-center gap-2 pt-2 lg:justify-start" aria-hidden="true">
+                                  {headlineSlides.map((_, index) => (
+                                    <span
+                                      key={`headline-dot-${index}`}
+                                      className={`h-1.5 w-8 rounded-full transition ${index === headlineIndex ? 'bg-primary' : 'bg-slate-300'
+                                        }`}
+                                    />
+                                  ))}
+                                </div>
+                              )}
                             </div>
 
                             {/* Decorative Corner Elements */}
@@ -293,17 +306,6 @@ export function Hero({ locale, data, events }: HeroProps) {
                       </motion.div>
                     </AnimatePresence>
                   </div>
-                  {headlineSlides.length > 1 && (
-                    <div className="mt-4 flex justify-center gap-2 lg:justify-start" aria-hidden="true">
-                      {headlineSlides.map((_, index) => (
-                        <span
-                          key={`headline-dot-${index}`}
-                          className={`h-1.5 w-8 rounded-full transition ${index === headlineIndex ? 'bg-primary' : 'bg-slate-200'
-                            }`}
-                        />
-                      ))}
-                    </div>
-                  )}
                 </div>
               </StaggerItem>
             </StaggerContainer>
