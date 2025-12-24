@@ -167,6 +167,20 @@ export const siteSeoConfig = {
         description: 'إصدارات تعليمية وتسجيلات فعاليات وأفلام وثائقية.',
       },
     },
+    kvkk: {
+      tr: {
+        title: 'KVKK Aydınlatma Metni · TARF Akademi',
+        description: 'Kişisel Verilerin Korunması Kanunu kapsamında aydınlatma metni ve veri işleme politikamız.',
+      },
+      en: {
+        title: 'KVKK Privacy Notice · TARF Academy',
+        description: 'Privacy notice and data processing policy under the Personal Data Protection Law.',
+      },
+      ar: {
+        title: 'إشعار خصوصية KVKK · أكاديمية TARF',
+        description: 'إشعار الخصوصية وسياسة معالجة البيانات بموجب قانون حماية البيانات الشخصية.',
+      },
+    },
   } as const,
 }
 
@@ -264,9 +278,9 @@ export function buildPageMetadata({
       ],
       ...(type === 'article'
         ? {
-            publishedTime: publishedTime || undefined,
-            modifiedTime: modifiedTime || publishedTime || undefined,
-          }
+          publishedTime: publishedTime || undefined,
+          modifiedTime: modifiedTime || publishedTime || undefined,
+        }
         : {}),
     },
     twitter: {
