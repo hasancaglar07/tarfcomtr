@@ -155,12 +155,26 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
   }, [router, state])
 
   const handleSubmit = async (formData: FormData) => {
+    const cleanedActions = (data.hero.actions ?? [])
+      .map((action) => ({
+        ...action,
+        label: action.label?.trim() ?? '',
+        href: action.href?.trim() ?? '',
+      }))
+      .filter((action) => action.label && action.href)
+    const payload: ContentPageDefinition = {
+      ...data,
+      hero: {
+        ...data.hero,
+        actions: cleanedActions,
+      },
+    }
     formData.set('slug', data.slug)
     formData.set('category', data.category)
     formData.set('title', data.hero.title)
     formData.set('seoTitle', data.seo.title)
     formData.set('seoDescription', data.seo.description)
-    formData.set('dataJson', JSON.stringify(data, null, 2))
+    formData.set('dataJson', JSON.stringify(payload, null, 2))
     if (mode === 'edit') {
       formData.set('originalSlug', defaultValues.slug)
     }

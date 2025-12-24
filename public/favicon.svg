@@ -1,4 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" fill="#FF8C00" rx="20"/>
-  <text x="50" y="70" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle">T</text>
+  <!-- Dark slate gradient background like footer -->
+  <defs>
+    <linearGradient id="footerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#020617;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#020617;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="20%" r="60%">
+      <stop offset="0%" style="stop-color:#fb8a34;stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:#fb8a34;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background with gradient -->
+  <rect width="100" height="100" fill="url(#footerGrad)" rx="20"/>
+  
+  <!-- Subtle glow effect -->
+  <rect width="100" height="100" fill="url(#glow)" rx="20"/>
+  
+  <!-- Border -->
+  <rect width="100" height="100" fill="none" stroke="#1e293b" stroke-width="1" rx="20"/>
+  
+  <!-- Text with primary color -->
+  <text x="50" y="70" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="#fb8a34" text-anchor="middle">T</text>
 </svg>

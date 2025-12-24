@@ -20,6 +20,8 @@ import {
 interface HeaderProps {
   locale: string
   settings?: Settings
+  contentPageSlugs?: string[]
+  publishedPageSlugs?: string[]
 }
 
 interface NavSection {
@@ -31,7 +33,7 @@ interface NavSection {
 
 const MOBILE_MENU_ID = 'mobile-navigation-drawer'
 
-export function Header({ locale, settings }: HeaderProps) {
+export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [hoveredNav, setHoveredNav] = useState<string | null>(null)
@@ -138,8 +140,8 @@ export function Header({ locale, settings }: HeaderProps) {
         locale === 'tr'
           ? 'Kim olduğumuz ve değerlerimiz'
           : locale === 'ar'
-          ? 'من نحن وقيمنا'
-          : 'Who we are and what we believe',
+            ? 'من نحن وقيمنا'
+            : 'Who we are and what we believe',
       links: [
         { label: locale === 'tr' ? 'Hakkımızda' : 'About', href: `/${locale}/hakkimizda`, description: locale === 'tr' ? 'Kuruluş hikayemiz' : 'Our story' },
         { label: locale === 'tr' ? 'Vizyon & Değerler' : 'Vision & Values', href: `/${locale}/vizyon-degerler`, description: locale === 'tr' ? 'Gelecek perspektifimiz' : 'Our long term vision' },
@@ -152,14 +154,9 @@ export function Header({ locale, settings }: HeaderProps) {
         locale === 'tr'
           ? 'Fikir üretimi ve araştırma platformu'
           : locale === 'ar'
-          ? 'منصة إنتاج الأفكار والبحث'
-          : 'Idea generation and research platform',
+            ? 'منصة إنتاج الأفكار والبحث'
+            : 'Idea generation and research platform',
       links: [
-        {
-          label: locale === 'tr' ? 'Ana sayfa' : locale === 'ar' ? 'الرئيسية' : 'Overview',
-          href: `/${locale}/dusunce-enstitusu`,
-          description: locale === 'tr' ? 'Araştırma merkezi' : 'Research hub',
-        },
         {
           label: locale === 'tr' ? 'Eğitim Araştırmaları' : locale === 'ar' ? 'أبحاث التعليم' : 'Education research',
           href: `/${locale}/dusunce-enstitusu/egitim`,
@@ -176,7 +173,7 @@ export function Header({ locale, settings }: HeaderProps) {
           description: locale === 'tr' ? 'Aile destek programları' : 'Family initiatives',
         },
         {
-          label: locale === 'tr' ? 'Kültür & Sanat' : locale === 'ar' ? 'الثقافة والفن' : 'Culture & Art',
+          label: locale === 'tr' ? 'Tarih, Kültür ve Medeniyet' : locale === 'ar' ? 'الثقافة والفن' : 'Culture & Art',
           href: `/${locale}/dusunce-enstitusu/kultur-sanat`,
           description: locale === 'tr' ? 'Kültürel araştırmalar' : 'Cultural research',
         },
@@ -186,7 +183,7 @@ export function Header({ locale, settings }: HeaderProps) {
           description: locale === 'tr' ? 'Diplomasi ve bölgesel çalışmalar' : 'Diplomacy and regional studies',
         },
         {
-          label: locale === 'tr' ? 'Çevre-İklim-Doğa' : locale === 'ar' ? 'البيئة والمناخ والطبيعة' : 'Environment & Climate',
+          label: locale === 'tr' ? 'Çevre-İklim-Şehir' : locale === 'ar' ? 'البيئة والمناخ والطبيعة' : 'Environment & Climate',
           href: `/${locale}/dusunce-enstitusu/cevre-iklim-doga`,
           description: locale === 'tr' ? 'İklim ve sürdürülebilirlik' : 'Climate and sustainability',
         },
@@ -203,8 +200,8 @@ export function Header({ locale, settings }: HeaderProps) {
         locale === 'tr'
           ? 'Eğitim programları ve sertifikalar'
           : locale === 'ar'
-          ? 'البرامج التعليمية والشهادات'
-          : 'Educational programs and certificates',
+            ? 'البرامج التعليمية والشهادات'
+            : 'Educational programs and certificates',
       links: [
         {
           label: locale === 'tr' ? 'Akademi' : 'Overview',
@@ -239,8 +236,8 @@ export function Header({ locale, settings }: HeaderProps) {
         locale === 'tr'
           ? 'Yenilikçi dijital çözümler'
           : locale === 'ar'
-          ? 'حلول رقمية مبتكرة'
-          : 'Innovative digital solutions',
+            ? 'حلول رقمية مبتكرة'
+            : 'Innovative digital solutions',
       links: [
         {
           label: locale === 'tr' ? 'Yazılım Geliştirme' : 'Software Development',
@@ -265,8 +262,8 @@ export function Header({ locale, settings }: HeaderProps) {
         locale === 'tr'
           ? 'Teknoloji takımları ve kulüpler'
           : locale === 'ar'
-          ? 'الفرق والأندية التقنية'
-          : 'Technology teams and clubs',
+            ? 'الفرق والأندية التقنية'
+            : 'Technology teams and clubs',
       links: [
         {
           label: locale === 'tr' ? 'Öğrenci Kulüpleri' : 'Student Clubs',
@@ -288,15 +285,15 @@ export function Header({ locale, settings }: HeaderProps) {
             locale === 'tr'
               ? 'Yayın Anlayışımız'
               : locale === 'ar'
-              ? 'رؤيتنا للنشر'
-              : 'Publishing Ethos',
+                ? 'رؤيتنا للنشر'
+                : 'Publishing Ethos',
           href: `/${locale}/yayin-anlayisimiz`,
           description:
             locale === 'tr'
               ? 'Yayın ilkemiz'
               : locale === 'ar'
-              ? 'رؤيتنا التحريرية'
-              : 'Editorial approach',
+                ? 'رؤيتنا التحريرية'
+                : 'Editorial approach',
         },
         {
           label: locale === 'tr' ? 'Tarf Dergi' : locale === 'ar' ? 'مجلة تارف' : 'Tarf Magazine',
@@ -334,6 +331,44 @@ export function Header({ locale, settings }: HeaderProps) {
     },
   ].filter(Boolean) as Array<{ icon: typeof Phone; label: string; href?: string }>
 
+  const contentPageSet = new Set(contentPageSlugs ?? [])
+  const publishedPageSet = new Set(publishedPageSlugs ?? [])
+
+  const normalizeSlug = (href?: string) => {
+    if (!href) return null
+    if (/^(https?:|mailto:|tel:)/i.test(href)) return null
+    const path = href.split('?')[0]?.split('#')[0] ?? ''
+    const trimmed = path.replace(/^\/+/, '').replace(/\/+$/, '')
+    if (!trimmed || trimmed === locale) return null
+    const prefix = `${locale}/`
+    const withoutLocale = trimmed.startsWith(prefix) ? trimmed.slice(prefix.length) : trimmed
+    if (!withoutLocale || withoutLocale === locale) return null
+    return withoutLocale
+  }
+
+  const shouldShowLink = (href?: string) => {
+    const slug = normalizeSlug(href)
+    if (!slug) return true
+    if (contentPageSet.size === 0) return true
+    if (!contentPageSet.has(slug)) return true
+    if (publishedPageSet.size === 0) return true
+    return publishedPageSet.has(slug)
+  }
+
+  const visibleNavigation = navigation
+    .map((item) => {
+      if (item.links?.length) {
+        const links = item.links.filter((link) => shouldShowLink(link.href))
+        if (links.length === 0) return null
+        return { ...item, links }
+      }
+      if (item.href && !shouldShowLink(item.href)) {
+        return null
+      }
+      return item
+    })
+    .filter(Boolean) as NavSection[]
+
   const renderNavLinks = (variant: 'desktop' | 'mobile' = 'desktop') => {
     const isDesktop = variant === 'desktop'
 
@@ -347,13 +382,13 @@ export function Header({ locale, settings }: HeaderProps) {
         )}
         {...(isDesktop
           ? {
-              initial: { opacity: 0, y: 12 },
-              animate: { opacity: 1, y: 0 },
-              transition: { duration: 0.35, delay: 0.1 },
-            }
+            initial: { opacity: 0, y: 12 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.35, delay: 0.1 },
+          }
           : {})}
       >
-        {navigation.map((item, index) => {
+        {visibleNavigation.map((item, index) => {
           const hasLinks = Boolean(item.links?.length)
 
           if (!hasLinks) {
@@ -363,10 +398,10 @@ export function Header({ locale, settings }: HeaderProps) {
                 key={item.label}
                 {...(isDesktop
                   ? {
-                      initial: { opacity: 0, y: 12 },
-                      animate: { opacity: 1, y: 0 },
-                      transition: { delay: 0.05 * index, duration: 0.3 },
-                    }
+                    initial: { opacity: 0, y: 12 },
+                    animate: { opacity: 1, y: 0 },
+                    transition: { delay: 0.05 * index, duration: 0.3 },
+                  }
                   : {})}
               >
                 <Link
@@ -384,10 +419,10 @@ export function Header({ locale, settings }: HeaderProps) {
                   }}
                   {...(isDesktop
                     ? {
-                        onMouseEnter: () => setHoveredNav(item.label),
-                        onMouseLeave: () =>
-                          setHoveredNav((current) => (current === item.label ? null : current)),
-                      }
+                      onMouseEnter: () => setHoveredNav(item.label),
+                      onMouseLeave: () =>
+                        setHoveredNav((current) => (current === item.label ? null : current)),
+                    }
                     : {})}
                 >
                   {isDesktop && hoveredNav === item.label && (
@@ -404,21 +439,21 @@ export function Header({ locale, settings }: HeaderProps) {
           }
 
           return (
-	            <motion.div
-	              layout
-	              key={item.label}
-	              className={cn(
-	                'group',
+            <motion.div
+              layout
+              key={item.label}
+              className={cn(
+                'group',
                 isDesktop
                   ? 'relative'
-	                  : 'overflow-hidden rounded-3xl border border-white/15 bg-[hsl(var(--background)_/_0.88)] shadow-[0_30px_80px_rgba(15,23,42,0.16)] backdrop-blur-2xl'
-	              )}
-	              {...(isDesktop
-	                ? {
-                    initial: { opacity: 0, y: 12 },
-                    animate: { opacity: 1, y: 0 },
-                    transition: { delay: 0.05 * index, duration: 0.3 },
-                  }
+                  : 'overflow-hidden rounded-3xl border border-white/15 bg-[hsl(var(--background)_/_0.88)] shadow-[0_30px_80px_rgba(15,23,42,0.16)] backdrop-blur-2xl'
+              )}
+              {...(isDesktop
+                ? {
+                  initial: { opacity: 0, y: 12 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: { delay: 0.05 * index, duration: 0.3 },
+                }
                 : {})}
               onMouseEnter={() => {
                 if (!isDesktop) return
@@ -428,9 +463,9 @@ export function Header({ locale, settings }: HeaderProps) {
                 if (!isDesktop) return
                 scheduleCloseDropdown(item.label)
               }}
-	            >
-	              <button
-	                type="button"
+            >
+              <button
+                type="button"
                 className={cn(
                   'group inline-flex w-full items-center justify-between gap-2 text-sm font-semibold transition-all',
                   isDesktop
@@ -439,16 +474,16 @@ export function Header({ locale, settings }: HeaderProps) {
                 )}
                 onClick={() => {
                   if (isDesktop) return
-	                  setActiveDropdown((current) => (current === item.label ? null : item.label))
-	                }}
-	                {...(isDesktop
-	                  ? {
-	                      onMouseEnter: () => setHoveredNav(item.label),
-	                      onMouseLeave: () =>
-	                        setHoveredNav((current) => (current === item.label ? null : current)),
-	                    }
-	                  : {})}
-	              >
+                  setActiveDropdown((current) => (current === item.label ? null : item.label))
+                }}
+                {...(isDesktop
+                  ? {
+                    onMouseEnter: () => setHoveredNav(item.label),
+                    onMouseLeave: () =>
+                      setHoveredNav((current) => (current === item.label ? null : current)),
+                  }
+                  : {})}
+              >
                 {isDesktop && hoveredNav === item.label && (
                   <motion.span
                     layoutId="navHighlight"
@@ -465,36 +500,34 @@ export function Header({ locale, settings }: HeaderProps) {
                 />
               </button>
 
-	                {isDesktop ? (
-	                  <AnimatePresence>
-	                    {activeDropdown === item.label && (
-	                      <motion.div
-	                        initial={{ opacity: 0, y: 10, scale: 0.97 }}
-	                        animate={{ opacity: 1, y: 0, scale: 1 }}
-	                        exit={{ opacity: 0, y: 6, scale: 0.97 }}
-	                        transition={{ duration: 0.2 }}
-	                        className="absolute left-1/2 top-full z-20 mt-4 w-[360px] -translate-x-1/2 rounded-3xl border border-white/30 bg-white p-5 text-foreground shadow-[0_30px_90px_rgba(15,23,42,0.35)] backdrop-blur-[22px]"
-                        onMouseEnter={() => {
-                          if (!isDesktop) return
-                          openDropdown(item.label)
-                        }}
-                        onMouseLeave={() => {
-                          if (!isDesktop) return
-                          scheduleCloseDropdown(item.label)
-                        }}
-	                      >
+              {isDesktop ? (
+                <AnimatePresence>
+                  {activeDropdown === item.label && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 6, scale: 0.97 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute left-1/2 top-full z-20 mt-4 w-[360px] -translate-x-1/2 rounded-3xl border border-white/30 bg-white p-5 text-foreground shadow-[0_30px_90px_rgba(15,23,42,0.35)] backdrop-blur-[22px]"
+                      onMouseEnter={() => {
+                        if (!isDesktop) return
+                        openDropdown(item.label)
+                      }}
+                      onMouseLeave={() => {
+                        if (!isDesktop) return
+                        scheduleCloseDropdown(item.label)
+                      }}
+                    >
                       <div className="space-y-2">
                         {item.links?.map((link) => (
                           <Link
                             key={link.href}
                             href={link.href}
-                            className="group/link block rounded-2xl border border-transparent bg-white p-3 transition-all hover:border-[hsl(var(--primary)_/_0.4)] hover:bg-white"
+                            className="group/link block rounded-2xl border border-transparent bg-white p-3 transition-all hover:border-[hsl(var(--primary)_/_0.4)] hover:bg-white hover:shadow-lg"
                           >
                             <div className="flex items-center justify-between gap-3">
-                              <div>
-                                <p className="text-sm font-semibold">{link.label}</p>
-                              </div>
-                              <ChevronDown className="h-3.5 w-3.5 -rotate-90 text-muted-foreground transition-transform group-hover/link:translate-x-1 group-hover/link:text-[hsl(var(--primary))]" />
+                              <p className="text-sm font-semibold text-foreground group-hover/link:text-primary">{link.label}</p>
+                              <ChevronDown className="h-3.5 w-3.5 shrink-0 -rotate-90 text-muted-foreground transition-transform group-hover/link:translate-x-1 group-hover/link:text-[hsl(var(--primary))]" />
                             </div>
                           </Link>
                         ))}
@@ -573,8 +606,8 @@ export function Header({ locale, settings }: HeaderProps) {
                   locale === 'tr'
                     ? 'Menüyü kapat'
                     : locale === 'ar'
-                    ? 'إغلاق القائمة'
-                    : 'Close menu'
+                      ? 'إغلاق القائمة'
+                      : 'Close menu'
                 }
               >
                 <X className="h-5 w-5" />
@@ -639,82 +672,82 @@ export function Header({ locale, settings }: HeaderProps) {
   return (
     <>
       <header className="relative sticky top-0 z-50 w-full overflow-visible border-b border-white/10 bg-background/75 backdrop-blur-2xl supports-[backdrop-filter]:bg-background/60">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary)_/_0.8)] to-transparent opacity-80" />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary)_/_0.5)] to-transparent opacity-60" />
-        <div className="absolute left-1/2 top-[-35%] h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.2),_transparent_65%)] blur-[140px]" />
-        <div className="absolute right-0 top-[-5%] h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.16),_transparent_60%)] blur-[150px]" />
-        <div className="absolute left-0 bottom-[-15%] h-[300px] w-[300px] rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.1),_transparent_70%)] blur-[160px]" />
-      </div>
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary)_/_0.8)] to-transparent opacity-80" />
+          <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary)_/_0.5)] to-transparent opacity-60" />
+          <div className="absolute left-1/2 top-[-35%] h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.2),_transparent_65%)] blur-[140px]" />
+          <div className="absolute right-0 top-[-5%] h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.16),_transparent_60%)] blur-[150px]" />
+          <div className="absolute left-0 bottom-[-15%] h-[300px] w-[300px] rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.1),_transparent_70%)] blur-[160px]" />
+        </div>
 
-      <div className="relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="container flex h-16 items-center justify-between lg:h-20"
-        >
-          <motion.div whileHover={{ scale: 1.02 }} className="flex items-center">
-            <Link href={`/${locale}`} className="flex items-center">
-              <Image
-                src="/img/tarf.png"
-                alt="TARF - Türkiye Araştırma Fonları Derneği"
-                width={120}
-                height={40}
-                className="h-10 w-auto object-contain"
-                priority
-              />
-            </Link>
-          </motion.div>
-
-          {renderNavLinks('desktop')}
-
-          <motion.div className="flex items-center gap-3" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}>
-            <Link href={`/${locale}/contact`} className="hidden lg:inline-flex">
-              <Button
-                size="lg"
-                className="group relative overflow-hidden rounded-full border border-white/15 bg-[hsl(var(--primary))] px-6 py-5 text-base font-semibold text-primary-foreground shadow-[0_25px_60px_rgba(255,138,52,0.45)] transition-all hover:-translate-y-0.5 hover:shadow-[0_30px_70px_rgba(255,138,52,0.5)]"
-              >
-                <span className="relative z-10">
-                  {locale === 'tr' ? 'Başvuru Yap' : locale === 'ar' ? 'قدّم الآن' : 'Send Application'}
-                </span>
-                <span className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.55),_transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-80" />
-                <motion.span
-                  aria-hidden
-                  initial={{ opacity: 0.25 }}
-                  animate={{ opacity: [0.25, 0.4, 0.25], scale: [1, 1.05, 1] }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                  className="absolute -inset-6 rounded-full bg-[hsl(var(--primary)_/_0.55)] blur-3xl"
+        <div className="relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="container flex h-16 items-center justify-between lg:h-20"
+          >
+            <motion.div whileHover={{ scale: 1.02 }} className="flex items-center">
+              <Link href={`/${locale}`} className="flex items-center">
+                <Image
+                  src="/img/tarf.png"
+                  alt="TARF - Türkiye Araştırma Fonları Derneği"
+                  width={120}
+                  height={40}
+                  className="h-10 w-auto object-contain"
+                  priority
                 />
+              </Link>
+            </motion.div>
+
+            {renderNavLinks('desktop')}
+
+            <motion.div className="flex items-center gap-3" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}>
+              <Link href={`/${locale}/contact`} className="hidden lg:inline-flex">
+                <Button
+                  size="lg"
+                  className="group relative overflow-hidden rounded-full border border-white/15 bg-[hsl(var(--primary))] px-6 py-5 text-base font-semibold text-primary-foreground shadow-[0_25px_60px_rgba(255,138,52,0.45)] transition-all hover:-translate-y-0.5 hover:shadow-[0_30px_70px_rgba(255,138,52,0.5)]"
+                >
+                  <span className="relative z-10">
+                    {locale === 'tr' ? 'Başvuru Yap' : locale === 'ar' ? 'قدّم الآن' : 'Send Application'}
+                  </span>
+                  <span className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.55),_transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-80" />
+                  <motion.span
+                    aria-hidden
+                    initial={{ opacity: 0.25 }}
+                    animate={{ opacity: [0.25, 0.4, 0.25], scale: [1, 1.05, 1] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                    className="absolute -inset-6 rounded-full bg-[hsl(var(--primary)_/_0.55)] blur-3xl"
+                  />
+                </Button>
+              </Link>
+
+              <Button
+                size="icon"
+                variant="outline"
+                className="lg:hidden border-white/20 bg-white/5 text-foreground"
+                aria-label={
+                  locale === 'tr'
+                    ? 'Mobil menüyü aç'
+                    : locale === 'ar'
+                      ? 'افتح قائمة الجوال'
+                      : 'Open mobile menu'
+                }
+                aria-controls={MOBILE_MENU_ID}
+                aria-expanded={mobileOpen}
+                aria-haspopup="dialog"
+                onClick={() => {
+                  setActiveDropdown(null)
+                  setMobileOpen(true)
+                }}
+              >
+                <Menu className="h-5 w-5" />
               </Button>
-            </Link>
-
-            <Button
-              size="icon"
-              variant="outline"
-              className="lg:hidden border-white/20 bg-white/5 text-foreground"
-              aria-label={
-                locale === 'tr'
-                  ? 'Mobil menüyü aç'
-                  : locale === 'ar'
-                  ? 'افتح قائمة الجوال'
-                  : 'Open mobile menu'
-              }
-              aria-controls={MOBILE_MENU_ID}
-              aria-expanded={mobileOpen}
-              aria-haspopup="dialog"
-              onClick={() => {
-                setActiveDropdown(null)
-                setMobileOpen(true)
-              }}
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      </div>
-    </header>
+        </div>
+      </header>
 
-    {isMounted ? createPortal(mobileMenu, document.body) : null}
+      {isMounted ? createPortal(mobileMenu, document.body) : null}
     </>
   )
 }

@@ -225,22 +225,23 @@ export function Hero({ locale, data, events }: HeroProps) {
   const heroVideoLink = currentHeroVideo?.youtube_url || (content.tertiary_cta_href as string) || '#'
   const hasMultipleHeroVideos = heroVideos.length > 1
   const activeHeadline = headlineSlides[headlineIndex] || headlineSlides[0]
+  const eyebrow = content.eyebrow?.trim()
 
   return (
     <>
       <section className="relative overflow-hidden">
         <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
         <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
-        <div className="container relative z-10 pt-10 pb-16 lg:pt-14 lg:pb-22">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
+        <div className="container relative z-10 pt-2 pb-14 lg:pt-6 lg:pb-20">
+          <div className="grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr]">
             <StaggerContainer className="min-w-0 space-y-8">
               <StaggerItem>
-                <div className="space-y-5 max-w-2xl mx-auto lg:mx-0 text-center lg:text-left text-balance">
-                  <div className="relative min-h-[8.5rem] sm:min-h-[9.5rem] lg:min-h-[11rem]">
+                <div className="relative max-w-2xl mx-auto lg:mx-0">
+                  <div className="relative mt-4 min-h-[7.5rem] sm:min-h-[8.5rem] lg:min-h-[10.5rem] text-center lg:text-left text-balance">
                     <AnimatePresence mode="wait" initial={false}>
                       <motion.div
                         key={`${headlineIndex}-${activeHeadline?.title}`}
-                        className="absolute inset-0 flex flex-col gap-4"
+                        className="absolute inset-0 flex flex-col gap-5"
                         initial={
                           shouldReduceHeadlineMotion
                             ? { opacity: 1, y: 0 }
@@ -254,15 +255,56 @@ export function Hero({ locale, data, events }: HeroProps) {
                         }
                         transition={{ duration: shouldReduceHeadlineMotion ? 0 : 0.6, ease: 'easeOut' }}
                       >
-                        <h1 className="text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-[64px] xl:text-[70px]">
-                          {activeHeadline?.title || content.title || defaultContent.en.title}
-                        </h1>
-                        <p className="text-lg text-muted-foreground leading-relaxed sm:text-xl lg:text-[22px]">
-                          {activeHeadline?.subtitle || content.subtitle || defaultContent.en.subtitle}
-                        </p>
+                        {/* Premium Headline Container */}
+                        <div className="relative">
+                          {/* Animated Gradient Background */}
+                          <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-r from-primary/20 via-amber-500/20 to-primary/20 opacity-0 blur-2xl transition-opacity duration-700 group-hover:opacity-100" />
+
+                          {/* Glassmorphism Card */}
+                          <div className="relative rounded-[28px] border border-white/20 bg-gradient-to-br from-white/40 via-white/30 to-amber-50/40 p-6 shadow-[0_20px_70px_rgba(251,146,60,0.15)] backdrop-blur-xl lg:p-8">
+                            {/* Shimmer Effect */}
+                            <div className="absolute inset-0 overflow-hidden rounded-[28px]">
+                              <div className="absolute -inset-[100%] animate-[shimmer_3s_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                            </div>
+
+                            {/* Inner Gradient Border */}
+                            <div className="absolute inset-[1px] rounded-[27px] bg-gradient-to-br from-white/60 to-transparent pointer-events-none" />
+
+                            {/* Content */}
+                            <div className="relative z-10 space-y-4">
+                              {/* Title with Premium Styling */}
+                              <h1 className="text-4xl font-bold leading-[1.08] tracking-[-0.025em] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent sm:text-5xl lg:text-[62px] xl:text-[72px] [text-shadow:_0_1px_20px_rgb(251_146_60_/_15%)]">
+                                {activeHeadline?.title || content.title || defaultContent.en.title}
+                              </h1>
+
+                              {/* Subtitle with Enhanced Styling */}
+                              <div className="relative inline-block">
+                                <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-primary/10 to-amber-400/10 blur-lg" />
+                                <p className="relative text-base font-medium text-slate-700/95 leading-relaxed sm:text-lg lg:text-[21px] lg:max-w-[34rem] [text-shadow:_0_1px_12px_rgb(255_255_255_/_80%)]">
+                                  {activeHeadline?.subtitle || content.subtitle || defaultContent.en.subtitle}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Decorative Corner Elements */}
+                            <div className="absolute top-3 right-3 h-20 w-20 rounded-full bg-gradient-to-br from-primary/20 to-amber-400/20 blur-2xl" />
+                            <div className="absolute bottom-3 left-3 h-16 w-16 rounded-full bg-gradient-to-tr from-amber-400/20 to-primary/20 blur-2xl" />
+                          </div>
+                        </div>
                       </motion.div>
                     </AnimatePresence>
                   </div>
+                  {headlineSlides.length > 1 && (
+                    <div className="mt-4 flex justify-center gap-2 lg:justify-start" aria-hidden="true">
+                      {headlineSlides.map((_, index) => (
+                        <span
+                          key={`headline-dot-${index}`}
+                          className={`h-1.5 w-8 rounded-full transition ${index === headlineIndex ? 'bg-primary' : 'bg-slate-200'
+                            }`}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </StaggerItem>
             </StaggerContainer>
@@ -321,10 +363,7 @@ export function Hero({ locale, data, events }: HeroProps) {
                   <div className="mt-6 flex flex-col gap-6">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <p className="text-xs uppercase tracking-[0.4em] text-muted-foreground">
-                          {locale === 'tr' ? 'TARF Ekosistemi' : locale === 'ar' ? 'نظام TARF' : 'TARF Ecosystem'}
-                        </p>
-                        <p className="text-lg font-semibold text-foreground leading-snug line-clamp-2 min-h-[3.1rem]">
+                        <p className="text-lg font-semibold text-foreground leading-snug line-clamp-2">
                           {currentHeroVideo?.title}
                         </p>
                       </div>
@@ -352,42 +391,14 @@ export function Hero({ locale, data, events }: HeroProps) {
                                 key={video.id}
                                 type="button"
                                 onClick={() => setHeroVideoIndex(index)}
-                                className={`h-1.5 w-6 rounded-full transition ${
-                                  index === heroVideoIndex ? 'bg-primary' : 'bg-border hover:bg-primary/60'
-                                }`}
+                                className={`h-1.5 w-6 rounded-full transition ${index === heroVideoIndex ? 'bg-primary' : 'bg-border hover:bg-primary/60'
+                                  }`}
                                 aria-label={`Video ${index + 1}`}
                               />
                             ))}
                           </div>
                         </div>
                       )}
-                    </div>
-
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-2xl border border-dashed border-border/70 bg-white/60 p-4 shadow-lg">
-                        <p className="text-xs font-semibold text-primary">
-                          {locale === 'tr' ? 'Geleceği Kodluyoruz' : locale === 'ar' ? 'نبرمج المستقبل' : 'Coding the Future'}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {locale === 'tr'
-                            ? 'Yenilikçi dijital çözümler geliştiren Ar-Ge ve teknoloji merkezi'
-                            : locale === 'ar'
-                            ? 'مركز البحث والتطوير والتكنولوجيا الذي يطور حلولاً رقمية مبتكرة'
-                            : 'R&D and technology center developing innovative digital solutions'}
-                        </p>
-                      </div>
-                      <div className="rounded-2xl border border-dashed border-border/70 bg-white/60 p-4 shadow-lg">
-                        <p className="text-xs font-semibold text-primary">
-                          {locale === 'tr' ? 'Bilim ve İrfan' : locale === 'ar' ? 'العلم والمعرفة' : 'Science and Wisdom'}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {locale === 'tr'
-                            ? 'Fikir üretimi ve araştırmayı öncelikli hedef olarak belirleyen platform'
-                            : locale === 'ar'
-                            ? 'منصة تحدد إنتاج الأفكار والبحث كهدف أساسي'
-                            : 'Platform prioritizing idea generation and research'}
-                        </p>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -446,9 +457,9 @@ function HeroEventsMarquee({ locale, events }: { locale: string; events: Post[] 
         shouldReduceMotion
           ? undefined
           : {
-              WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
-              maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
-            }
+            WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+            maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+          }
       }
     >
       {shouldReduceMotion ? (
@@ -462,8 +473,8 @@ function HeroEventsMarquee({ locale, events }: { locale: string; events: Post[] 
               <span className="shrink-0 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
                 {event.event_date
                   ? new Intl.DateTimeFormat(locale, { day: '2-digit', month: 'short' }).format(
-                      new Date(event.event_date),
-                    )
+                    new Date(event.event_date),
+                  )
                   : '--'}
               </span>
               <div className="min-w-0">
@@ -491,8 +502,8 @@ function HeroEventsMarquee({ locale, events }: { locale: string; events: Post[] 
                   <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary sm:px-3.5 sm:py-1.5 sm:text-sm">
                     {event.event_date
                       ? new Intl.DateTimeFormat(locale, { day: '2-digit', month: 'short' }).format(
-                          new Date(event.event_date),
-                        )
+                        new Date(event.event_date),
+                      )
                       : '--'}
                   </span>
                 </div>
@@ -521,8 +532,8 @@ function HeroEventsMarquee({ locale, events }: { locale: string; events: Post[] 
                   <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary sm:px-3.5 sm:py-1.5 sm:text-sm">
                     {event.event_date
                       ? new Intl.DateTimeFormat(locale, { day: '2-digit', month: 'short' }).format(
-                          new Date(event.event_date),
-                        )
+                        new Date(event.event_date),
+                      )
                       : '--'}
                   </span>
                 </div>

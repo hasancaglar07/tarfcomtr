@@ -77,12 +77,32 @@ export async function listPublishedContentPages() {
 }
 
 export async function listPublishedSlugs() {
-  const records = await prisma.contentPage.findMany({
-    where: { publishedAt: { not: null }, status: 'published' },
-    select: { slug: true },
-  })
+  return cached(
+    ['content-pages', 'slugs', 'published'],
+    [cacheTags.contentPages()],
+    async () => {
+      const records = await prisma.contentPage.findMany({
+        where: { publishedAt: { not: null }, status: 'published' },
+        select: { slug: true },
+      })
 
-  return records.map((r) => r.slug)
+      return records.map((r) => r.slug)
+    },
+  )
+}
+
+export async function listContentPageSlugs() {
+  return cached(
+    ['content-pages', 'slugs', 'all'],
+    [cacheTags.contentPages()],
+    async () => {
+      const records = await prisma.contentPage.findMany({
+        select: { slug: true },
+      })
+
+      return records.map((r) => r.slug)
+    },
+  )
 }
 
 export async function getContentPageGroups() {

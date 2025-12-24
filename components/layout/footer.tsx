@@ -1,21 +1,20 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Settings } from '@/lib/api'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Youtube, ArrowUpRight, Twitter, Facebook, Instagram, Globe } from 'lucide-react'
+import { Youtube, Twitter, Facebook, Instagram, Globe } from 'lucide-react'
 
 interface FooterProps {
   locale: string
   settings?: Settings
+  contentPageSlugs?: string[]
+  publishedPageSlugs?: string[]
 }
 
 const footerNavigation = (locale: string) => ({
   kurumsal: [
-    { label: locale === 'tr' ? 'Hakkımızda' : locale === 'ar' ? 'من نحن' : 'About', href: `/${locale}/hakkimizda` },
-    { label: locale === 'tr' ? 'Vizyon & Değerler' : locale === 'ar' ? 'الرؤية والقيم' : 'Vision & Values', href: `/${locale}/vizyon-degerler` },
-    { label: locale === 'tr' ? 'Yönetim İlkeleri' : locale === 'ar' ? 'مبادئ الإدارة' : 'Management Principles', href: `/${locale}/yonetim-ilkeleri` },
-    { label: locale === 'tr' ? 'İletişim' : locale === 'ar' ? 'اتصل' : 'Contact', href: `/${locale}/contact` },
+    { label: locale === 'tr' ? 'Hakkımızda' : 'About', href: `/${locale}/hakkimizda` },
+    { label: locale === 'tr' ? 'Vizyon & Değerler' : 'Vision & Values', href: `/${locale}/vizyon-degerler` },
+    { label: locale === 'tr' ? 'Yönetim İlkeleri' : 'Governance', href: `/${locale}/yonetim-ilkeleri` },
   ],
   dusunce: [
     { label: locale === 'tr' ? 'Ana sayfa' : locale === 'ar' ? 'الرئيسية' : 'Overview', href: `/${locale}/dusunce-enstitusu` },
@@ -28,7 +27,7 @@ const footerNavigation = (locale: string) => ({
     { label: locale === 'tr' ? 'Bilim ve Teknoloji' : locale === 'ar' ? 'العلم والتكنولوجيا' : 'Science & Technology', href: `/${locale}/dusunce-enstitusu/bilim-teknoloji` },
   ],
   akademi: [
-    { label: locale === 'tr' ? 'Akademi' : 'Overview', href: `/${locale}/akademi` },
+    { label: locale === 'tr' ? 'Akademi' : 'Academy', href: `/${locale}/akademi` },
     { label: locale === 'tr' ? 'Seminerler' : locale === 'ar' ? 'الندوات' : 'Seminars', href: `/${locale}/akademi/seminerler` },
     { label: locale === 'tr' ? 'Konferanslar' : locale === 'ar' ? 'المؤتمرات' : 'Conferences', href: `/${locale}/akademi/konferanslar` },
     { label: locale === 'tr' ? 'Çalıştaylar' : locale === 'ar' ? 'ورش العمل' : 'Workshops', href: `/${locale}/akademi/calistaylar` },
@@ -37,7 +36,7 @@ const footerNavigation = (locale: string) => ({
   yazilim: [
     { label: locale === 'tr' ? 'Yazılım Geliştirme' : 'Software Development', href: `/${locale}/yazilim/gelistirme` },
     { label: locale === 'tr' ? 'Teknoloji Danışmanlığı' : 'Technology Consulting', href: `/${locale}/yazilim/danismanlik` },
-    { label: locale === 'tr' ? 'Ürünlerimiz' : locale === 'ar' ? 'الأمن السيبراني' : 'Cybersecurity', href: `/${locale}/yazilim/siber-guvenlik` },
+    { label: locale === 'tr' ? 'Siber Güvenlik' : locale === 'ar' ? 'الأمن السيبراني' : 'Cybersecurity', href: `/${locale}/yazilim/siber-guvenlik` },
   ],
   kulupler: [
     { label: locale === 'tr' ? 'Öğrenci Kulüpleri' : 'Student Clubs', href: `/${locale}/kulupler/ogrenci-kulupleri` },
@@ -57,15 +56,11 @@ const footerNavigation = (locale: string) => ({
 })
 
 const socialLinks = [
-  {
-    icon: Youtube,
-    label: 'YouTube',
-    href: 'https://www.youtube.com/@tarfakademi',
-  },
+  { icon: Youtube, label: 'YouTube', href: 'https://www.youtube.com/@tarfakademi' },
   { icon: Twitter, label: 'X', href: 'https://x.com/tarfakademi' },
   { icon: Facebook, label: 'Facebook', href: 'https://www.facebook.com/tarfakademi' },
   { icon: Instagram, label: 'Instagram', href: 'https://example.com/tarf-instagram' },
-  { icon: Globe, label: 'Next Sosyal', href: 'https://example.com/next-sosyal' },
+  { icon: Globe, label: 'Website', href: 'https://tarf.com.tr' },
 ]
 
 const highlightPills: Record<string, string[]> = {
@@ -74,111 +69,147 @@ const highlightPills: Record<string, string[]> = {
   en: ['Science', 'Technology', 'Community'],
 }
 
-export function Footer({ locale, settings }: FooterProps) {
+export function Footer({ locale, settings, contentPageSlugs, publishedPageSlugs }: FooterProps) {
   const currentYear = new Date().getFullYear()
   const nav = footerNavigation(locale)
+  const contentPageSet = new Set(contentPageSlugs ?? [])
+  const publishedPageSet = new Set(publishedPageSlugs ?? [])
   const pills = highlightPills[locale] || highlightPills.en
+
+  const normalizeSlug = (href: string) => {
+    if (!href) return null
+    if (/^(https?:|mailto:|tel:)/i.test(href)) return null
+    const path = href.split('?')[0]?.split('#')[0] ?? ''
+    const trimmed = path.replace(/^\/+/, '').replace(/\/+$/, '')
+    if (!trimmed || trimmed === locale) return null
+    const prefix = `${locale}/`
+    const withoutLocale = trimmed.startsWith(prefix) ? trimmed.slice(prefix.length) : trimmed
+    if (!withoutLocale || withoutLocale === locale) return null
+    return withoutLocale
+  }
+
+  const shouldShowLink = (href: string) => {
+    const slug = normalizeSlug(href)
+    if (!slug) return true
+    if (contentPageSet.size === 0) return true
+    if (!contentPageSet.has(slug)) return true
+    if (publishedPageSet.size === 0) return true
+    return publishedPageSet.has(slug)
+  }
+
   const navSections = [
     {
       title: locale === 'tr' ? 'Kurumsal' : locale === 'ar' ? 'مؤسسي' : 'Corporate',
-      links: nav.kurumsal,
+      links: nav.kurumsal.filter((link) => shouldShowLink(link.href)),
     },
     {
-      title: locale === 'tr' ? 'Düşünce Enstitüsü' : locale === 'ar' ? 'معهد الفكر' : 'Think Tank Institute',
-      links: nav.dusunce,
+      title: locale === 'tr' ? 'Düşünce Enstitüsü' : locale === 'ar' ? 'معهد الفكر' : 'Think Tank',
+      links: nav.dusunce.filter((link) => shouldShowLink(link.href)),
     },
     {
       title: locale === 'tr' ? 'Akademi' : locale === 'ar' ? 'الأكاديمية' : 'Academy',
-      links: nav.akademi,
+      links: nav.akademi.filter((link) => shouldShowLink(link.href)),
     },
     {
-      title: locale === 'tr' ? 'Yazılım Teknolojileri' : locale === 'ar' ? 'تقنيات البرمجيات' : 'Software Technologies',
-      links: nav.yazilim,
+      title: locale === 'tr' ? 'Yazılım' : locale === 'ar' ? 'تقنيات البرمجيات' : 'Software',
+      links: nav.yazilim.filter((link) => shouldShowLink(link.href)),
     },
     {
-      title: locale === 'tr' ? 'Kulüpler ve Takımlar' : locale === 'ar' ? 'الأندية والفرق' : 'Clubs & Teams',
-      links: nav.kulupler,
+      title: locale === 'tr' ? 'Kulüpler' : locale === 'ar' ? 'الأندية والفرق' : 'Clubs',
+      links: nav.kulupler.filter((link) => shouldShowLink(link.href)),
     },
     {
       title: locale === 'tr' ? 'Yayınlar' : locale === 'ar' ? 'المنشورات' : 'Publications',
-      links: nav.yayinlar,
-    },
-    {
-      title: locale === 'tr' ? 'Kaynaklar' : locale === 'ar' ? 'الموارد' : 'Resources',
-      links: nav.kaynaklar,
+      links: nav.yayinlar.filter((link) => shouldShowLink(link.href)),
     },
   ]
 
+  const legalLinks = [
+    {
+      href: `/${locale}/gizlilik-politikasi`,
+      label: locale === 'tr' ? 'Gizlilik' : locale === 'ar' ? 'الخصوصية' : 'Privacy',
+    },
+    {
+      href: `/${locale}/kullanim-kosullari`,
+      label: locale === 'tr' ? 'Koşullar' : locale === 'ar' ? 'الشروط' : 'Terms',
+    },
+    {
+      href: `/${locale}/contact`,
+      label: locale === 'tr' ? 'İletişim' : locale === 'ar' ? 'اتصل' : 'Contact',
+    },
+  ].filter((link) => shouldShowLink(link.href))
+
   return (
-    <footer className="relative overflow-hidden border-t border-white/5 bg-gradient-to-b from-background via-background/95 to-primary/10">
+    <footer className="relative mt-auto border-t border-slate-800/50 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      {/* Subtle Background Glow */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-x-[-10%] top-0 h-40 bg-gradient-to-b from-primary/20 via-primary/5 to-transparent opacity-70 blur-3xl" />
-        <div className="absolute -bottom-32 right-0 h-64 w-64 rounded-full bg-primary/25 blur-[140px] opacity-60" />
-        <div className="absolute -left-10 top-1/3 h-48 w-48 rounded-full bg-primary/10 blur-[120px]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        <div className="absolute -top-40 left-1/2 h-80 w-[600px] -translate-x-1/2 rounded-full bg-primary/5 blur-[100px]" />
       </div>
-      <div className="relative container py-12">
-        <div className="grid gap-6 lg:grid-cols-[1.15fr_2.2fr]">
-          {/* Brand */}
-          <div className="space-y-4 rounded-3xl border border-white/10 bg-background/80 p-5 shadow-2xl shadow-primary/10 backdrop-blur">
-            <div className="space-y-3">
-              <div className="inline-flex items-center gap-4">
-                <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-primary/5">
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/30 to-transparent opacity-60 blur-md" />
-                  <Image
-                    src="/img/tarf.png"
-                    alt="TARF - Türkiye Araştırma Fonları Derneği"
-                    width={120}
-                    height={40}
-                    className="relative h-10 w-auto object-contain"
-                  />
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                    {locale === 'tr' ? 'Araştırma Fonları' : locale === 'ar' ? 'صناديق البحث' : 'Research Funds'}
-                  </p>
-                  <h3 className="text-xl font-semibold">
-                    {settings?.site_name || 'TARF Düşünce Enstitüsü'}
-                  </h3>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground leading-snug">
+
+      <div className="relative container py-10 lg:py-12">
+        {/* Brand Section */}
+        <div className="mb-8 flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex items-start gap-4">
+            <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/95 p-3 shadow-lg">
+              <Image
+                src="/img/tarf.png"
+                alt="TARF"
+                width={100}
+                height={35}
+                className="h-auto w-full object-contain"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/70">
+                {locale === 'tr' ? 'Araştırma Fonları' : locale === 'ar' ? 'صناديق البحث' : 'Research Funds'}
+              </p>
+              <h3 className="text-lg font-bold text-white sm:text-xl">
+                TARF Akademi
+              </h3>
+              <p className="mt-1 text-xs leading-relaxed text-slate-400 sm:text-sm lg:max-w-md">
                 {locale === 'tr'
-                  ? 'Bilim, teknoloji ve irfanı bir araya getirerek geleceği inşa ediyoruz. Eğitim, yazılım, araştırma ve toplumsal dönüşüm için çalışıyoruz.'
+                  ? 'Bilim, teknoloji ve irfanı bir araya getirerek geleceği inşa ediyoruz.'
                   : locale === 'ar'
-                  ? 'نبني المستقبل من خلال الجمع بين العلم والتكنولوجيا والحكمة. نعمل من أجل التعليم والبرمجيات والبحث والتحول المجتمعي.'
-                  : 'Building the future by bringing together science, technology and wisdom. We work for education, software, research and social transformation.'}
+                    ? 'نبني المستقبل من خلال الجمع بين العلم والتكنولوجيا والحكمة.'
+                    : 'Building the future by bringing together science, technology and wisdom.'}
               </p>
             </div>
+          </div>
 
+          <div className="flex flex-col gap-3">
+            {/* Pills */}
             <div className="flex flex-wrap gap-1.5">
               {pills.map((pill) => (
                 <span
                   key={pill}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-primary/5 px-3 py-0.5 text-xs font-medium uppercase tracking-wide text-foreground/80"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary"
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                  <span className="h-1 w-1 rounded-full bg-primary animate-pulse" />
                   {pill}
                 </span>
               ))}
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 text-sm">
+            {/* Contact Info */}
+            <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
               {settings?.contact_phone && (
-                <a href={`tel:${settings.contact_phone}`} className="font-semibold text-foreground transition-colors hover:text-primary">
+                <a href={`tel:${settings.contact_phone}`} className="font-semibold text-white transition-colors hover:text-primary">
                   {settings.contact_phone}
                 </a>
               )}
               {settings?.contact_email && settings?.contact_phone && (
-                <span className="text-muted-foreground/70">—</span>
+                <span className="text-slate-600">—</span>
               )}
               {settings?.contact_email && (
-                <a href={`mailto:${settings.contact_email}`} className="text-muted-foreground transition-colors hover:text-primary">
+                <a href={`mailto:${settings.contact_email}`} className="text-slate-400 transition-colors hover:text-primary">
                   {settings.contact_email}
                 </a>
               )}
             </div>
 
-            <div className="flex items-center gap-3">
+            {/* Social Links */}
+            <div className="flex items-center gap-2">
               {socialLinks.map(({ icon: Icon, label, href }) => (
                 <a
                   key={label}
@@ -186,91 +217,49 @@ export function Footer({ locale, settings }: FooterProps) {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={label}
-                  className="group relative inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-background/60 text-muted-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+                  className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900/50 text-slate-400 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
                 >
-                  <span className="absolute inset-0 opacity-0 blur-lg transition-opacity duration-300 group-hover:opacity-100">
-                    <span className="absolute inset-0 bg-gradient-to-br from-primary/40 to-transparent" />
-                  </span>
-                  <Icon className="relative h-4 w-4" />
+                  <Icon className="h-4 w-4" />
                 </a>
               ))}
             </div>
           </div>
-
-          <div className="flex flex-col gap-4">
-            <div className="rounded-3xl border border-white/10 bg-background/70 p-5 shadow-xl shadow-primary/5 backdrop-blur">
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {navSections.map((section) => (
-                  <div key={section.title} className="space-y-2">
-                    <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
-                      {section.title}
-                    </h4>
-                    <ul className="space-y-1.5">
-                      {section.links.map((link) => (
-                        <li key={link.href}>
-                          <Link
-                            href={link.href}
-                            className="group flex items-center justify-between rounded-lg px-3 py-1.5 text-sm text-muted-foreground/80 ring-1 ring-white/5 transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/5 hover:text-foreground"
-                          >
-                            {link.label}
-                            <ArrowUpRight className="h-3 w-3 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-1" />
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Newsletter */}
-            <div className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent p-4 shadow-2xl shadow-primary/20">
-              <div className="pointer-events-none absolute inset-0 opacity-40">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.25),_transparent_60%)]" />
-              </div>
-              <div className="relative space-y-2">
-                <p className="text-sm font-semibold">
-                  {locale === 'tr' ? 'Hizmetlerimizden yararlanın' : locale === 'ar' ? 'استفد من خدماتنا' : 'Benefit from our services'}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {locale === 'tr'
-                    ? 'Eğitimler, projeler, yayınlar ve teknoloji takımlarıyla üretim yolculuğunuza bugün başlayın.'
-                    : locale === 'ar'
-                    ? 'ابدأ رحلة إنتاجك اليوم مع التدريبات والمشاريع والمنشورات وفرق التكنولوجيا.'
-                    : 'Start your production journey today with trainings, projects, publications and technology teams.'}
-                </p>
-                <form className="space-y-2">
-                  <Input
-                    type="email"
-                    placeholder={locale === 'tr' ? 'E-posta adresiniz' : locale === 'ar' ? 'بريدك الإلكتروني' : 'Your email'}
-                    className="h-10 border-white/20 bg-background/80 text-sm focus-visible:ring-2 focus-visible:ring-primary/40"
-                  />
-                  <Button size="sm" className="w-full shadow-lg shadow-primary/30" type="submit">
-                    {locale === 'tr' ? 'Ücretsiz Başvuru' : locale === 'ar' ? 'طلب مجاني' : 'Free Application'}
-                  </Button>
-                </form>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-white/5 pt-4 text-sm text-muted-foreground/80 md:flex-row md:items-center md:justify-between">
+        {/* Main Navigation Grid - TÜM HEADER LİNKLERİ */}
+        <div className="mb-6 grid grid-cols-2 gap-6 border-t border-slate-800/50 pt-8 md:grid-cols-3 lg:grid-cols-6">
+          {navSections.map((section) => (
+            <div key={section.title} className="space-y-3">
+              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+                {section.title}
+              </h4>
+              <ul className="space-y-2">
+                {section.links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="block text-xs text-slate-400 transition-colors hover:text-primary sm:text-sm"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Bar - Compact */}
+        <div className="flex flex-col gap-3 border-t border-slate-800/50 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {currentYear} TARF. {locale === 'tr' ? 'Tüm hakları saklıdır.' : locale === 'ar' ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'}
           </p>
-          <div className="flex flex-wrap gap-4">
-            <Link href={`/${locale}/gizlilik-politikasi`} className="transition-colors hover:text-primary">
-              {locale === 'tr' ? 'Gizlilik Politikası' : locale === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy'}
-            </Link>
-            <Link href={`/${locale}/kullanim-kosullari`} className="transition-colors hover:text-primary">
-              {locale === 'tr' ? 'Kullanım Koşulları' : locale === 'ar' ? 'شروط الاستخدام' : 'Terms of Service'}
-            </Link>
-            <Link href={`/${locale}/cerez-politikasi`} className="transition-colors hover:text-primary">
-              {locale === 'tr' ? 'Çerez Politikası' : locale === 'ar' ? 'سياسة ملفات تعريف الارتباط' : 'Cookie Policy'}
-            </Link>
-            <Link href={`/${locale}/contact`} className="transition-colors hover:text-primary">
-              {locale === 'tr' ? 'İletişim' : locale === 'ar' ? 'اتصل' : 'Contact'}
-            </Link>
+          <div className="flex flex-wrap gap-3 sm:gap-4">
+            {legalLinks.map((link) => (
+              <Link key={link.href} href={link.href} className="transition-colors hover:text-primary">
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

@@ -138,6 +138,9 @@ export function MediaLibrary() {
             locale={item.locale}
             type={item.kind || item.type}
             createdAt={item.createdAt}
+            onDeleted={() => {
+              setItems((prev) => prev.filter((entry) => entry.id !== item.id))
+            }}
           />
         ))}
         {items.length === 0 && !loading && (

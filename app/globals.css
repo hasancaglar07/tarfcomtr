@@ -371,6 +371,16 @@
     animation: hero-events-marquee-scroll 28s linear infinite;
   }
 
+  /* Premium Hero Headline Shimmer Effect */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%) rotate(10deg);
+    }
+    100% {
+      transform: translateX(100%) rotate(10deg);
+    }
+  }
+
   .hero-events-marquee:hover .hero-events-marquee-track,
   .hero-events-marquee:focus-within .hero-events-marquee-track {
     animation-play-state: paused;

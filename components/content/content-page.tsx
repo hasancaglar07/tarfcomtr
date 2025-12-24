@@ -168,6 +168,13 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
   const showNarrative =
     Boolean(description) && (descriptionParagraphs.length > 1 || description.length > 220)
   const hideExtraSections = page.category !== 'yasal'
+  const heroActions = (page.hero.actions ?? [])
+    .map((action) => ({
+      ...action,
+      label: action.label?.trim() ?? '',
+      href: action.href?.trim() ?? '',
+    }))
+    .filter((action) => action.label && action.href)
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-slate-50">
@@ -214,9 +221,9 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
                 </div>
               </div>
             )}
-            {page.hero.actions && (
+            {heroActions.length > 0 && (
               <div className="flex flex-wrap gap-4">
-                {page.hero.actions.map((action) => (
+                {heroActions.map((action) => (
                   <Button
                     key={action.label}
                     variant={action.variant === 'secondary' ? 'outline' : 'default'}

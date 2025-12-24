@@ -62,7 +62,7 @@ const localizedContent: Record<'tr' | 'en' | 'ar', ContactCopy> = {
     plusCodeLabel: 'Plus kodu',
     directions: 'Yol tarifi al',
     formTitle: 'Başvuru formu',
-    formSubtitle: 'Ekibimiz 24 saat içinde dönüş yapar.',
+    formSubtitle: '',
     typeLabel: 'Başvuru Türü',
     applicationTypes: [
       'Etkinlik Başvurusu',
@@ -77,7 +77,7 @@ const localizedContent: Record<'tr' | 'en' | 'ar', ContactCopy> = {
       name: 'Adınız Soyadınız',
       email: 'E-posta adresiniz',
       phone: 'Telefon numaranız',
-      company: 'Kurum / Şirket',
+      company: 'Kurum / Şirket / Okul',
       topic: 'Talep konusu',
       message: 'TARF ile neyi başarmak istiyorsunuz?',
     },
@@ -98,7 +98,7 @@ const localizedContent: Record<'tr' | 'en' | 'ar', ContactCopy> = {
     plusCodeLabel: 'Plus code',
     directions: 'Get directions',
     formTitle: 'Application form',
-    formSubtitle: 'We reply within 24 hours.',
+    formSubtitle: '',
     typeLabel: 'Application Type',
     applicationTypes: [
       'Event Application',
@@ -113,7 +113,7 @@ const localizedContent: Record<'tr' | 'en' | 'ar', ContactCopy> = {
       name: 'Full name',
       email: 'Email address',
       phone: 'Phone number',
-      company: 'Organization',
+      company: 'Organization / School',
       topic: 'Topic',
       message: 'What will we build together?',
     },
@@ -134,7 +134,7 @@ const localizedContent: Record<'tr' | 'en' | 'ar', ContactCopy> = {
     plusCodeLabel: 'رمز بلس',
     directions: 'الحصول على الاتجاهات',
     formTitle: 'نموذج التقديم',
-    formSubtitle: 'نرد خلال 24 ساعة.',
+    formSubtitle: '',
     typeLabel: 'نوع الطلب',
     applicationTypes: [
       'طلب فعالية',
@@ -149,7 +149,7 @@ const localizedContent: Record<'tr' | 'en' | 'ar', ContactCopy> = {
       name: 'الاسم الكامل',
       email: 'البريد الإلكتروني',
       phone: 'رقم الهاتف',
-      company: 'الجهة / الشركة',
+      company: 'الجهة / الشركة / المدرسة',
       topic: 'موضوع الطلب',
       message: 'ما الذي نحققه معاً؟',
     },
@@ -186,7 +186,7 @@ const mergeCopy = (base: ContactCopy, override?: unknown): ContactCopy => {
 
   const mergedApplicationTypes =
     Array.isArray(overrideCopy.applicationTypes) &&
-    overrideCopy.applicationTypes.every((item) => typeof item === 'string')
+      overrideCopy.applicationTypes.every((item) => typeof item === 'string')
       ? (overrideCopy.applicationTypes as ContactCopy['applicationTypes'])
       : base.applicationTypes
 
@@ -235,7 +235,7 @@ export default async function ContactPage({
   const overrideCopy =
     rawContactContent && typeof rawContactContent === 'object'
       ? ((rawContactContent as Record<string, unknown>)[locale] as Record<string, unknown> | undefined) ||
-        (rawContactContent as Record<string, unknown>)
+      (rawContactContent as Record<string, unknown>)
       : undefined
   const copy = mergeCopy(
     localizedContent[locale as keyof typeof localizedContent] || localizedContent.en,
@@ -288,7 +288,6 @@ export default async function ContactPage({
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="rounded-3xl border border-white/70 bg-white/80 p-5 shadow-lg backdrop-blur transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-2xl">
                     <p className="text-xs uppercase tracking-[0.35em] text-primary/80">{copy.formTitle}</p>
-                    <p className="mt-2 text-lg font-semibold text-slate-900">{copy.formSubtitle}</p>
                     <span className="text-sm text-slate-500">{copy.heroSubtitle}</span>
                   </div>
                   <div className="rounded-3xl border border-white/70 bg-white/80 p-5 shadow-lg backdrop-blur transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-2xl">
@@ -366,7 +365,6 @@ export default async function ContactPage({
                 />
                 <div className="relative space-y-1">
                   <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{copy.formTitle}</p>
-                  <h2 className="text-2xl font-semibold text-slate-900">{copy.formSubtitle}</h2>
                 </div>
                 <ApplicationForm
                   copy={{
