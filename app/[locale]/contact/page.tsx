@@ -242,12 +242,13 @@ export default async function ContactPage({
     overrideCopy,
   )
   const contactEmail = settings.contact_email || fallbackContact.email
-  const contactPhone = settings.contact_phone || fallbackContact.phone
+  const contactPhone = settings.contact_phone?.trim() || ''
   const contactAddress =
     settings.contact_address || `${fallbackContact.addressLine1}\n${fallbackContact.addressLine2}`
   const mapUrl = settings.contact_map_url || fallbackContact.mapUrl
   const plusCode = fallbackContact.plusCode
   const sanitizedPhone = contactPhone.replace(/\s+/g, '')
+  const showPhone = contactPhone.length > 0
 
   return (
     <>
@@ -317,17 +318,19 @@ export default async function ContactPage({
                         </a>
                       </div>
                     </div>
-                    <div className="group flex items-start gap-4 rounded-2xl border border-white/70 bg-white/90 p-4 shadow-sm transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-                        <Phone className="h-5 w-5" />
+                    {showPhone && (
+                      <div className="group flex items-start gap-4 rounded-2xl border border-white/70 bg-white/90 p-4 shadow-sm transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                          <Phone className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{copy.phoneLabel}</p>
+                          <a href={`tel:${sanitizedPhone}`} className="text-lg font-semibold text-slate-900">
+                            {contactPhone}
+                          </a>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{copy.phoneLabel}</p>
-                        <a href={`tel:${sanitizedPhone}`} className="text-lg font-semibold text-slate-900">
-                          {contactPhone}
-                        </a>
-                      </div>
-                    </div>
+                    )}
                     <div className="md:col-span-2 flex gap-4 rounded-2xl border border-dashed border-slate-200 bg-white/85 p-5 shadow-sm backdrop-blur">
                       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-50 text-cyan-600">
                         <MapPin className="h-5 w-5" />
@@ -396,6 +399,19 @@ export default async function ContactPage({
                         : locale === 'ar'
                           ? 'يرجى التحقق من الحقول وإعادة المحاولة.'
                           : 'Please check the fields and try again.',
+                    kvkkLabel:
+                      locale === 'tr'
+                        ? 'Kişisel verilerimin işlenmesine ilişkin'
+                        : locale === 'ar'
+                          ? 'فيما يتعلق بمعالجة بياناتي الشخصية'
+                          : 'Regarding the processing of my personal data, I have read and accept the',
+                    kvkkLinkText:
+                      locale === 'tr'
+                        ? 'KVKK Aydınlatma Metni'
+                        : locale === 'ar'
+                          ? 'نص إشعار KVKK'
+                          : 'KVKK Privacy Notice',
+                    kvkkLink: `/${locale}/kvkk-aydinlatma-metni`,
                   }}
                 />
               </Card>

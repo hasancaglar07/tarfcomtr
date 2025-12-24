@@ -17,17 +17,16 @@ const footerNavigation = (locale: string) => ({
     { label: locale === 'tr' ? 'Yönetim İlkeleri' : 'Governance', href: `/${locale}/yonetim-ilkeleri` },
   ],
   dusunce: [
-    { label: locale === 'tr' ? 'Ana sayfa' : locale === 'ar' ? 'الرئيسية' : 'Overview', href: `/${locale}/dusunce-enstitusu` },
     { label: locale === 'tr' ? 'Eğitim Araştırmaları' : locale === 'ar' ? 'أبحاث التعليم' : 'Education research', href: `/${locale}/dusunce-enstitusu/egitim` },
     { label: locale === 'tr' ? 'Gençlik' : locale === 'ar' ? 'الشباب' : 'Youth', href: `/${locale}/dusunce-enstitusu/genclik` },
     { label: locale === 'tr' ? 'Aile' : locale === 'ar' ? 'الأسرة' : 'Family', href: `/${locale}/dusunce-enstitusu/aile` },
-    { label: locale === 'tr' ? 'Kültür & Sanat' : locale === 'ar' ? 'الثقافة والفن' : 'Culture & Art', href: `/${locale}/dusunce-enstitusu/kultur-sanat` },
+    { label: locale === 'tr' ? 'Tarih, Kültür ve Medeniyet' : locale === 'ar' ? 'الثقافة والفن' : 'Culture & Art', href: `/${locale}/dusunce-enstitusu/kultur-sanat` },
     { label: locale === 'tr' ? 'Uluslararası İlişkiler' : locale === 'ar' ? 'العلاقات الدولية' : 'International Relations', href: `/${locale}/dusunce-enstitusu/uluslararasi-iliskiler` },
-    { label: locale === 'tr' ? 'Çevre-İklim-Doğa' : locale === 'ar' ? 'البيئة والمناخ والطبيعة' : 'Environment & Climate', href: `/${locale}/dusunce-enstitusu/cevre-iklim-doga` },
+    { label: locale === 'tr' ? 'Çevre-İklim-Şehir' : locale === 'ar' ? 'البيئة والمناخ والطبيعة' : 'Environment & Climate', href: `/${locale}/dusunce-enstitusu/cevre-iklim-doga` },
     { label: locale === 'tr' ? 'Bilim ve Teknoloji' : locale === 'ar' ? 'العلم والتكنولوجيا' : 'Science & Technology', href: `/${locale}/dusunce-enstitusu/bilim-teknoloji` },
   ],
   akademi: [
-    { label: locale === 'tr' ? 'Akademi' : 'Academy', href: `/${locale}/akademi` },
+    { label: locale === 'tr' ? 'Akademi' : 'Overview', href: `/${locale}/akademi` },
     { label: locale === 'tr' ? 'Seminerler' : locale === 'ar' ? 'الندوات' : 'Seminars', href: `/${locale}/akademi/seminerler` },
     { label: locale === 'tr' ? 'Konferanslar' : locale === 'ar' ? 'المؤتمرات' : 'Conferences', href: `/${locale}/akademi/konferanslar` },
     { label: locale === 'tr' ? 'Çalıştaylar' : locale === 'ar' ? 'ورش العمل' : 'Workshops', href: `/${locale}/akademi/calistaylar` },
@@ -36,7 +35,7 @@ const footerNavigation = (locale: string) => ({
   yazilim: [
     { label: locale === 'tr' ? 'Yazılım Geliştirme' : 'Software Development', href: `/${locale}/yazilim/gelistirme` },
     { label: locale === 'tr' ? 'Teknoloji Danışmanlığı' : 'Technology Consulting', href: `/${locale}/yazilim/danismanlik` },
-    { label: locale === 'tr' ? 'Siber Güvenlik' : locale === 'ar' ? 'الأمن السيبراني' : 'Cybersecurity', href: `/${locale}/yazilim/siber-guvenlik` },
+    { label: locale === 'tr' ? 'Ürünlerimiz' : locale === 'ar' ? 'الأمن السيبراني' : 'Cybersecurity', href: `/${locale}/yazilim/siber-guvenlik` },
   ],
   kulupler: [
     { label: locale === 'tr' ? 'Öğrenci Kulüpleri' : 'Student Clubs', href: `/${locale}/kulupler/ogrenci-kulupleri` },
@@ -45,13 +44,6 @@ const footerNavigation = (locale: string) => ({
   yayinlar: [
     { label: locale === 'tr' ? 'Yayın Anlayışımız' : locale === 'ar' ? 'رؤيتنا للنشر' : 'Publishing Ethos', href: `/${locale}/yayin-anlayisimiz` },
     { label: locale === 'tr' ? 'Tarf Dergi' : locale === 'ar' ? 'مجلة تارف' : 'Tarf Magazine', href: `/${locale}/dergi` },
-  ],
-  kaynaklar: [
-    { label: locale === 'tr' ? 'Blog' : locale === 'ar' ? 'المدونة' : 'Blog', href: `/${locale}/blog` },
-    { label: locale === 'tr' ? 'Video' : locale === 'ar' ? 'الفيديو' : 'Videos', href: `/${locale}/videos` },
-    { label: locale === 'tr' ? 'Podcast' : locale === 'ar' ? 'البودكاست' : 'Podcasts', href: `/${locale}/podcasts` },
-    { label: locale === 'tr' ? 'Etkinlikler' : locale === 'ar' ? 'الفعاليات' : 'Events', href: `/${locale}/events` },
-    { label: locale === 'tr' ? 'SSS' : locale === 'ar' ? 'الأسئلة الشائعة' : 'FAQ', href: `/${locale}/faq` },
   ],
 })
 

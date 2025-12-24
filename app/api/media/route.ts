@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { del } from '@vercel/blob'
+import { BlobNotFoundError, del } from '@vercel/blob'
 
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
@@ -69,8 +69,10 @@ export async function DELETE(request: Request) {
 
   try {
     await del(media.url, { token: process.env['yeni_blob_READ_WRITE_TOKEN'] })
-  } catch {
-    return NextResponse.json({ error: 'Blob silinemedi' }, { status: 500 })
+  } catch (err) {
+    if (!(err instanceof BlobNotFoundError)) {
+      return NextResponse.json({ error: 'Blob silinemedi' }, { status: 500 })
+    }
   }
 
   await prisma.media.delete({ where: { id } })

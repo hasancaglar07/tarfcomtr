@@ -60,11 +60,14 @@ const defaultContent = {
 
 export function ContactCTA({ locale, settings }: ContactCTAProps) {
   const content = defaultContent[locale as keyof typeof defaultContent] || defaultContent.en
-  const contactInfo = {
-    email: settings?.contact_email || content.email_value,
-    phone: settings?.contact_phone || content.phone_value,
-    address: settings?.contact_address || content.address_value,
-  }
+  const hasSettings = Boolean(settings)
+  const contactEmail = hasSettings ? settings?.contact_email?.trim() || '' : content.email_value
+  const contactPhone = hasSettings ? settings?.contact_phone?.trim() || '' : content.phone_value
+  const contactAddress = hasSettings ? settings?.contact_address?.trim() || '' : content.address_value
+  const sanitizedPhone = contactPhone.replace(/\s/g, '')
+  const showEmail = contactEmail.length > 0
+  const showPhone = contactPhone.length > 0
+  const showAddress = contactAddress.length > 0
 
   return (
     <section className="py-12">
@@ -84,53 +87,59 @@ export function ContactCTA({ locale, settings }: ContactCTAProps) {
             {/* Contact Info Cards */}
             <StaggerItem>
               <div className="space-y-4">
-              <Card className="p-6 hover:shadow-lg transition-shadow group">
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary/10 p-3 rounded-lg group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <Mail className="w-6 h-6" />
+              {showEmail && (
+                <Card className="p-6 hover:shadow-lg transition-shadow group">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary/10 p-3 rounded-lg group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      <Mail className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">{content.email_label}</h3>
+                      <a 
+                        href={`mailto:${contactEmail}`}
+                        className="text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {contactEmail}
+                      </a>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">{content.email_label}</h3>
-                    <a 
-                      href={`mailto:${contactInfo.email}`}
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      {contactInfo.email}
-                    </a>
-                  </div>
-                </div>
-              </Card>
+                </Card>
+              )}
 
-              <Card className="p-6 hover:shadow-lg transition-shadow group">
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary/10 p-3 rounded-lg group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <Phone className="w-6 h-6" />
+              {showPhone && (
+                <Card className="p-6 hover:shadow-lg transition-shadow group">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary/10 p-3 rounded-lg group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      <Phone className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">{content.phone_label}</h3>
+                      <a 
+                        href={`tel:${sanitizedPhone}`}
+                        className="text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {contactPhone}
+                      </a>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">{content.phone_label}</h3>
-                    <a 
-                      href={`tel:${contactInfo.phone.replace(/\s/g, '')}`}
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      {contactInfo.phone}
-                    </a>
-                  </div>
-                </div>
-              </Card>
+                </Card>
+              )}
 
-              <Card className="p-6 hover:shadow-lg transition-shadow group">
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary/10 p-3 rounded-lg group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <MapPin className="w-6 h-6" />
+              {showAddress && (
+                <Card className="p-6 hover:shadow-lg transition-shadow group">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary/10 p-3 rounded-lg group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      <MapPin className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">{content.address_label}</h3>
+                      <p className="text-muted-foreground">
+                        {contactAddress}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">{content.address_label}</h3>
-                    <p className="text-muted-foreground">
-                      {contactInfo.address}
-                    </p>
-                  </div>
-                </div>
-              </Card>
+                </Card>
+              )}
               </div>
             </StaggerItem>
           </StaggerContainer>

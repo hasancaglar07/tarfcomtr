@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -22,12 +23,16 @@ type Copy = {
   successBody?: string
   errorTitle?: string
   errorBody?: string
+  kvkkLabel?: string
+  kvkkLinkText?: string
+  kvkkLink?: string
 }
 
 export function ApplicationForm({ copy }: { copy: Copy }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const [kvkkAccepted, setKvkkAccepted] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -50,6 +55,12 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (!kvkkAccepted) {
+      setError(copy.kvkkLabel || 'KVKK metnini onaylamanız gerekmektedir.')
+      return
+    }
+
     setLoading(true)
     setError(null)
     setSuccess(false)
@@ -92,6 +103,7 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
         message: '',
         applicationType: '',
       })
+      setKvkkAccepted(false)
     } catch (err) {
       setError(
         err instanceof Error
@@ -191,16 +203,43 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
         onChange={handleChange}
         className="min-h-[160px] resize-none border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
       />
+
+      {/* KVKK Onay Checkbox */}
+      <div className="flex items-start gap-3 rounded-xl border border-slate-200/80 bg-white/90 p-4 shadow-sm">
+        <input
+          type="checkbox"
+          id="kvkk-consent"
+          checked={kvkkAccepted}
+          onChange={(e) => setKvkkAccepted(e.target.checked)}
+          className="mt-1 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 text-primary accent-primary focus:ring-primary/30"
+        />
+        <label htmlFor="kvkk-consent" className="cursor-pointer text-sm leading-relaxed text-slate-600">
+          {copy.kvkkLabel || 'Kişisel verilerimin işlenmesine ilişkin'}{' '}
+          <Link
+            href={copy.kvkkLink || '/tr/kvkk-aydinlatma-metni'}
+            target="_blank"
+            className="font-semibold text-primary underline decoration-primary/30 underline-offset-2 transition-colors hover:text-primary/80 hover:decoration-primary/50"
+          >
+            {copy.kvkkLinkText || 'KVKK Aydınlatma Metni'}
+          </Link>
+          {"'"}ni okudum ve kabul ediyorum.
+        </label>
+      </div>
+
       {error && (
-        <div className="flex items-start gap-2 rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-100">
-          <AlertTriangle className="h-4 w-4 mt-0.5" />
+        <div className="flex items-start gap-2 rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-700">
+          <AlertTriangle className="h-4 w-4 mt-0.5 text-red-500" />
           <div>
             <p className="font-semibold">{copy.errorTitle || 'Gönderim hatası'}</p>
             <p>{error || copy.errorBody || 'Lütfen alanları kontrol edin.'}</p>
           </div>
         </div>
       )}
-      <Button type="submit" className="h-12 w-full text-base font-semibold shadow-lg" disabled={loading}>
+      <Button
+        type="submit"
+        className="h-12 w-full text-base font-semibold shadow-lg"
+        disabled={loading || !kvkkAccepted}
+      >
         {loading ? 'Gönderiliyor…' : copy.submit}
       </Button>
     </form>
