@@ -378,7 +378,7 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
         className={cn(
           isDesktop
             ? 'hidden lg:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 shadow-[0_30px_60px_rgba(255,138,52,0.18)] backdrop-blur-2xl'
-            : 'space-y-4'
+            : 'flex flex-col'
         )}
         {...(isDesktop
           ? {
@@ -403,14 +403,15 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
                     transition: { delay: 0.05 * index, duration: 0.3 },
                   }
                   : {})}
+                className={!isDesktop ? 'border-b border-white/5 last:border-0' : undefined}
               >
                 <Link
                   href={item.href || '#'}
                   className={cn(
-                    'group relative isolate flex items-center gap-2 text-sm font-semibold transition-all',
+                    'group relative isolate flex items-center gap-2 transition-all',
                     isDesktop
-                      ? 'rounded-full px-3 py-1.5 text-foreground/80 hover:text-foreground'
-                      : 'rounded-3xl border border-white/15 bg-[hsl(var(--background)_/_0.94)] px-4 py-3 text-base shadow-[0_25px_60px_rgba(15,23,42,0.18)] backdrop-blur-xl hover:-translate-y-0.5 hover:border-white/25 hover:shadow-[0_30px_80px_rgba(15,23,42,0.22)]'
+                      ? 'rounded-full px-3 py-1.5 text-sm font-semibold text-foreground/80 hover:text-foreground'
+                      : 'w-full py-4 text-lg font-medium text-foreground hover:text-primary'
                   )}
                   onClick={() => {
                     if (!isDesktop) {
@@ -446,7 +447,7 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
                 'group',
                 isDesktop
                   ? 'relative'
-                  : 'overflow-hidden rounded-3xl border border-white/15 bg-[hsl(var(--background)_/_0.88)] shadow-[0_30px_80px_rgba(15,23,42,0.16)] backdrop-blur-2xl'
+                  : 'border-b border-white/5 last:border-0'
               )}
               {...(isDesktop
                 ? {
@@ -467,10 +468,10 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
               <button
                 type="button"
                 className={cn(
-                  'group inline-flex w-full items-center justify-between gap-2 text-sm font-semibold transition-all',
+                  'group inline-flex w-full items-center justify-between gap-2 transition-all',
                   isDesktop
-                    ? 'relative isolate rounded-full px-3 py-1.5 text-foreground/80 hover:text-foreground'
-                    : 'px-4 py-3 text-base'
+                    ? 'relative isolate rounded-full px-3 py-1.5 text-sm font-semibold text-foreground/80 hover:text-foreground'
+                    : 'w-full py-4 text-lg font-medium text-foreground hover:text-primary'
                 )}
                 onClick={() => {
                   if (isDesktop) return
@@ -543,18 +544,21 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.25 }}
-                      className="space-y-3 border-t border-white/15 px-4 pb-4 pt-3"
+                      className="overflow-hidden bg-white/5 rounded-2xl mb-4"
                     >
-                      {item.links?.map((link) => (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          onClick={closeMobileMenu}
-                          className="block rounded-2xl border border-white/10 bg-[hsl(var(--background)_/_0.96)] px-3 py-2 text-sm font-semibold text-foreground/90 shadow-[0_18px_45px_rgba(15,23,42,0.12)] transition hover:-translate-y-0.5 hover:border-[hsl(var(--primary)_/_0.4)] hover:text-[hsl(var(--primary))]"
-                        >
-                          <p className="font-semibold">{link.label}</p>
-                        </Link>
-                      ))}
+                      <div className="flex flex-col p-2 space-y-1">
+                        {item.links?.map((link) => (
+                          <Link
+                            key={link.href}
+                            href={link.href}
+                            onClick={closeMobileMenu}
+                            className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-white/10 hover:text-primary"
+                          >
+                            <span>{link.label}</span>
+                            <ChevronDown className="-rotate-90 h-3 w-3 opacity-50" />
+                          </Link>
+                        ))}
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -573,15 +577,15 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[120] bg-[radial-gradient(circle_at_top,_rgba(3,7,18,0.85),_rgba(2,6,23,0.65))] backdrop-blur-[32px] lg:hidden"
+          className="fixed inset-0 z-[120] bg-black/60 backdrop-blur-md lg:hidden"
           onClick={closeMobileMenu}
         >
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ type: 'spring', stiffness: 220, damping: 28 }}
-            className="relative ml-auto flex h-full w-full max-w-sm flex-col overflow-hidden border-l border-white/15 bg-[hsl(var(--background)_/_0.97)] text-foreground shadow-[0_45px_140px_rgba(15,23,42,0.5)]"
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="absolute right-0 top-0 bottom-0 h-full w-full max-w-sm border-l border-white/10 bg-background shadow-2xl flex flex-col overflow-hidden"
             role="dialog"
             aria-modal="true"
             aria-label={
@@ -590,76 +594,60 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
             id={MOBILE_MENU_ID}
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="pointer-events-none absolute inset-0 opacity-60">
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary)_/_0.6)] to-transparent" />
-              <div className="absolute right-10 top-24 h-48 w-48 rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.2),_transparent_65%)] blur-3xl" />
-            </div>
-            <div className="relative flex h-16 items-center justify-between border-b border-white/15 bg-[hsl(var(--background)_/_0.98)] px-4">
-              <span className="text-lg font-semibold">
-                {locale === 'tr' ? 'Menü' : locale === 'ar' ? 'القائمة' : 'Menu'}
-              </span>
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
+              <div className="flex items-center gap-3">
+                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+                  {locale === 'tr' ? 'Menü' : locale === 'ar' ? 'القائمة' : 'Menu'}
+                </span>
+              </div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={closeMobileMenu}
-                aria-label={
-                  locale === 'tr'
-                    ? 'Menüyü kapat'
-                    : locale === 'ar'
-                      ? 'إغلاق القائمة'
-                      : 'Close menu'
-                }
+                className="hover:bg-white/5 rounded-full"
               >
-                <X className="h-5 w-5" />
+                <X className="h-6 w-6" />
               </Button>
             </div>
 
-            <div className="relative flex-1 space-y-6 overflow-y-auto px-4 py-6">
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto px-6 py-6 scrollbar-hide">
               {renderNavLinks('mobile')}
 
-              <div className="space-y-3 rounded-3xl border border-white/15 bg-[hsl(var(--background)_/_0.95)] p-4 shadow-[0_30px_90px_rgba(15,23,42,0.18)] backdrop-blur-xl">
-                <p className="text-sm font-semibold text-muted-foreground">
-                  {locale === 'tr' ? 'İletişim' : locale === 'ar' ? 'تواصل' : 'Contact'}
-                </p>
-                {contactInfo.map((info, idx) => {
-                  const Icon = info.icon
-                  return (
-                    <div
-                      key={idx}
-                      className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[hsl(var(--background)_/_0.97)] px-3 py-2 text-sm font-medium text-foreground/90 shadow-[0_18px_50px_rgba(15,23,42,0.14)]"
-                    >
-                      <Icon className="h-4 w-4 text-[hsl(var(--primary))]" />
-                      {info.href ? (
-                        <a href={info.href} onClick={closeMobileMenu} className="hover:text-[hsl(var(--primary))]">
-                          {info.label}
-                        </a>
-                      ) : (
-                        info.label
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
+              {/* Extras Divider */}
+              <div className="my-8 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-              <div className="rounded-3xl border border-white/15 bg-[hsl(var(--background)_/_0.95)] p-4 shadow-[0_30px_90px_rgba(15,23,42,0.18)] backdrop-blur-xl">
-                <p className="mb-3 text-sm font-semibold text-muted-foreground">
-                  {locale === 'tr' ? 'Dil Seçimi' : locale === 'ar' ? 'اختر اللغة' : 'Switch Language'}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {languages.map((lang) => (
-                    <Link key={lang.code} href={`/${lang.code}`} onClick={closeMobileMenu}>
-                      <Button variant={locale === lang.code ? 'default' : 'outline'}>{lang.name}</Button>
-                    </Link>
-                  ))}
+              {/* Contact Information */}
+              <div className="space-y-4 mb-8">
+                <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                  {locale === 'tr' ? 'İletişim' : locale === 'ar' ? 'تواصل' : 'Contact'}
+                </h4>
+                <div className="space-y-3">
+                  {contactInfo.map((info, idx) => {
+                    const Icon = info.icon
+                    return (
+                      <div key={idx} className="flex items-center gap-4 text-foreground/80">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/5 border border-white/5 text-primary">
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        {info.href ? (
+                          <a href={info.href} onClick={closeMobileMenu} className="text-sm font-medium hover:text-primary transition-colors">
+                            {info.label}
+                          </a>
+                        ) : (
+                          <span className="text-sm font-medium">{info.label}</span>
+                        )}
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
 
-              <Link href={`/${locale}/contact`} onClick={closeMobileMenu}>
-                <Button className="group relative w-full overflow-hidden rounded-2xl border border-white/15 bg-[hsl(var(--primary))] py-6 text-base font-semibold text-primary-foreground shadow-[0_20px_50px_rgba(255,138,52,0.4)]">
-                  <span className="relative z-10">
-                    {locale === 'tr' ? 'Hızlı Teklif Al' : locale === 'ar' ? 'اطلب عرضاً' : 'Get a Quote'}
-                  </span>
-                  <span className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.5),_transparent_65%)] opacity-0 transition-opacity duration-500 group-hover:opacity-80" />
+              {/* Action Button */}
+              <Link href={`/${locale}/contact`} onClick={closeMobileMenu} className="block">
+                <Button className="w-full h-14 rounded-2xl text-base font-semibold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 transition-all">
+                  {locale === 'tr' ? 'Başvuru Yap' : locale === 'ar' ? 'قدّم الآن' : 'Send Application'}
                 </Button>
               </Link>
             </div>

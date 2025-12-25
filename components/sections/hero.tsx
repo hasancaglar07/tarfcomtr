@@ -231,16 +231,16 @@ export function Hero({ locale, data, events }: HeroProps) {
       <section className="relative overflow-hidden">
         <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
         <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
-        <div className="container relative z-10 pt-2 pb-14 lg:pt-6 lg:pb-20">
-          <div className="grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr]">
-            <StaggerContainer className="min-w-0 space-y-8">
+        <div className="container relative z-10 py-6 lg:pt-6 lg:pb-20">
+          <div className="grid items-start gap-8 lg:gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+            <StaggerContainer className="min-w-0 space-y-6 lg:space-y-8">
               <StaggerItem>
                 <div className="relative max-w-2xl mx-auto lg:mx-0">
-                  <div className="relative mt-4 min-h-[7.5rem] sm:min-h-[8.5rem] lg:min-h-[10.5rem] text-center lg:text-left text-balance">
+                  <div className="relative text-center lg:text-left">
                     <AnimatePresence mode="wait" initial={false}>
                       <motion.div
                         key={`${headlineIndex}-${activeHeadline?.title}`}
-                        className="absolute inset-0 flex flex-col gap-5"
+                        className="flex flex-col gap-4 lg:gap-5"
                         initial={
                           shouldReduceHeadlineMotion
                             ? { opacity: 1, y: 0 }
@@ -260,7 +260,7 @@ export function Hero({ locale, data, events }: HeroProps) {
                           <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-r from-primary/20 via-amber-500/20 to-primary/20 opacity-0 blur-2xl transition-opacity duration-700 group-hover:opacity-100" />
 
                           {/* Glassmorphism Card */}
-                          <div className="relative rounded-[28px] border border-white/20 bg-gradient-to-br from-white/40 via-white/30 to-amber-50/40 p-6 shadow-[0_20px_70px_rgba(251,146,60,0.15)] backdrop-blur-xl lg:p-8">
+                          <div className="relative rounded-[20px] sm:rounded-[28px] border border-white/20 bg-gradient-to-br from-white/40 via-white/30 to-amber-50/40 p-4 sm:p-6 shadow-[0_20px_70px_rgba(251,146,60,0.15)] backdrop-blur-xl lg:p-8">
                             {/* Shimmer Effect */}
                             <div className="absolute inset-0 overflow-hidden rounded-[28px]">
                               <div className="absolute -inset-[100%] animate-[shimmer_3s_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent" />
@@ -270,16 +270,16 @@ export function Hero({ locale, data, events }: HeroProps) {
                             <div className="absolute inset-[1px] rounded-[27px] bg-gradient-to-br from-white/60 to-transparent pointer-events-none" />
 
                             {/* Content */}
-                            <div className="relative z-10 space-y-4">
+                            <div className="relative z-10 space-y-3 sm:space-y-4">
                               {/* Title with Premium Styling */}
-                              <h1 className="text-4xl font-bold leading-[1.08] tracking-[-0.025em] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent sm:text-5xl lg:text-[62px] xl:text-[72px] [text-shadow:_0_1px_20px_rgb(251_146_60_/_15%)]">
+                              <h1 className="text-2xl font-bold leading-[1.15] tracking-[-0.02em] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[62px] [text-shadow:_0_1px_20px_rgb(251_146_60_/_15%)]">
                                 {activeHeadline?.title || content.title || defaultContent.en.title}
                               </h1>
 
                               {/* Subtitle with Enhanced Styling */}
                               <div className="relative inline-block">
                                 <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-primary/10 to-amber-400/10 blur-lg" />
-                                <p className="relative text-base font-medium text-slate-700/95 leading-relaxed sm:text-lg lg:text-[21px] lg:max-w-[34rem] [text-shadow:_0_1px_12px_rgb(255_255_255_/_80%)]">
+                                <p className="relative text-sm font-medium text-slate-700/95 leading-relaxed sm:text-base lg:text-lg lg:max-w-[34rem] [text-shadow:_0_1px_12px_rgb(255_255_255_/_80%)]">
                                   {activeHeadline?.subtitle || content.subtitle || defaultContent.en.subtitle}
                                 </p>
                               </div>
@@ -313,9 +313,9 @@ export function Hero({ locale, data, events }: HeroProps) {
             <Animate variant="slideInRight">
               <div className="relative">
                 <div className="absolute -inset-6 hidden rounded-[40px] bg-gradient-to-tr from-primary/30 to-amber-200/30 blur-2xl lg:block" />
-                <div className="relative rounded-[32px] border border-border bg-card/80 p-6 shadow-2xl backdrop-blur">
-                  <div className="rounded-[26px] border border-border/70 bg-muted/30 p-3">
-                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] bg-primary/10">
+                <div className="relative rounded-[20px] sm:rounded-[32px] border border-border bg-card/80 p-3 sm:p-6 shadow-2xl backdrop-blur">
+                  <div className="rounded-[16px] sm:rounded-[26px] border border-border/70 bg-muted/30 p-2 sm:p-3">
+                    <div className="relative aspect-video sm:aspect-[4/3] w-full overflow-hidden rounded-[12px] sm:rounded-[22px] bg-primary/10">
                       {heroVideoPlaying && heroVideoId ? (
                         <iframe
                           className="h-full w-full"
@@ -361,10 +361,10 @@ export function Hero({ locale, data, events }: HeroProps) {
                     </div>
                   </div>
 
-                  <div className="mt-6 flex flex-col gap-6">
+                  <div className="mt-3 sm:mt-6 flex flex-col gap-4 sm:gap-6">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <p className="text-lg font-semibold text-foreground leading-snug line-clamp-2">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm sm:text-lg font-semibold text-foreground leading-snug line-clamp-2">
                           {currentHeroVideo?.title}
                         </p>
                       </div>
@@ -408,11 +408,11 @@ export function Hero({ locale, data, events }: HeroProps) {
           </div>
         </div>
       </section>
-      <div className="-mt-12">
+      <div className="mt-6 lg:-mt-8">
         <div className="container">
-          <StaggerContainer className="min-w-0 space-y-8">
+          <StaggerContainer className="min-w-0 space-y-6 lg:space-y-8">
             <StaggerItem>
-              <div className="w-full rounded-[28px] border border-primary/15 bg-gradient-to-br from-white/95 via-white/90 to-amber-50/80 p-5 shadow-[0_26px_80px_rgba(15,23,42,0.16)] sm:p-6">
+              <div className="w-full rounded-[20px] sm:rounded-[28px] border border-primary/15 bg-gradient-to-br from-white/95 via-white/90 to-amber-50/80 p-4 sm:p-5 shadow-[0_26px_80px_rgba(15,23,42,0.16)] lg:p-6">
                 <div className="flex flex-col items-center gap-3 pb-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
                   <div className="flex min-w-0 items-center gap-3">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary shadow-sm">

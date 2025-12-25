@@ -214,6 +214,15 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Hide scrollbar for clean UI */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
   
   /* Smooth scrolling */
   html {
