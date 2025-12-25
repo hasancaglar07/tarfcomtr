@@ -229,8 +229,6 @@ export function Hero({ locale, data, events }: HeroProps) {
   return (
     <>
       <section className="relative overflow-hidden">
-        <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
-        <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
         <div className="container relative z-10 py-6 lg:pt-6 lg:pb-20">
           <div className="grid items-start gap-8 lg:gap-12 lg:grid-cols-[1.05fr_0.95fr]">
             <StaggerContainer className="min-w-0 space-y-6 lg:space-y-8">

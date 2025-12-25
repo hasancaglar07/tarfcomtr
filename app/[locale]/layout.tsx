@@ -30,7 +30,7 @@ export default async function LocaleLayout({
   ])
 
   return (
-    <div lang={normalizedLocale} dir={direction}>
+    <div lang={normalizedLocale} dir={direction} className="overflow-x-hidden">
       <Header
         locale={normalizedLocale}
         settings={settings}

@@ -657,9 +657,9 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary)_/_0.8)] to-transparent opacity-80" />
           <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary)_/_0.5)] to-transparent opacity-60" />
-          <div className="absolute left-1/2 top-[-35%] h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.2),_transparent_65%)] blur-[140px]" />
-          <div className="absolute right-0 top-[-5%] h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.16),_transparent_60%)] blur-[150px]" />
-          <div className="absolute left-0 bottom-[-15%] h-[300px] w-[300px] rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.1),_transparent_70%)] blur-[160px]" />
+          <div className="absolute left-1/2 top-[-35%] h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.2),_transparent_65%)] blur-[140px] hidden lg:block" />
+          <div className="absolute right-0 top-[-5%] h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.16),_transparent_60%)] blur-[150px] hidden lg:block" />
+          <div className="absolute left-0 bottom-[-15%] h-[300px] w-[300px] rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.1),_transparent_70%)] blur-[160px] hidden lg:block" />
         </div>
 
         <div className="relative z-10">
