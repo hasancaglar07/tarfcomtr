@@ -308,12 +308,6 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
     },
   ]
 
-  const languages = [
-    { code: 'tr', name: 'TR', flag: '🇹🇷' },
-    { code: 'en', name: 'EN', flag: '🇬🇧' },
-    { code: 'ar', name: 'AR', flag: '🇸🇦' },
-  ]
-
   const contactInfo = [
     settings?.contact_phone && {
       icon: Phone,
