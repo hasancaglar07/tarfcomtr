@@ -542,19 +542,6 @@
     }
   }
 
-  @media (max-width: 768px) {
-
-    .animation-wrapper,
-    .animate-fade-in,
-    .animate-slide-up,
-    .animate-slide-in-left,
-    .animate-slide-in-right,
-    .animate-scale-in {
-      animation: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-    }
-  }
 
   /* Gradient backgrounds */
   .gradient-primary {

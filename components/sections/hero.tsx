@@ -100,7 +100,7 @@ export function Hero({ locale, data, events }: HeroProps) {
     ...(defaultContent[locale as keyof typeof defaultContent] || defaultContent.en),
     ...data,
   }
-  const shouldReduceHeadlineMotion = useShouldReduceMotion(768)
+  const shouldReduceHeadlineMotion = useShouldReduceMotion(0)
 
   const headlineSlides = useMemo(() => {
     const rawSlides = Array.isArray(content.headlineSlides) ? content.headlineSlides : []
@@ -446,7 +446,7 @@ export function Hero({ locale, data, events }: HeroProps) {
 }
 
 function HeroEventsMarquee({ locale, events }: { locale: string; events: Post[] }) {
-  const shouldReduceMotion = useShouldReduceMotion(768)
+  const shouldReduceMotion = useShouldReduceMotion(0)
   const displayEvents = Array.isArray(events) ? events : []
 
   return (

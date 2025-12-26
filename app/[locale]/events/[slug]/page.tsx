@@ -124,21 +124,21 @@ export default async function EventDetailPage({
 
               <Animate variant="slideInRight" delay={0.2}>
                 <Card className="p-6 h-fit">
-                <h3 className="text-lg font-semibold mb-4">
-                  {locale === 'tr' ? 'Bilet ve kayıt' : locale === 'ar' ? 'التذاكر والتسجيل' : 'Tickets & registration'}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {locale === 'tr'
-                    ? 'Kontenjan sınırlıdır. Katılım için lütfen kayıt formunu doldurun.'
-                    : locale === 'ar'
-                      ? 'الأماكن محدودة. يرجى ملء نموذج التسجيل للمشاركة.'
-                      : 'Seats are limited. Please fill the registration form to secure your spot.'}
-                </p>
-                <Button className="w-full" asChild>
-                  <Link href={`/${locale}/contact`}>
-                    {locale === 'tr' ? 'Kayıt Formu' : locale === 'ar' ? 'نموذج التسجيل' : 'Registration form'}
-                  </Link>
-                </Button>
+                  <h3 className="text-lg font-semibold mb-4">
+                    {locale === 'tr' ? 'Bilet ve kayıt' : locale === 'ar' ? 'التذاكر والتسجيل' : 'Tickets & registration'}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    {locale === 'tr'
+                      ? 'Kontenjan sınırlıdır. Katılım için lütfen kayıt formunu doldurun.'
+                      : locale === 'ar'
+                        ? 'الأماكن محدودة. يرجى ملء نموذج التسجيل للمشاركة.'
+                        : 'Seats are limited. Please fill the registration form to secure your spot.'}
+                  </p>
+                  <Button className="w-full" asChild>
+                    <Link href={`/${locale}/contact`}>
+                      {locale === 'tr' ? 'Kayıt Formu' : locale === 'ar' ? 'نموذج التسجيل' : 'Registration form'}
+                    </Link>
+                  </Button>
                 </Card>
               </Animate>
             </div>
@@ -154,28 +154,6 @@ export default async function EventDetailPage({
                     fill
                     className="object-cover"
                   />
-                </div>
-              </Animate>
-            </div>
-          )}
-
-          {event.gallery && event.gallery.length > 0 && (
-            <div className="container pb-10">
-              <Animate variant="slideUp" delay={0.35}>
-                <h2 className="text-xl font-semibold mb-4">
-                  {locale === 'tr' ? 'Galeri' : locale === 'ar' ? 'معرض الصور' : 'Gallery'}
-                </h2>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {event.gallery.map((img) => (
-                    <div key={img} className="relative h-48 w-full overflow-hidden rounded-2xl border border-slate-200/10">
-                      <Image
-                        src={resolveImageSrc(img, getDefaultImage())}
-                        alt={event.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
                 </div>
               </Animate>
             </div>
@@ -232,6 +210,26 @@ export default async function EventDetailPage({
               </Card>
             </Animate>
 
+            {event.gallery && event.gallery.length > 0 && (
+              <Animate variant="slideUp" delay={0.45}>
+                <h2 className="text-xl font-semibold mb-4">
+                  {locale === 'tr' ? 'Galeri' : locale === 'ar' ? 'معرض الصور' : 'Gallery'}
+                </h2>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {event.gallery.map((img) => (
+                    <div key={img} className="relative h-48 w-full overflow-hidden rounded-2xl border border-slate-200/10">
+                      <Image
+                        src={resolveImageSrc(img, getDefaultImage())}
+                        alt={event.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </Animate>
+            )}
+
             {related_events && related_events.length > 0 && (
               <div>
                 <Animate variant="slideUp" delay={0.5}>
@@ -243,16 +241,16 @@ export default async function EventDetailPage({
                   {related_events.map((related) => (
                     <StaggerItem key={related.id}>
                       <Card className="p-5">
-                      <p className="text-sm text-primary/80 mb-1">{related.category?.name}</p>
-                      <h3 className="font-semibold mb-2 line-clamp-2">{related.title}</h3>
-                      <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-                        {related.excerpt}
-                      </p>
-                      <Button variant="outline" size="sm" asChild>
-                        <Link href={`/${locale}/events/${related.slug}`}>
-                          {locale === 'tr' ? 'İncele' : locale === 'ar' ? 'اعرض' : 'View'}
-                        </Link>
-                      </Button>
+                        <p className="text-sm text-primary/80 mb-1">{related.category?.name}</p>
+                        <h3 className="font-semibold mb-2 line-clamp-2">{related.title}</h3>
+                        <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                          {related.excerpt}
+                        </p>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link href={`/${locale}/events/${related.slug}`}>
+                            {locale === 'tr' ? 'İncele' : locale === 'ar' ? 'اعرض' : 'View'}
+                          </Link>
+                        </Button>
                       </Card>
                     </StaggerItem>
                   ))}

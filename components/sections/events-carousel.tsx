@@ -9,10 +9,9 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Calendar, MapPin, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { Animate, AnimatedCard } from '@/components/ui/animate'
 import { motion } from 'framer-motion'
-import { useShouldReduceMotion } from '@/lib/hooks/use-reduced-motion'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 type EventPost = Post & { is_featured?: boolean | null }
@@ -29,53 +28,57 @@ const defaultContent = {
     subtitle: 'Yaklaşan eğitim etkinlikleri ve seminerler',
     details: 'Detaylar',
     no_events: 'Henüz etkinlik eklenmedi.',
-    featured: 'Öne Çıkan'
+    featured: 'Öne Çıkan',
+    see_all: 'Tüm Etkinlikleri Gör'
   },
   en: {
     title: 'Events',
     subtitle: 'Upcoming educational events and seminars',
     details: 'Details',
     no_events: 'No events available yet.',
-    featured: 'Featured'
+    featured: 'Featured',
+    see_all: 'See All Events'
   },
   ar: {
     title: 'الفعاليات',
     subtitle: 'الأحداث والندوات التعليمية القادمة',
     details: 'التفاصيل',
     no_events: 'لا توجد أحداث متاحة حتى الآن.',
-    featured: 'مميز'
+    featured: 'مميز',
+    see_all: 'مشاهدة جميع الفعاليات'
   }
 }
 
 export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCarouselProps) {
   const content = defaultContent[locale as keyof typeof defaultContent] || defaultContent.en
-  const shouldReduceMotion = useShouldReduceMotion(768)
   const [activeTab, setActiveTab] = useState<'past' | 'upcoming'>('past')
+  const [itemsToShow, setItemsToShow] = useState(4)
+  const [sliderGap, setSliderGap] = useState(20)
+  const [isPaused, setIsPaused] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [itemsToShow, setItemsToShow] = useState(3)
-  const [sliderGap, setSliderGap] = useState(16)
-  const [isMobileStack, setIsMobileStack] = useState(false)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   const upcoming = Array.isArray(upcomingEvents) ? upcomingEvents : []
   const past = Array.isArray(pastEvents) ? pastEvents : []
   const selectedEvents = activeTab === 'past' ? past : upcoming
+
+  const maxIndex = Math.max(0, selectedEvents.length - itemsToShow)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
 
     const determineItems = () => {
       const width = window.innerWidth
-      if (width < 768) return { items: 1, gap: 12, stack: true }
-      if (width < 1024) return { items: 2, gap: 16, stack: false }
-      if (width < 1280) return { items: 3, gap: 18, stack: false }
-      return { items: 4, gap: 20, stack: false }
+      if (width < 768) return { items: 1, gap: 12 }
+      if (width < 1024) return { items: 2, gap: 16 }
+      if (width < 1280) return { items: 3, gap: 18 }
+      return { items: 4, gap: 20 }
     }
 
     const updateItems = () => {
       const next = determineItems()
       setItemsToShow(next.items)
       setSliderGap(next.gap)
-      setIsMobileStack(Boolean(next.stack))
       setCurrentIndex(0)
     }
 
@@ -85,7 +88,7 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
     return () => {
       window.removeEventListener('resize', updateItems)
     }
-  }, [shouldReduceMotion])
+  }, [])
 
   useEffect(() => {
     if (activeTab === 'past' && past.length === 0 && upcoming.length > 0) {
@@ -95,7 +98,41 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
 
   useEffect(() => {
     setCurrentIndex(0)
-  }, [activeTab, itemsToShow])
+  }, [activeTab])
+
+  // Scroll to current index
+  const scrollToIndex = useCallback((index: number) => {
+    if (!scrollContainerRef.current) return
+    const container = scrollContainerRef.current
+    const cardWidth = container.scrollWidth / selectedEvents.length
+    container.scrollTo({
+      left: index * cardWidth,
+      behavior: 'smooth'
+    })
+  }, [selectedEvents.length])
+
+  useEffect(() => {
+    scrollToIndex(currentIndex)
+  }, [currentIndex, scrollToIndex])
+
+  // Auto-scroll
+  useEffect(() => {
+    if (isPaused || selectedEvents.length <= itemsToShow) return
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1))
+    }, 4000)
+
+    return () => clearInterval(interval)
+  }, [isPaused, selectedEvents.length, itemsToShow, maxIndex])
+
+  const scrollLeft = () => {
+    setCurrentIndex((prev) => Math.max(0, prev - 1))
+  }
+
+  const scrollRight = () => {
+    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1))
+  }
 
   if (upcoming.length === 0 && past.length === 0) {
     return (
@@ -107,27 +144,14 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
     )
   }
 
-  const effectiveItemsToShow = Math.max(1, itemsToShow)
-  const maxIndex = Math.max(0, selectedEvents.length - effectiveItemsToShow)
-  const canScrollLeft = !shouldReduceMotion && currentIndex > 0
-  const canScrollRight = !shouldReduceMotion && currentIndex < maxIndex
-  const showNavigation =
-    !shouldReduceMotion && !isMobileStack && selectedEvents.length > effectiveItemsToShow
-
-  const scrollLeft = () => {
-    if (canScrollLeft) {
-      setCurrentIndex(prev => Math.max(0, prev - 1))
-    }
-  }
-
-  const scrollRight = () => {
-    if (canScrollRight) {
-      setCurrentIndex(prev => Math.min(maxIndex, prev + 1))
-    }
-  }
+  const showNavigation = selectedEvents.length > itemsToShow
 
   return (
-    <section className="py-12 overflow-hidden">
+    <section
+      className="py-12 overflow-hidden"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       <div className="container">
         <Tabs
           value={activeTab}
@@ -149,14 +173,14 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
               </p>
             </Animate>
 
-            {showNavigation && selectedEvents.length > 0 && (
+            {showNavigation && (
               <Animate variant="fadeIn" delay={0.15}>
                 <div className="mt-6 flex justify-center gap-2 md:absolute md:right-0 md:top-1/2 md:mt-0 md:-translate-y-1/2">
                   <Button
                     variant="outline"
                     size="icon"
                     onClick={scrollLeft}
-                    disabled={!canScrollLeft}
+                    disabled={currentIndex === 0}
                     className="rounded-full shadow-lg disabled:opacity-50"
                     aria-label={locale === 'tr' ? 'Önceki' : locale === 'ar' ? 'السابق' : 'Previous'}
                   >
@@ -166,7 +190,7 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
                     variant="outline"
                     size="icon"
                     onClick={scrollRight}
-                    disabled={!canScrollRight}
+                    disabled={currentIndex >= maxIndex}
                     className="rounded-full shadow-lg disabled:opacity-50"
                     aria-label={locale === 'tr' ? 'Sonraki' : locale === 'ar' ? 'التالي' : 'Next'}
                   >
@@ -206,87 +230,79 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
           {/* Carousel */}
           <Animate variant="fadeIn" delay={0.3}>
             <div className="relative">
-              <div className={shouldReduceMotion ? '-mx-4 px-4' : 'overflow-hidden'}>
+              <div
+                ref={scrollContainerRef}
+                className="flex overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+                style={{
+                  gap: `${sliderGap}px`,
+                  WebkitOverflowScrolling: 'touch',
+                  scrollBehavior: 'smooth'
+                }}
+              >
                 {selectedEvents.length === 0 ? (
-                  <div className="text-center text-muted-foreground py-10">
+                  <div className="w-full text-center text-muted-foreground py-10">
                     {locale === 'tr'
                       ? 'Henüz etkinlik eklenmedi.'
                       : locale === 'ar'
                         ? 'لا توجد أحداث متاحة حتى الآن.'
                         : 'No events available yet.'}
                   </div>
-                ) : isMobileStack ? (
-                  <div className="grid gap-4">
-                    {selectedEvents.map((event) => (
-                      <EventCard key={event.id} event={event} content={content} locale={locale} />
-                    ))}
-                  </div>
-                ) : shouldReduceMotion ? (
-                  <div
-                    className="flex overflow-x-auto pb-4 snap-x snap-mandatory gap-0"
-                    style={{ paddingRight: `${sliderGap}px`, WebkitOverflowScrolling: 'touch' }}
-                  >
-                    {selectedEvents.map((event) => (
-                      <div
-                        key={event.id}
-                        className="snap-start flex-shrink-0"
-                        style={{
-                          minWidth: `calc(100% - ${sliderGap}px)`,
-                        }}
-                      >
-                        <EventCard event={event} content={content} locale={locale} />
-                      </div>
-                    ))}
-                  </div>
                 ) : (
-                  <motion.div
-                    className="flex"
-                    animate={{
-                      x: `-${currentIndex * (100 / effectiveItemsToShow)}%`
-                    }}
-                    transition={{
-                      duration: 0.5,
-                      ease: [0.25, 0.46, 0.45, 0.94]
-                    }}
-                    style={{ gap: `${sliderGap}px` }}
-                  >
-                    {selectedEvents.map((event, index) => (
+                  selectedEvents.map((event, index) => (
+                    <div
+                      key={event.id}
+                      className="snap-start flex-shrink-0"
+                      style={{
+                        width: `calc((100% - ${(itemsToShow - 1) * sliderGap}px) / ${itemsToShow})`,
+                        minWidth: itemsToShow === 1 ? '85%' : undefined
+                      }}
+                    >
                       <motion.div
-                        key={event.id}
-                        className="flex-shrink-0"
-                        style={{
-                          width: `calc((100% - ${(effectiveItemsToShow - 1) * sliderGap}px) / ${effectiveItemsToShow})`,
-                        }}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.08 }}
                       >
                         <EventCard event={event} content={content} locale={locale} />
                       </motion.div>
-                    ))}
-                  </motion.div>
+                    </div>
+                  ))
                 )}
               </div>
             </div>
           </Animate>
 
           {/* Dots Indicator */}
-          {!shouldReduceMotion && selectedEvents.length > effectiveItemsToShow && selectedEvents.length > 0 && (
-            <div className="flex justify-center gap-2 mt-8">
-              {Array.from({ length: Math.max(1, selectedEvents.length - effectiveItemsToShow + 1) }).map((_, index) => (
+          {showNavigation && (
+            <div className="flex justify-center gap-2 mt-6">
+              {Array.from({ length: maxIndex + 1 }).map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    index === currentIndex
+                  className={`w-2 h-2 rounded-full transition-all ${index === currentIndex
                       ? 'bg-primary w-8'
                       : 'bg-primary/30 hover:bg-primary/50'
-                  }`}
+                    }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
               ))}
             </div>
           )}
+
+          {/* Bottom Bar: See All */}
+          <div className="flex flex-col items-center gap-8 mt-10">
+            {/* See All Button */}
+            <Animate variant="slideUp" delay={0.4}>
+              <Link href={`/${locale}/events`}>
+                <Button
+                  variant="outline"
+                  className="rounded-full px-8 py-6 h-auto text-base font-semibold border-primary/20 hover:bg-primary hover:text-white transition-all group"
+                >
+                  {content.see_all}
+                  <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            </Animate>
+          </div>
         </Tabs>
       </div>
     </section>

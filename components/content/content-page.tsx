@@ -161,9 +161,9 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
   const description = page.hero.description?.trim() ?? ''
   const descriptionParagraphs = description
     ? description
-        .split(/\n+/)
-        .map((paragraph) => paragraph.trim())
-        .filter(Boolean)
+      .split(/\n+/)
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean)
     : []
   const showNarrative =
     Boolean(description) && (descriptionParagraphs.length > 1 || description.length > 220)
@@ -210,7 +210,7 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
                         key={`${index}-${paragraph.slice(0, 24)}`}
                         className={
                           index === 0
-                            ? 'first-letter:text-3xl first-letter:font-semibold first-letter:text-primary'
+                            ? 'first-letter:text-3xl first-letter:font-semibold first-letter:text-slate-700'
                             : ''
                         }
                       >

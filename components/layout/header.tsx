@@ -158,7 +158,7 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
             : 'Idea generation and research platform',
       links: [
         {
-          label: locale === 'tr' ? 'Eğitim Araştırmaları' : locale === 'ar' ? 'أبحاث التعليم' : 'Education research',
+          label: locale === 'tr' ? 'Eğitim' : locale === 'ar' ? 'التعليم' : 'Education',
           href: `/${locale}/dusunce-enstitusu/egitim`,
           description: locale === 'tr' ? 'Modern eğitim dönüşümü' : 'Modern education transformation',
         },

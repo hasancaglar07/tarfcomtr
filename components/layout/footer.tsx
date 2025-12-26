@@ -17,7 +17,7 @@ const footerNavigation = (locale: string) => ({
     { label: locale === 'tr' ? 'Yönetim İlkeleri' : 'Governance', href: `/${locale}/yonetim-ilkeleri` },
   ],
   dusunce: [
-    { label: locale === 'tr' ? 'Eğitim Araştırmaları' : locale === 'ar' ? 'أبحاث التعليم' : 'Education research', href: `/${locale}/dusunce-enstitusu/egitim` },
+    { label: locale === 'tr' ? 'Eğitim' : locale === 'ar' ? 'التعليم' : 'Education', href: `/${locale}/dusunce-enstitusu/egitim` },
     { label: locale === 'tr' ? 'Gençlik' : locale === 'ar' ? 'الشباب' : 'Youth', href: `/${locale}/dusunce-enstitusu/genclik` },
     { label: locale === 'tr' ? 'Aile' : locale === 'ar' ? 'الأسرة' : 'Family', href: `/${locale}/dusunce-enstitusu/aile` },
     { label: locale === 'tr' ? 'Tarih, Kültür ve Medeniyet' : locale === 'ar' ? 'الثقافة والفن' : 'Culture & Art', href: `/${locale}/dusunce-enstitusu/kultur-sanat` },
