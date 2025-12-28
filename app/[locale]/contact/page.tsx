@@ -1,7 +1,6 @@
 import { api } from '@/lib/api'
 import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
-import { Card } from '@/components/ui/card'
 import { ArrowUpRight, Mail, Phone, MapPin } from 'lucide-react'
 import { ApplicationForm } from '@/components/forms/application-form'
 
@@ -352,8 +351,14 @@ export default async function ContactPage({
             <div className="relative isolate lg:sticky lg:top-32">
 
               {/* Animated Attention Grabbing Border/Glow */}
-              <div className="absolute -inset-[3px] rounded-[52px] bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 opacity-30 blur-sm animate-pulse pointer-events-none" />
-              <div className="absolute -inset-1 rounded-[52px] bg-gradient-to-br from-amber-400/20 to-orange-600/20 blur-xl pointer-events-none" />
+              {/* Grand Rotating Border Beam & Glow */}
+              <div className="absolute -inset-[2px] rounded-[52px] overflow-hidden pointer-events-none">
+                <div
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] animate-[spin_6s_linear_infinite] opacity-70"
+                  style={{ background: 'conic-gradient(from 0deg, transparent 0 300deg, #fbbf24 330deg, #ea580c 360deg)' }}
+                />
+              </div>
+              <div className="absolute -inset-[2px] rounded-[52px] bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 opacity-20 blur-xl animate-pulse pointer-events-none" />
 
               <div className="relative rounded-[48px] border border-white/80 bg-white/90 p-8 md:p-10 shadow-[0_40px_100px_rgba(234,88,12,0.15)] backdrop-blur-3xl">
                 {/* Badge */}
@@ -369,9 +374,6 @@ export default async function ContactPage({
 
                 <div className="mb-8 pr-12">
                   <h2 className="text-3xl font-black tracking-tight text-slate-900">{copy.formTitle}</h2>
-                  <p className="text-slate-500 mt-2 font-medium text-sm">
-                    {locale === 'tr' ? '24 saat içinde dönüş garantisi.' : 'Response guaranteed within 24 hours.'}
-                  </p>
                 </div>
 
                 <ApplicationForm

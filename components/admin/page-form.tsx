@@ -53,7 +53,7 @@ export function PageForm({ mode, action, defaultValues }: PageFormProps) {
   const parsedData = (() => {
     try {
       return JSON.parse(dataJson) as ContentPageDefinition
-    } catch (e) {
+    } catch {
       return null
     }
   })()
@@ -209,8 +209,8 @@ export function PageForm({ mode, action, defaultValues }: PageFormProps) {
               type="button"
               onClick={() => setEditorMode('json')}
               className={`rounded-md px-3 py-1 text-xs font-semibold transition ${editorMode === 'json'
-                  ? 'bg-slate-700 text-slate-100'
-                  : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-slate-700 text-slate-100'
+                : 'text-slate-400 hover:text-slate-200'
                 }`}
             >
               JSON
@@ -225,8 +225,8 @@ export function PageForm({ mode, action, defaultValues }: PageFormProps) {
                 setEditorMode('visual')
               }}
               className={`rounded-md px-3 py-1 text-xs font-semibold transition ${editorMode === 'visual'
-                  ? 'bg-orange-500 text-slate-950'
-                  : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-orange-500 text-slate-950'
+                : 'text-slate-400 hover:text-slate-200'
                 }`}
             >
               Görsel Editör

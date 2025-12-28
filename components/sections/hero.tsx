@@ -1,11 +1,10 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { ArrowRight, Play, MapPin, Sparkles, ChevronLeft, ChevronRight, Calendar } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
+import { StaggerContainer, StaggerItem } from '@/components/ui/animate'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { Post } from '@/lib/api'
 import { useShouldReduceMotion } from '@/lib/hooks/use-reduced-motion'

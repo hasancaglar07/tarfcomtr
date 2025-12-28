@@ -4,6 +4,7 @@ import { buildPageMetadata } from '@/lib/seo'
 import { Hero } from '@/components/sections/hero'
 import { EventsCarousel } from '@/components/sections/events-carousel'
 import { FutureContribution } from '@/components/sections/future-contribution'
+import { ScrollReveal } from '@/components/ui/scroll-reveal'
 
 type StaticHeroContent = {
   eyebrow?: string
@@ -92,10 +93,10 @@ export async function generateMetadata({
   return buildPageMetadata({ locale, page: 'home', pathSegments: [] })
 }
 
-export default async function Home({ 
-  params 
-}: { 
-  params: Promise<{ locale: string }> 
+export default async function Home({
+  params
+}: {
+  params: Promise<{ locale: string }>
 }) {
   const { locale: rawLocale } = await params
   const locale = normalizeLocale(rawLocale)
@@ -121,24 +122,24 @@ export default async function Home({
   const heroContent =
     heroFromDb
       ? {
-          eyebrow: heroFromDb.eyebrow || STATIC_HERO_CONTENT[locale].eyebrow,
-          title: heroFromDb.title || STATIC_HERO_CONTENT[locale].title,
-          subtitle: heroFromDb.subtitle || STATIC_HERO_CONTENT[locale].subtitle,
-          primary_cta_label: heroFromDb.button_text || STATIC_HERO_CONTENT[locale].primary_cta_label,
-          primary_cta_href: heroFromDb.button_url || STATIC_HERO_CONTENT[locale].primary_cta_href,
-          tertiary_cta_label: STATIC_HERO_CONTENT[locale].tertiary_cta_label,
-          tertiary_cta_href: STATIC_HERO_CONTENT[locale].tertiary_cta_href,
-          background_image: heroFromDb.background_image || STATIC_HERO_CONTENT[locale].background_image,
-          stats: STATIC_HERO_CONTENT[locale].stats,
-          headlineSlides: heroFromDb.headline_slides || STATIC_HERO_CONTENT[locale].headlineSlides,
-          video_url: heroFromDb.video_url || STATIC_HERO_CONTENT[locale].video_url,
-          video_cover: heroFromDb.video_cover || heroFromDb.background_image || STATIC_HERO_CONTENT[locale].background_image,
-          video_url_2: heroFromDb.video_url_2,
-          video_cover_2: heroFromDb.video_cover_2,
-          video_url_3: heroFromDb.video_url_3,
-          video_url_4: heroFromDb.video_url_4,
-          video_url_5: heroFromDb.video_url_5,
-        }
+        eyebrow: heroFromDb.eyebrow || STATIC_HERO_CONTENT[locale].eyebrow,
+        title: heroFromDb.title || STATIC_HERO_CONTENT[locale].title,
+        subtitle: heroFromDb.subtitle || STATIC_HERO_CONTENT[locale].subtitle,
+        primary_cta_label: heroFromDb.button_text || STATIC_HERO_CONTENT[locale].primary_cta_label,
+        primary_cta_href: heroFromDb.button_url || STATIC_HERO_CONTENT[locale].primary_cta_href,
+        tertiary_cta_label: STATIC_HERO_CONTENT[locale].tertiary_cta_label,
+        tertiary_cta_href: STATIC_HERO_CONTENT[locale].tertiary_cta_href,
+        background_image: heroFromDb.background_image || STATIC_HERO_CONTENT[locale].background_image,
+        stats: STATIC_HERO_CONTENT[locale].stats,
+        headlineSlides: heroFromDb.headline_slides || STATIC_HERO_CONTENT[locale].headlineSlides,
+        video_url: heroFromDb.video_url || STATIC_HERO_CONTENT[locale].video_url,
+        video_cover: heroFromDb.video_cover || heroFromDb.background_image || STATIC_HERO_CONTENT[locale].background_image,
+        video_url_2: heroFromDb.video_url_2,
+        video_cover_2: heroFromDb.video_cover_2,
+        video_url_3: heroFromDb.video_url_3,
+        video_url_4: heroFromDb.video_url_4,
+        video_url_5: heroFromDb.video_url_5,
+      }
       : STATIC_HERO_CONTENT[locale] || STATIC_HERO_CONTENT.tr
 
   return (
@@ -154,16 +155,20 @@ export default async function Home({
           <Hero locale={locale} data={heroContent} events={data.events} />
 
           {/* Events Carousel - Aktif etkinliklerimiz ve seminerler */}
-          {(data.events && data.events.length > 0) || (data.past_events && data.past_events.length > 0) ? (
-            <EventsCarousel
-              locale={locale}
-              upcomingEvents={data.events}
-              pastEvents={data.past_events}
-            />
-          ) : null}
+          <ScrollReveal delay={0.2}>
+            {(data.events && data.events.length > 0) || (data.past_events && data.past_events.length > 0) ? (
+              <EventsCarousel
+                locale={locale}
+                upcomingEvents={data.events}
+                pastEvents={data.past_events}
+              />
+            ) : null}
+          </ScrollReveal>
 
           {/* Join CTA */}
-          <FutureContribution locale={locale} />
+          <ScrollReveal delay={0.2}>
+            <FutureContribution locale={locale} />
+          </ScrollReveal>
         </div>
       </main>
 

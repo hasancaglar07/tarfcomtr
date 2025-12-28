@@ -2,16 +2,14 @@
 
 import type { Post } from '@/lib/api'
 
-import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Calendar, MapPin, Clock, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { Animate, AnimatedCard } from '@/components/ui/animate'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 type EventPost = Post & { is_featured?: boolean | null }

@@ -1,5 +1,4 @@
 import { api } from '@/lib/api'
-import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar, MapPin, Clock3, ArrowRight } from 'lucide-react'
