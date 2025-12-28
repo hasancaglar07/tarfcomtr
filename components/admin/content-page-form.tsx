@@ -8,6 +8,7 @@ import type { PageActionState } from '@/app/admin/actions'
 import { SectionEditor } from '@/components/admin/content-section'
 import { ActionToast } from '@/components/admin/action-toast'
 import { useInvalidToast } from '@/components/admin/use-invalid-toast'
+import { RichTextEditor } from '@/components/admin/rich-text-editor'
 
 type ContentPageFormProps = {
   mode: 'create' | 'edit'
@@ -270,10 +271,9 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
           className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
           placeholder="Alt başlık"
         />
-        <textarea
+        <RichTextEditor
           value={data.hero.description || ''}
-          onChange={(e) => updateData({ hero: { ...data.hero, description: e.target.value } })}
-          className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+          onChange={(val) => updateData({ hero: { ...data.hero, description: val } })}
           placeholder="Hero açıklama"
         />
       </div>

@@ -8,6 +8,8 @@ import type { ContentCategory } from '@prisma/client'
 import type { PageActionState } from '@/app/admin/actions'
 import { ActionToast } from '@/components/admin/action-toast'
 import { useInvalidToast } from '@/components/admin/use-invalid-toast'
+import { RichTextEditor } from './rich-text-editor'
+import { ContentPageDefinition } from '@/content/content-pages'
 
 type PageFormProps = {
   mode: 'create' | 'edit'
@@ -45,6 +47,22 @@ export function PageForm({ mode, action, defaultValues }: PageFormProps) {
     title: Boolean(defaultValues.seoTitle),
     description: Boolean(defaultValues.seoDescription),
   })
+  const [dataJson, setDataJson] = useState(defaultValues.dataJson)
+  const [editorMode, setEditorMode] = useState<'json' | 'visual'>('json')
+
+  const parsedData = (() => {
+    try {
+      return JSON.parse(dataJson) as ContentPageDefinition
+    } catch (e) {
+      return null
+    }
+  })()
+
+  const updateParsedData = (updater: (prev: ContentPageDefinition) => ContentPageDefinition) => {
+    if (!parsedData) return
+    const newData = updater(parsedData)
+    setDataJson(JSON.stringify(newData, null, 2))
+  }
 
   if (state?.status === 'error') {
     // noop, render message below
@@ -151,49 +169,203 @@ export function PageForm({ mode, action, defaultValues }: PageFormProps) {
           <label className="text-sm text-slate-300" htmlFor="seoTitle">
             SEO Başlık
           </label>
-        <input
-        id="seoTitle"
-        name="seoTitle"
-        value={seoTitle}
-        onChange={(e) => {
-          setSeoDirty((prev) => ({ ...prev, title: true }))
-          setSeoTitle(e.target.value)
-        }}
-        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-        placeholder="SEO başlığı (opsiyonel)"
-      />
-      </div>
-      <div className="space-y-2">
-        <label className="text-sm text-slate-300" htmlFor="seoDescription">
-          SEO Açıklama
-        </label>
-        <input
-        id="seoDescription"
-        name="seoDescription"
-        value={seoDescription}
-        onChange={(e) => {
-          setSeoDirty((prev) => ({ ...prev, description: true }))
-          setSeoDescription(e.target.value)
-        }}
-        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-        placeholder="Kısa açıklama"
-      />
-      </div>
+          <input
+            id="seoTitle"
+            name="seoTitle"
+            value={seoTitle}
+            onChange={(e) => {
+              setSeoDirty((prev) => ({ ...prev, title: true }))
+              setSeoTitle(e.target.value)
+            }}
+            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+            placeholder="SEO başlığı (opsiyonel)"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm text-slate-300" htmlFor="seoDescription">
+            SEO Açıklama
+          </label>
+          <input
+            id="seoDescription"
+            name="seoDescription"
+            value={seoDescription}
+            onChange={(e) => {
+              setSeoDirty((prev) => ({ ...prev, description: true }))
+              setSeoDescription(e.target.value)
+            }}
+            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+            placeholder="Kısa açıklama"
+          />
+        </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="text-sm text-slate-300" htmlFor="dataJson">
-          İçerik JSON (hero, sections, cta, seo)
-        </label>
-        <textarea
-          id="dataJson"
-          name="dataJson"
-          required
-          defaultValue={defaultValues.dataJson}
-          className="min-h-[360px] w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-3 font-mono text-sm text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-        />
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold text-slate-300">
+            İçerik Editörü
+          </label>
+          <div className="flex rounded-lg border border-slate-700 bg-slate-900 p-1">
+            <button
+              type="button"
+              onClick={() => setEditorMode('json')}
+              className={`rounded-md px-3 py-1 text-xs font-semibold transition ${editorMode === 'json'
+                  ? 'bg-slate-700 text-slate-100'
+                  : 'text-slate-400 hover:text-slate-200'
+                }`}
+            >
+              JSON
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (!parsedData) {
+                  alert('JSON formatı hatalı olduğu için görsel editöre geçilemiyor.')
+                  return
+                }
+                setEditorMode('visual')
+              }}
+              className={`rounded-md px-3 py-1 text-xs font-semibold transition ${editorMode === 'visual'
+                  ? 'bg-orange-500 text-slate-950'
+                  : 'text-slate-400 hover:text-slate-200'
+                }`}
+            >
+              Görsel Editör
+            </button>
+          </div>
+        </div>
+
+        {editorMode === 'json' ? (
+          <textarea
+            id="dataJson"
+            name="dataJson"
+            required
+            value={dataJson}
+            onChange={(e) => setDataJson(e.target.value)}
+            className="min-h-[460px] w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-3 font-mono text-sm text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+          />
+        ) : (
+          <div className="space-y-8 rounded-xl border border-slate-700 bg-slate-900/50 p-6">
+            <input type="hidden" name="dataJson" value={dataJson} />
+
+            {/* Hero Section */}
+            <div className="space-y-4">
+              <h3 className="border-b border-slate-700 pb-2 text-lg font-bold text-orange-400">Hero Bölümü</h3>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1">
+                  <label className="text-xs text-slate-400 uppercase">Giriş Etiketi (Eyebrow)</label>
+                  <input
+                    value={parsedData?.hero.eyebrow || ''}
+                    onChange={(e) => updateParsedData(prev => ({ ...prev, hero: { ...prev.hero, eyebrow: e.target.value } }))}
+                    className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-orange-400"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs text-slate-400 uppercase">Hero Başlık</label>
+                  <input
+                    value={parsedData?.hero.title || ''}
+                    onChange={(e) => updateParsedData(prev => ({ ...prev, hero: { ...prev.hero, title: e.target.value } }))}
+                    className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-orange-400"
+                  />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs text-slate-400 uppercase">Açıklama Metni (Rich Text)</label>
+                <RichTextEditor
+                  value={parsedData?.hero.description || ''}
+                  onChange={(val) => updateParsedData(prev => ({ ...prev, hero: { ...prev.hero, description: val } }))}
+                  placeholder="Hero açıklamasını buraya yazın..."
+                />
+              </div>
+            </div>
+
+            {/* Content Sections */}
+            <div className="space-y-6">
+              <h3 className="border-b border-slate-700 pb-2 text-lg font-bold text-orange-400">Sayfa Bölümleri (Sections)</h3>
+              {parsedData?.sections.map((section, sIdx) => (
+                <div key={section.id || sIdx} className="rounded-lg border border-slate-700 bg-slate-950/50 p-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-slate-200">Bölüm #{sIdx + 1}: {section.title}</span>
+                    <span className="text-[10px] uppercase text-slate-500 font-mono">{section.layout || 'grid'}</span>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-1">
+                      <label className="text-xs text-slate-400 uppercase">Bölüm Başlığı</label>
+                      <input
+                        value={section.title || ''}
+                        onChange={(e) => updateParsedData(prev => {
+                          const sections = [...prev.sections]
+                          sections[sIdx] = { ...sections[sIdx], title: e.target.value }
+                          return { ...prev, sections }
+                        })}
+                        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-orange-400"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs text-slate-400 uppercase">Giriş Metni (Eyebrow)</label>
+                      <input
+                        value={section.eyebrow || ''}
+                        onChange={(e) => updateParsedData(prev => {
+                          const sections = [...prev.sections]
+                          sections[sIdx] = { ...sections[sIdx], eyebrow: e.target.value }
+                          return { ...prev, sections }
+                        })}
+                        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 outline-none focus:border-orange-400"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-slate-400 uppercase">Bölüm Açıklaması</label>
+                    <RichTextEditor
+                      value={section.description || ''}
+                      onChange={(val) => updateParsedData(prev => {
+                        const sections = [...prev.sections]
+                        sections[sIdx] = { ...sections[sIdx], description: val }
+                        return { ...prev, sections }
+                      })}
+                    />
+                  </div>
+
+                  {section.items && section.items.length > 0 && (
+                    <div className="pl-4 border-l-2 border-slate-800 space-y-4">
+                      <p className="text-xs font-semibold text-slate-500 uppercase">Alt Öğeler (Items)</p>
+                      {section.items.map((item, iIdx) => (
+                        <div key={iIdx} className="space-y-2">
+                          <input
+                            value={item.title || ''}
+                            placeholder="Öğe başlığı"
+                            onChange={(e) => updateParsedData(prev => {
+                              const sections = [...prev.sections]
+                              const items = [...(sections[sIdx].items || [])]
+                              items[iIdx] = { ...items[iIdx], title: e.target.value }
+                              sections[sIdx] = { ...sections[sIdx], items }
+                              return { ...prev, sections }
+                            })}
+                            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm text-slate-100 outline-none focus:border-orange-400"
+                          />
+                          <RichTextEditor
+                            value={item.description || ''}
+                            onChange={(val) => updateParsedData(prev => {
+                              const sections = [...prev.sections]
+                              const items = [...(sections[sIdx].items || [])]
+                              items[iIdx] = { ...items[iIdx], description: val }
+                              sections[sIdx] = { ...sections[sIdx], items }
+                              return { ...prev, sections }
+                            })}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-slate-500 italic text-center">
+              Daha fazla bölüm eklemek veya silmek için şimdilik JSON modunu kullanın.
+            </p>
+          </div>
+        )}
         <p className="text-xs text-slate-500">
-          JSON yapısı `ContentPageDefinition` formatında olmalı. Slug/kategori alanları yukarıdan alınır.
+          Slug ve Kategori alanlarını yukarıdan güncelleyebilirsiniz. İçerik yapısı `ContentPageDefinition` formatındadır.
         </p>
       </div>
 

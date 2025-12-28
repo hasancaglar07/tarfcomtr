@@ -371,7 +371,7 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
         layout
         className={cn(
           isDesktop
-            ? 'hidden lg:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 shadow-[0_30px_60px_rgba(255,138,52,0.18)] backdrop-blur-2xl'
+            ? 'hidden lg:flex items-center gap-1 rounded-full border border-white/40 bg-white/50 px-2 py-1.5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] backdrop-blur-md'
             : 'flex flex-col'
         )}
         {...(isDesktop
@@ -404,8 +404,8 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
                   className={cn(
                     'group relative isolate flex items-center gap-2 transition-all',
                     isDesktop
-                      ? 'rounded-full px-3 py-1.5 text-sm font-semibold text-foreground/80 hover:text-foreground'
-                      : 'w-full py-4 text-lg font-medium text-foreground hover:text-primary'
+                      ? 'rounded-full px-4 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-white/60'
+                      : 'w-full py-4 text-lg font-medium text-slate-800 hover:text-primary'
                   )}
                   onClick={() => {
                     if (!isDesktop) {
@@ -423,7 +423,7 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
                   {isDesktop && hoveredNav === item.label && (
                     <motion.span
                       layoutId="navHighlight"
-                      className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_top,_hsl(var(--primary)_/_0.32),_hsl(var(--primary)_/_0.12))] shadow-[0_15px_35px_rgba(255,138,52,0.35)]"
+                      className="absolute inset-0 rounded-full bg-white/80 shadow-sm"
                       transition={{ type: 'spring', stiffness: 350, damping: 32 }}
                     />
                   )}
@@ -464,8 +464,8 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
                 className={cn(
                   'group inline-flex w-full items-center justify-between gap-2 transition-all',
                   isDesktop
-                    ? 'relative isolate rounded-full px-3 py-1.5 text-sm font-semibold text-foreground/80 hover:text-foreground'
-                    : 'w-full py-4 text-lg font-medium text-foreground hover:text-primary'
+                    ? 'relative isolate rounded-full px-4 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-white/60'
+                    : 'w-full py-4 text-lg font-medium text-slate-800 hover:text-primary'
                 )}
                 onClick={() => {
                   if (isDesktop) return
@@ -482,7 +482,7 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
                 {isDesktop && hoveredNav === item.label && (
                   <motion.span
                     layoutId="navHighlight"
-                    className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_top,_hsl(var(--primary)_/_0.32),_hsl(var(--primary)_/_0.12))] shadow-[0_15px_35px_rgba(255,138,52,0.35)]"
+                    className="absolute inset-0 rounded-full bg-white/80 shadow-sm"
                     transition={{ type: 'spring', stiffness: 350, damping: 32 }}
                   />
                 )}
@@ -579,7 +579,7 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="absolute right-0 top-0 bottom-0 h-full w-full max-w-sm border-l border-white/10 bg-background shadow-2xl flex flex-col overflow-hidden"
+            className="absolute right-0 top-0 bottom-0 h-full w-full max-w-sm border-l border-white/20 bg-white/95 backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden"
             role="dialog"
             aria-modal="true"
             aria-label={
@@ -599,7 +599,7 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
                 variant="ghost"
                 size="icon"
                 onClick={closeMobileMenu}
-                className="hover:bg-white/5 rounded-full"
+                className="hover:bg-black/5 rounded-full text-slate-800"
               >
                 <X className="h-6 w-6" />
               </Button>
@@ -640,8 +640,11 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
 
               {/* Action Button */}
               <Link href={`/${locale}/contact`} onClick={closeMobileMenu} className="block">
-                <Button className="w-full h-14 rounded-2xl text-base font-semibold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 transition-all">
-                  {locale === 'tr' ? 'Başvuru Yap' : locale === 'ar' ? 'قدّم الآن' : 'Send Application'}
+                <Button className="group relative w-full h-14 rounded-2xl text-base font-bold text-white shadow-lg overflow-hidden bg-gradient-to-r from-amber-500 to-orange-600 border-0">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:animate-shimmer" />
+                  <span className="relative flex items-center justify-center gap-2">
+                    {locale === 'tr' ? 'Başvuru Yap' : locale === 'ar' ? 'قدّم الآن' : 'Send Application'}
+                  </span>
                 </Button>
               </Link>
             </div>
@@ -653,13 +656,10 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
 
   return (
     <>
-      <header className="relative sticky top-0 z-50 w-full overflow-visible border-b border-white/10 bg-background/75 backdrop-blur-2xl supports-[backdrop-filter]:bg-background/60">
+      <header className="fixed left-0 top-0 z-50 w-full overflow-visible border-b border-white/40 bg-white/80 backdrop-blur-3xl shadow-[0_4px_30px_rgba(0,0,0,0.03)] supports-[backdrop-filter]:bg-white/60">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary)_/_0.8)] to-transparent opacity-80" />
-          <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--primary)_/_0.5)] to-transparent opacity-60" />
-          <div className="absolute left-1/2 top-[-35%] h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.2),_transparent_65%)] blur-[140px] hidden lg:block" />
-          <div className="absolute right-0 top-[-5%] h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.16),_transparent_60%)] blur-[150px] hidden lg:block" />
-          <div className="absolute left-0 bottom-[-15%] h-[300px] w-[300px] rounded-full bg-[radial-gradient(circle,_hsl(var(--primary)_/_0.1),_transparent_70%)] blur-[160px] hidden lg:block" />
+          {/* Subtle Ambient Glow */}
+          <div className="absolute left-1/2 top-0 h-[200px] w-[600px] -translate-x-1/2 bg-amber-500/5 blur-[100px]" />
         </div>
 
         <div className="relative z-10">
@@ -687,26 +687,19 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
               <Link href={`/${locale}/contact`} className="hidden lg:inline-flex">
                 <Button
                   size="lg"
-                  className="group relative overflow-hidden rounded-full border border-white/15 bg-[hsl(var(--primary))] px-6 py-5 text-base font-semibold text-primary-foreground shadow-[0_25px_60px_rgba(255,138,52,0.45)] transition-all hover:-translate-y-0.5 hover:shadow-[0_30px_70px_rgba(255,138,52,0.5)]"
+                  className="group relative overflow-hidden rounded-full px-8 py-6 text-base font-bold text-white shadow-[0_10px_30px_rgba(249,115,22,0.3)] transition-all hover:scale-105 hover:shadow-[0_20px_50px_rgba(249,115,22,0.4)] bg-gradient-to-r from-amber-500 to-orange-600 border-0"
                 >
-                  <span className="relative z-10">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:animate-shimmer" />
+                  <span className="relative z-10 flex items-center gap-2">
                     {locale === 'tr' ? 'Başvuru Yap' : locale === 'ar' ? 'قدّم الآن' : 'Send Application'}
                   </span>
-                  <span className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.55),_transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-80" />
-                  <motion.span
-                    aria-hidden
-                    initial={{ opacity: 0.25 }}
-                    animate={{ opacity: [0.25, 0.4, 0.25], scale: [1, 1.05, 1] }}
-                    transition={{ duration: 4, repeat: Infinity }}
-                    className="absolute -inset-6 rounded-full bg-[hsl(var(--primary)_/_0.55)] blur-3xl"
-                  />
                 </Button>
               </Link>
 
               <Button
                 size="icon"
                 variant="outline"
-                className="lg:hidden border-white/20 bg-white/5 text-foreground"
+                className="lg:hidden border-transparent bg-transparent hover:bg-black/5 text-slate-800"
                 aria-label={
                   locale === 'tr'
                     ? 'Mobil menüyü aç'

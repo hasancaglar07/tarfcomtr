@@ -229,181 +229,213 @@ export function Hero({ locale, data, events }: HeroProps) {
   return (
     <>
       <section className="relative overflow-hidden">
-        <div className="container relative z-10 py-6 lg:pt-6 lg:pb-20">
-          <div className="grid items-start gap-8 lg:gap-12 lg:grid-cols-[1.05fr_0.95fr]">
-            <StaggerContainer className="min-w-0 space-y-6 lg:space-y-8">
-              <StaggerItem>
-                <div className="relative max-w-2xl mx-auto lg:mx-0">
-                  <div className="relative text-center lg:text-left">
+        <div className="container relative z-10 pt-24 pb-10 lg:pt-28 lg:pb-20">
+          <StaggerContainer>
+            <StaggerItem>
+              {/* Ambient Background Orbs */}
+              <div className="absolute inset-0 z-0 pointer-events-none">
+                <motion.div
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 90, 0],
+                    opacity: [0.3, 0.5, 0.3]
+                  }}
+                  transition={{
+                    duration: 20,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                  className="absolute -top-[20%] -left-[10%] w-[70vh] h-[70vh] rounded-full bg-primary/20 blur-[120px]"
+                />
+                <motion.div
+                  animate={{
+                    scale: [1.2, 1, 1.2],
+                    rotate: [0, -90, 0],
+                    opacity: [0.2, 0.4, 0.2]
+                  }}
+                  transition={{
+                    duration: 25,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                  className="absolute -bottom-[20%] -right-[10%] w-[60vh] h-[60vh] rounded-full bg-amber-500/10 blur-[100px]"
+                />
+              </div>
+
+              {/* Grand Unified Hero Card - with Spotlight Effect */}
+              <div
+                className="relative z-10 overflow-hidden rounded-[32px] md:rounded-[48px] border border-white/40 bg-gradient-to-br from-white/80 via-white/50 to-white/30 p-2 shadow-[0_40px_100px_rgba(15,23,42,0.1),0_20px_50px_rgba(15,23,42,0.05),inset_0_0_0_1px_rgba(255,255,255,0.5)] backdrop-blur-3xl group/card"
+                onMouseMove={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                  e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                }}
+              >
+                {/* Spotlight Overlay */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{
+                    background: 'radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.4), transparent 40%)'
+                  }}
+                />
+                {/* Noise Texture */}
+                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
+
+                {/* Decorative Shine */}
+                <div className="absolute -top-[50%] -left-[50%] w-[200%] h-[200%] bg-gradient-to-br from-transparent via-white/20 to-transparent rotate-45 pointer-events-none" />
+
+                <div className="relative z-10 grid gap-8 lg:grid-cols-2 lg:gap-12 p-6 sm:p-10 lg:p-14 items-center">
+
+                  {/* Left Side: Content */}
+                  <div className="flex flex-col gap-6 sm:gap-8 text-center lg:text-left h-[420px] sm:h-[450px] lg:h-[600px] justify-center">
                     <AnimatePresence mode="wait" initial={false}>
                       <motion.div
                         key={`${headlineIndex}-${activeHeadline?.title}`}
-                        className="flex flex-col gap-4 lg:gap-5"
-                        initial={
-                          shouldReduceHeadlineMotion
-                            ? { opacity: 1, y: 0 }
-                            : { opacity: 0, y: 14 }
-                        }
+                        className="flex flex-col gap-6"
+                        initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={
-                          shouldReduceHeadlineMotion
-                            ? { opacity: 1, y: 0 }
-                            : { opacity: 0, y: -10 }
-                        }
-                        transition={{ duration: shouldReduceHeadlineMotion ? 0 : 0.6, ease: 'easeOut' }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.4 }}
                       >
-                        {/* Premium Headline Container */}
-                        <div className="relative">
-                          {/* Animated Gradient Background */}
-                          <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-r from-primary/20 via-amber-500/20 to-primary/20 opacity-0 blur-2xl transition-opacity duration-700 group-hover:opacity-100" />
-
-                          {/* Glassmorphism Card */}
-                          <div className="relative rounded-[20px] sm:rounded-[28px] border border-white/20 bg-gradient-to-br from-white/40 via-white/30 to-amber-50/40 p-4 sm:p-6 shadow-[0_20px_70px_rgba(251,146,60,0.15)] backdrop-blur-xl lg:p-8">
-                            {/* Shimmer Effect */}
-                            <div className="absolute inset-0 overflow-hidden rounded-[28px]">
-                              <div className="absolute -inset-[100%] animate-[shimmer_3s_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-                            </div>
-
-                            {/* Inner Gradient Border */}
-                            <div className="absolute inset-[1px] rounded-[27px] bg-gradient-to-br from-white/60 to-transparent pointer-events-none" />
-
-                            {/* Content */}
-                            <div className="relative z-10 space-y-3 sm:space-y-4">
-                              {/* Title with Premium Styling */}
-                              <h1 className="text-2xl font-bold leading-[1.15] tracking-[-0.02em] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[62px] [text-shadow:_0_1px_20px_rgb(251_146_60_/_15%)]">
-                                {activeHeadline?.title || content.title || defaultContent.en.title}
-                              </h1>
-
-                              {/* Subtitle with Enhanced Styling */}
-                              <div className="relative inline-block">
-                                <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-primary/10 to-amber-400/10 blur-lg" />
-                                <p className="relative text-sm font-medium text-slate-700/95 leading-relaxed sm:text-base lg:text-lg lg:max-w-[34rem] [text-shadow:_0_1px_12px_rgb(255_255_255_/_80%)]">
-                                  {activeHeadline?.subtitle || content.subtitle || defaultContent.en.subtitle}
-                                </p>
-                              </div>
-
-                              {/* Headline Slider Dots - Inside Card */}
-                              {headlineSlides.length > 1 && (
-                                <div className="flex justify-center gap-2 pt-2 lg:justify-start" aria-hidden="true">
-                                  {headlineSlides.map((_, index) => (
-                                    <span
-                                      key={`headline-dot-${index}`}
-                                      className={`h-1.5 w-8 rounded-full transition ${index === headlineIndex ? 'bg-primary' : 'bg-slate-300'
-                                        }`}
-                                    />
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Decorative Corner Elements */}
-                            <div className="absolute top-3 right-3 h-20 w-20 rounded-full bg-gradient-to-br from-primary/20 to-amber-400/20 blur-2xl" />
-                            <div className="absolute bottom-3 left-3 h-16 w-16 rounded-full bg-gradient-to-tr from-amber-400/20 to-primary/20 blur-2xl" />
+                        <div className="space-y-6">
+                          {/* Premium Badge */}
+                          <div className="flex justify-center lg:justify-start">
+                            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-bold uppercase tracking-widest text-primary shadow-[0_2px_10px_rgba(249,115,22,0.1)] backdrop-blur-md">
+                              <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                              </span>
+                              {locale === 'tr' ? 'Öne Çıkan' : locale === 'ar' ? 'متميز' : 'Featured'}
+                            </span>
                           </div>
+
+                          {/* Title */}
+                          <h1 className="text-4xl font-black leading-[1.1] tracking-tight bg-[linear-gradient(110deg,#0f172a,45%,#334155,55%,#0f172a)] bg-[length:200%_100%] animate-text-shimmer bg-clip-text text-transparent sm:text-5xl lg:text-6xl xl:text-[4.5rem] filter drop-shadow-sm">
+                            {activeHeadline?.title || content.title || defaultContent.en.title}
+                          </h1>
+
+                          {/* Subtitle - Dynamic Sizing */}
+                          {(() => {
+                            const subt = activeHeadline?.subtitle || content.subtitle || defaultContent.en.subtitle || '';
+                            const len = subt.length;
+                            const sizeClass = len > 300
+                              ? 'text-xs sm:text-sm lg:text-base'
+                              : len > 150
+                                ? 'text-sm sm:text-base lg:text-lg'
+                                : 'text-base sm:text-lg lg:text-xl';
+
+                            return (
+                              <p className={`${sizeClass} font-medium text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0`}>
+                                {subt}
+                              </p>
+                            );
+                          })()}
+                        </div>
+
+                        {/* Action Bar */}
+                        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-2">
+
+
+                          {headlineSlides.length > 1 && (
+                            <div className="flex gap-2" aria-hidden="true">
+                              {headlineSlides.map((_, index) => (
+                                <button
+                                  key={`headline-dot-${index}`}
+                                  onClick={() => setHeadlineIndex(index)}
+                                  className={`h-2 rounded-full transition-all duration-500 ${index === headlineIndex ? 'w-8 bg-primary' : 'w-2 bg-slate-300'
+                                    }`}
+                                />
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </motion.div>
                     </AnimatePresence>
                   </div>
-                </div>
-              </StaggerItem>
-            </StaggerContainer>
 
-            <Animate variant="slideInRight">
-              <div className="relative">
-                <div className="absolute -inset-6 hidden rounded-[40px] bg-gradient-to-tr from-primary/30 to-amber-200/30 blur-2xl lg:block" />
-                <div className="relative rounded-[20px] sm:rounded-[32px] border border-border bg-card/80 p-3 sm:p-6 shadow-2xl backdrop-blur">
-                  <div className="rounded-[16px] sm:rounded-[26px] border border-border/70 bg-muted/30 p-2 sm:p-3">
-                    <div className="relative aspect-video sm:aspect-[4/3] w-full overflow-hidden rounded-[12px] sm:rounded-[22px] bg-primary/10">
-                      {heroVideoPlaying && heroVideoId ? (
-                        <iframe
-                          className="h-full w-full"
-                          src={`https://www.youtube.com/embed/${heroVideoId}?autoplay=1&rel=0&modestbranding=1`}
-                          title={currentHeroVideo?.title || 'Hero video'}
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
-                      ) : (
-                        <>
-                          {heroVideoCover ? (
-                            <Image src={heroVideoCover} alt={currentHeroVideo?.title || 'Hero visual'} fill className="object-cover" />
-                          ) : (
-                            <div className="absolute inset-0 flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 via-amber-50 to-white">
-                              <Sparkles className="h-16 w-16 text-primary" />
-                            </div>
-                          )}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/20 to-transparent" />
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            {heroVideoId ? (
-                              <button
-                                type="button"
-                                onClick={() => setHeroVideoPlaying(true)}
-                                className="rounded-full bg-white/90 px-8 py-3 text-sm font-semibold uppercase tracking-[0.35em] text-primary shadow-2xl transition hover:bg-white"
-                              >
-                                <span className="flex items-center gap-2">
-                                  <Play className="h-5 w-5" />
-                                  {locale === 'tr' ? 'Oynat' : locale === 'ar' ? 'تشغيل' : 'Play'}
-                                </span>
-                              </button>
+                  {/* Right Side: Video Player (Integrated) */}
+                  <div className="relative">
+                    <div className="relative overflow-hidden rounded-[32px] bg-slate-900 shadow-2xl ring-1 ring-white/10 group/video aspect-video">
+                      <div className="absolute inset-0 z-0">
+                        {heroVideoPlaying && heroVideoId ? (
+                          <iframe
+                            className="h-full w-full"
+                            src={`https://www.youtube.com/embed/${heroVideoId}?autoplay=1&rel=0&modestbranding=1`}
+                            title={currentHeroVideo?.title || 'Hero video'}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        ) : (
+                          <>
+                            {heroVideoCover ? (
+                              <Image src={heroVideoCover} alt={currentHeroVideo?.title || 'Hero visual'} fill className="object-cover transition-transform duration-700 group-hover/video:scale-105" />
                             ) : (
-                              <Link href={heroVideoLink} target="_blank" rel="noopener noreferrer">
-                                <Button size="lg" className="rounded-full bg-white/90 text-primary hover:bg-white">
-                                  <Play className="mr-2 h-5 w-5" />
-                                  {locale === 'tr' ? 'Oynat' : locale === 'ar' ? 'تشغيل' : 'Play'}
-                                </Button>
-                              </Link>
+                              <div className="absolute inset-0 flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
+                                <Sparkles className="h-16 w-16 text-white/20" />
+                              </div>
                             )}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="mt-3 sm:mt-6 flex flex-col gap-4 sm:gap-6">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm sm:text-lg font-semibold text-foreground leading-snug line-clamp-2">
-                          {currentHeroVideo?.title}
-                        </p>
+                            <div className="absolute inset-0 bg-black/20 group-hover/video:bg-black/10 transition-colors duration-500" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              {heroVideoId ? (
+                                <button
+                                  type="button"
+                                  onClick={() => setHeroVideoPlaying(true)}
+                                  className="group/play relative flex h-20 w-20 items-center justify-center rounded-full bg-white/10 backdrop-blur-md transition-all hover:scale-110 hover:bg-white/20"
+                                >
+                                  <div className="absolute inset-0 rounded-full border border-white/30 animate-[ping_2s_ease-in-out_infinite]" />
+                                  <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-white text-primary shadow-lg">
+                                    <Play className="h-6 w-6 ml-1 fill-current" />
+                                  </div>
+                                </button>
+                              ) : (
+                                <Link href={heroVideoLink} target="_blank" rel="noopener noreferrer">
+                                  <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-white text-primary shadow-lg transition-transform hover:scale-110">
+                                    <Play className="h-6 w-6 ml-1 fill-current" />
+                                  </div>
+                                </Link>
+                              )}
+                            </div>
+                          </>
+                        )}
                       </div>
+                    </div>
+
+                    {/* Unique Video Controls / Title */}
+                    <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
+                      <div className="flex-1 min-w-0 text-center sm:text-left w-full sm:w-auto">
+                        <h3 className="text-sm font-bold text-slate-800 truncate px-4 sm:px-0">
+                          {currentHeroVideo?.title}
+                        </h3>
+                        <div className="mt-2 flex gap-1 justify-center sm:justify-start">
+                          <span className="h-1 w-12 rounded-full bg-primary/20">
+                            <span className="block h-full w-2/3 bg-primary rounded-full" />
+                          </span>
+                        </div>
+                      </div>
+
                       {hasMultipleHeroVideos && (
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                           <button
-                            type="button"
                             onClick={() => setHeroVideoIndex((prev) => (prev - 1 + heroVideos.length) % heroVideos.length)}
-                            className="rounded-full border border-border/60 bg-background/70 p-2 text-muted-foreground transition hover:text-primary"
-                            aria-label="Önceki video"
+                            className="p-2 rounded-full hover:bg-slate-100/50 text-slate-500 hover:text-primary transition-colors"
                           >
-                            <ChevronLeft className="h-4 w-4" />
+                            <ChevronLeft className="h-5 w-5" />
                           </button>
                           <button
-                            type="button"
                             onClick={() => setHeroVideoIndex((prev) => (prev + 1) % heroVideos.length)}
-                            className="rounded-full border border-border/60 bg-background/70 p-2 text-muted-foreground transition hover:text-primary"
-                            aria-label="Sonraki video"
+                            className="p-2 rounded-full hover:bg-slate-100/50 text-slate-500 hover:text-primary transition-colors"
                           >
-                            <ChevronRight className="h-4 w-4" />
+                            <ChevronRight className="h-5 w-5" />
                           </button>
-                          <div className="hidden gap-2 md:flex">
-                            {heroVideos.map((video, index) => (
-                              <button
-                                key={video.id}
-                                type="button"
-                                onClick={() => setHeroVideoIndex(index)}
-                                className={`h-1.5 w-6 rounded-full transition ${index === heroVideoIndex ? 'bg-primary' : 'bg-border hover:bg-primary/60'
-                                  }`}
-                                aria-label={`Video ${index + 1}`}
-                              />
-                            ))}
-                          </div>
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
               </div>
-            </Animate>
-          </div>
+            </StaggerItem>
+          </StaggerContainer>
         </div>
       </section>
       <div className="mt-6 lg:-mt-8">

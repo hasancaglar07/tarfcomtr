@@ -257,124 +257,123 @@ export default async function ContactPage({
   const showPhone = contactPhone.length > 0
 
   return (
-    <>
-      <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f6fbff] via-white to-[#eef2ff] text-slate-900">
-        <div className="pointer-events-none absolute inset-0">
-          <div
-            className="absolute inset-0 bg-[url('/assets/2112.jpg')] bg-cover bg-center bg-no-repeat opacity-25 mix-blend-soft-light"
-            style={{ transform: 'scale(1.1)' }}
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-[#f6fbff]/85 to-white" />
-          <div
-            className="absolute -top-24 left-8 h-72 w-72 rounded-full bg-primary/35 blur-3xl opacity-70 animate-[spin_30s_linear_infinite]"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute bottom-0 right-[-10%] h-[460px] w-[460px] rounded-full bg-emerald-200/60 blur-[150px] opacity-80 animate-pulse"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute top-1/3 right-1/4 h-32 w-32 rounded-full border border-white/60 opacity-50 animate-spin"
-            aria-hidden="true"
-          />
-        </div>
-        <section className="relative py-24">
-          <div className="container space-y-16">
-            <div className="grid gap-12 lg:grid-cols-[1.1fr,0.9fr]">
-              <div className="space-y-8">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/80 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-primary shadow-sm backdrop-blur-sm">
-                  <span className="h-2 w-2 rounded-full bg-primary/70 animate-ping" aria-hidden="true" />
+    <main className="relative min-h-screen overflow-hidden">
+      {/* Global Background Pattern */}
+      <div
+        className="fixed inset-0 z-0 opacity-90 pointer-events-none bg-amber-pattern"
+        aria-hidden="true"
+      />
+
+      <section className="relative z-10 pt-32 lg:pt-40 pb-20">
+        <div className="container">
+          <div className="grid lg:grid-cols-[1fr,1.1fr] gap-12 lg:gap-24 items-start">
+
+            {/* Left Column: Hero Content & Contact Info */}
+            <div className="space-y-12">
+              {/* Hero Text Area */}
+              <div className="space-y-6 relative">
+                <div className="absolute -left-20 -top-20 h-[300px] w-[300px] rounded-full bg-primary/10 blur-[80px] pointer-events-none" />
+
+                <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary shadow-sm backdrop-blur-md">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                  </span>
                   {copy.heroEyebrow}
                 </div>
-                <div className="space-y-4 text-slate-700">
-                  <h1 className="text-4xl font-semibold tracking-tight text-slate-900 md:text-5xl">{copy.heroTitle}</h1>
-                  <p className="text-lg text-slate-600">{copy.heroSubtitle}</p>
-                  <p className="text-slate-500">{copy.heroBody}</p>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-3xl border border-white/70 bg-white/80 p-5 shadow-lg backdrop-blur transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-2xl">
-                    <p className="text-xs uppercase tracking-[0.35em] text-primary/80">{copy.formTitle}</p>
-                    <span className="text-sm text-slate-500">{copy.heroSubtitle}</span>
-                  </div>
-                  <div className="rounded-3xl border border-white/70 bg-white/80 p-5 shadow-lg backdrop-blur transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-2xl">
-                    <p className="text-xs uppercase tracking-[0.35em] text-primary/80">{copy.mapTitle}</p>
-                    <p className="mt-2 text-lg font-semibold text-slate-900 whitespace-pre-line">{contactAddress}</p>
-                    <span className="text-sm text-slate-500">{copy.mapBody}</span>
-                  </div>
-                </div>
-                <Card className="relative overflow-hidden border-white/70 bg-white/90 p-8 shadow-[0_30px_90px_rgba(15,23,42,0.12)] backdrop-blur">
-                  <div
-                    className="absolute -top-20 -right-10 h-48 w-48 rounded-full bg-primary/10 blur-3xl"
-                    aria-hidden="true"
-                  />
-                  <div
-                    className="absolute -bottom-16 left-0 h-48 w-48 rounded-full bg-emerald-100/80 blur-3xl"
-                    aria-hidden="true"
-                  />
-                  <div className="relative grid gap-6 md:grid-cols-2">
-                    <div className="group flex items-start gap-4 rounded-2xl border border-white/70 bg-white/90 p-4 shadow-sm transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                        <Mail className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{copy.emailLabel}</p>
-                        <a href={`mailto:${contactEmail}`} className="text-lg font-semibold text-slate-900">
-                          {contactEmail}
-                        </a>
-                      </div>
-                    </div>
-                    {showPhone && (
-                      <div className="group flex items-start gap-4 rounded-2xl border border-white/70 bg-white/90 p-4 shadow-sm transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-                          <Phone className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{copy.phoneLabel}</p>
-                          <a href={`tel:${sanitizedPhone}`} className="text-lg font-semibold text-slate-900">
-                            {contactPhone}
-                          </a>
-                        </div>
-                      </div>
-                    )}
-                    <div className="md:col-span-2 flex gap-4 rounded-2xl border border-dashed border-slate-200 bg-white/85 p-5 shadow-sm backdrop-blur">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-50 text-cyan-600">
-                        <MapPin className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{copy.addressLabel}</p>
-                        <p className="text-lg font-semibold text-slate-900 whitespace-pre-line">{contactAddress}</p>
-                      </div>
-                    </div>
-                    <div className="md:col-span-2 flex flex-wrap items-center gap-3">
-                      <span className="rounded-full border border-dashed border-slate-200/80 px-4 py-2 text-xs font-medium text-slate-500">
-                        {copy.plusCodeLabel}: {plusCode}
-                      </span>
-                      <a
-                        href={mapUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-2 rounded-full bg-primary/90 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-primary"
-                      >
-                        {copy.directions}
-                        <ArrowUpRight className="h-4 w-4" />
-                      </a>
-                    </div>
-                  </div>
-                </Card>
+
+                <h1 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl leading-[1.1]">
+                  {copy.heroTitle}
+                </h1>
+                <p className="text-xl font-medium text-slate-600 leading-relaxed">
+                  {copy.heroSubtitle}
+                </p>
+                <p className="text-lg text-slate-500 leading-relaxed font-normal">
+                  {copy.heroBody}
+                </p>
               </div>
-              <Card className="relative overflow-hidden border-white/70 bg-white/95 p-8 shadow-[0_40px_120px_rgba(67,89,113,0.18)] backdrop-blur">
-                <div
-                  className="absolute -top-16 right-4 h-44 w-44 rounded-full bg-primary/10 blur-3xl"
-                  aria-hidden="true"
-                />
-                <div
-                  className="absolute -bottom-12 left-12 h-36 w-36 rounded-full bg-amber-100/70 blur-2xl"
-                  aria-hidden="true"
-                />
-                <div className="relative space-y-1">
-                  <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{copy.formTitle}</p>
+
+              {/* Contact Cards Grid */}
+              <div className="space-y-4">
+                {/* Email Card */}
+                <a href={`mailto:${contactEmail}`} className="group flex items-center gap-5 rounded-[24px] border border-white/60 bg-white/40 p-5 shadow-sm transition-all hover:bg-white/80 hover:border-white hover:shadow-lg hover:-translate-y-1 backdrop-blur-md">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-50 text-orange-600 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                    <Mail className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-0.5">{copy.emailLabel}</p>
+                    <p className="text-base font-bold text-slate-900 break-all">{contactEmail}</p>
+                  </div>
+                </a>
+
+                {/* Phone Card */}
+                {showPhone && (
+                  <a href={`tel:${sanitizedPhone}`} className="group flex items-center gap-5 rounded-[24px] border border-white/60 bg-white/40 p-5 shadow-sm transition-all hover:bg-white/80 hover:border-white hover:shadow-lg hover:-translate-y-1 backdrop-blur-md">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                      <Phone className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-0.5">{copy.phoneLabel}</p>
+                      <p className="text-base font-bold text-slate-900">{contactPhone}</p>
+                    </div>
+                  </a>
+                )}
+
+                {/* Address Card */}
+                <div className="group flex items-start gap-5 rounded-[24px] border border-white/60 bg-white/40 p-5 shadow-sm transition-all hover:bg-white/80 hover:border-white hover:shadow-lg backdrop-blur-md">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                    <MapPin className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-0.5">{copy.addressLabel}</p>
+                    <p className="text-base font-bold text-slate-900 leading-snug whitespace-pre-line">{contactAddress}</p>
+                  </div>
                 </div>
+              </div>
+
+              {/* Map Link Card (Compact) */}
+              <div className="inline-flex flex-wrap items-center gap-4 p-1">
+                <a
+                  href={mapUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-primary hover:shadow-orange-500/25"
+                >
+                  {copy.directions}
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
+                <div className="bg-white/50 px-4 py-2 rounded-full border border-white/60 text-xs font-bold text-slate-500 uppercase tracking-wider backdrop-blur-sm">
+                  {copy.plusCodeLabel}: <span className="text-slate-800">{plusCode}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Application Form (Prominent) */}
+            <div className="relative isolate lg:sticky lg:top-32">
+
+              {/* Animated Attention Grabbing Border/Glow */}
+              <div className="absolute -inset-[3px] rounded-[52px] bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 opacity-30 blur-sm animate-pulse pointer-events-none" />
+              <div className="absolute -inset-1 rounded-[52px] bg-gradient-to-br from-amber-400/20 to-orange-600/20 blur-xl pointer-events-none" />
+
+              <div className="relative rounded-[48px] border border-white/80 bg-white/90 p-8 md:p-10 shadow-[0_40px_100px_rgba(234,88,12,0.15)] backdrop-blur-3xl">
+                {/* Badge */}
+                <div className="absolute top-8 right-8 hidden sm:block">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-orange-700 border border-orange-200">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                    </span>
+                    {locale === 'tr' ? 'Hızlı Başvuru' : 'Fast Track'}
+                  </span>
+                </div>
+
+                <div className="mb-8 pr-12">
+                  <h2 className="text-3xl font-black tracking-tight text-slate-900">{copy.formTitle}</h2>
+                  <p className="text-slate-500 mt-2 font-medium text-sm">
+                    {locale === 'tr' ? '24 saat içinde dönüş garantisi.' : 'Response guaranteed within 24 hours.'}
+                  </p>
+                </div>
+
                 <ApplicationForm
                   copy={{
                     typeLabel: copy.typeLabel,
@@ -420,43 +419,12 @@ export default async function ContactPage({
                     kvkkLink: `/${locale}/kvkk-aydinlatma-metni`,
                   }}
                 />
-              </Card>
+              </div>
             </div>
 
-            <Card className="relative overflow-hidden border-white/70 bg-white/90 p-8 shadow-[0_40px_120px_rgba(67,89,113,0.18)] backdrop-blur">
-              <div
-                className="absolute -left-16 top-0 h-48 w-48 rounded-full bg-primary/15 blur-3xl"
-                aria-hidden="true"
-              />
-              <div
-                className="absolute -right-10 bottom-0 h-64 w-64 rounded-full bg-emerald-200/30 blur-[120px] opacity-80 animate-[spin_40s_linear_infinite]"
-                aria-hidden="true"
-              />
-              <div className="relative flex flex-wrap items-center gap-6">
-                <div className="space-y-3 min-w-[260px]">
-                  <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{copy.mapTitle}</p>
-                  <p className="text-2xl font-semibold text-slate-900 whitespace-pre-line">{contactAddress}</p>
-                  <p className="text-sm text-slate-500">{copy.mapBody}</p>
-                </div>
-                <div className="flex flex-wrap items-center gap-4">
-                  <a
-                    href={mapUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-primary/90"
-                  >
-                    {copy.directions}
-                    <ArrowUpRight className="h-4 w-4" />
-                  </a>
-                  <span className="rounded-full border border-dashed border-slate-200/80 px-4 py-2 text-xs font-medium text-slate-500">
-                    {plusCode}
-                  </span>
-                </div>
-              </div>
-            </Card>
           </div>
-        </section>
-      </main>
-    </>
+        </div>
+      </section>
+    </main>
   )
 }

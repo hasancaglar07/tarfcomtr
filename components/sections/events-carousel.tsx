@@ -6,12 +6,12 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Calendar, MapPin, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Calendar, MapPin, Clock, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { Animate, AnimatedCard } from '@/components/ui/animate'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 type EventPost = Post & { is_featured?: boolean | null }
@@ -172,33 +172,6 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
                   : content.subtitle}
               </p>
             </Animate>
-
-            {showNavigation && (
-              <Animate variant="fadeIn" delay={0.15}>
-                <div className="mt-6 flex justify-center gap-2 md:absolute md:right-0 md:top-1/2 md:mt-0 md:-translate-y-1/2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={scrollLeft}
-                    disabled={currentIndex === 0}
-                    className="rounded-full shadow-lg disabled:opacity-50"
-                    aria-label={locale === 'tr' ? 'Önceki' : locale === 'ar' ? 'السابق' : 'Previous'}
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={scrollRight}
-                    disabled={currentIndex >= maxIndex}
-                    className="rounded-full shadow-lg disabled:opacity-50"
-                    aria-label={locale === 'tr' ? 'Sonraki' : locale === 'ar' ? 'التالي' : 'Next'}
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </Button>
-                </div>
-              </Animate>
-            )}
           </div>
 
           {/* Tabs under title (centered) */}
@@ -227,12 +200,40 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
             </TabsList>
           </div>
 
-          {/* Carousel */}
+          {/* Carousel with Side Navigation */}
           <Animate variant="fadeIn" delay={0.3}>
-            <div className="relative">
+            <div className="relative px-0 md:px-12 group/carousel">
+              {/* Desktop Navigation Arrows on Sides */}
+              {showNavigation && (
+                <>
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={scrollLeft}
+                      disabled={currentIndex === 0}
+                      className="rounded-full h-12 w-12 shadow-xl bg-background/95 border-primary/20 hover:scale-110 hover:bg-primary hover:text-white transition-all disabled:opacity-0 disabled:pointer-events-none"
+                    >
+                      <ChevronLeft className="h-6 w-6" />
+                    </Button>
+                  </div>
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={scrollRight}
+                      disabled={currentIndex >= maxIndex}
+                      className="rounded-full h-12 w-12 shadow-xl bg-background/95 border-primary/20 hover:scale-110 hover:bg-primary hover:text-white transition-all disabled:opacity-0 disabled:pointer-events-none"
+                    >
+                      <ChevronRight className="h-6 w-6" />
+                    </Button>
+                  </div>
+                </>
+              )}
+
               <div
                 ref={scrollContainerRef}
-                className="flex overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+                className="flex overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0"
                 style={{
                   gap: `${sliderGap}px`,
                   WebkitOverflowScrolling: 'touch',
@@ -253,14 +254,17 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
                       key={event.id}
                       className="snap-start flex-shrink-0"
                       style={{
-                        width: `calc((100% - ${(itemsToShow - 1) * sliderGap}px) / ${itemsToShow})`,
-                        minWidth: itemsToShow === 1 ? '85%' : undefined
+                        width: itemsToShow === 1
+                          ? 'calc(100vw - 64px)'
+                          : `calc((100% - ${(itemsToShow - 1) * sliderGap}px) / ${itemsToShow})`,
+                        minWidth: itemsToShow === 1 ? '260px' : undefined
                       }}
                     >
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.08 }}
+                        className="h-full"
                       >
                         <EventCard event={event} content={content} locale={locale} />
                       </motion.div>
@@ -268,6 +272,30 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
                   ))
                 )}
               </div>
+
+              {/* Mobile Navigation fallback (centered buttons) */}
+              {showNavigation && (
+                <div className="flex justify-center gap-4 mt-6 md:hidden">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={scrollLeft}
+                    disabled={currentIndex === 0}
+                    className="rounded-full h-10 w-10 shadow-lg bg-background/95 disabled:opacity-30"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={scrollRight}
+                    disabled={currentIndex >= maxIndex}
+                    className="rounded-full h-10 w-10 shadow-lg bg-background/95 disabled:opacity-30"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </Button>
+                </div>
+              )}
             </div>
           </Animate>
 
@@ -279,8 +307,8 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
                   key={index}
                   onClick={() => setCurrentIndex(index)}
                   className={`w-2 h-2 rounded-full transition-all ${index === currentIndex
-                      ? 'bg-primary w-8'
-                      : 'bg-primary/30 hover:bg-primary/50'
+                    ? 'bg-primary w-8'
+                    : 'bg-primary/30 hover:bg-primary/50'
                     }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -320,87 +348,106 @@ function EventCard({
 }) {
   return (
     <AnimatedCard className="h-full">
-      <Card className="group hover:shadow-2xl transition-all duration-300 h-full">
+      <div className="group relative h-full flex flex-col overflow-hidden rounded-[32px] border border-white/30 bg-gradient-to-br from-white/80 via-white/50 to-white/30 shadow-[0_10px_30px_rgba(15,23,42,0.05),inset_0_0_0_1px_rgba(255,255,255,0.5)] backdrop-blur-3xl transition-all duration-500 hover:shadow-[0_20px_50px_rgba(15,23,42,0.1),inset_0_0_0_1px_rgba(255,255,255,0.8)] hover:-translate-y-1">
+
+        {/* Noise Texture */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
+
+        {/* Decorative Shine */}
+        <div className="absolute -inset-[100%] bg-gradient-to-tr from-transparent via-white/20 to-transparent rotate-45 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0" />
+
         {/* Event Image */}
-        <Link href={`/${locale}/events/${event.slug}`}>
-          <div className="relative w-full overflow-hidden rounded-t-lg aspect-[3/2] sm:aspect-[16/10] max-h-56 sm:max-h-64">
-            {event.featured_image ? (
-              <Image
-                src={resolveImageSrc(event.featured_image, getDefaultImage())}
-                alt={event.title}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                <Calendar className="w-16 h-16 text-primary/50" />
-              </div>
-            )}
-
-            {/* Featured Badge */}
-            {event.is_featured && (
-              <div className="absolute top-3 right-3">
-                <Badge className="bg-primary text-primary-foreground shadow-lg">
-                  {content.featured}
-                </Badge>
-              </div>
-            )}
-
-            {/* Date Badge */}
-            {event.event_date && (
-              <div className="absolute top-3 left-3">
-                <div className="bg-background/95 backdrop-blur-sm rounded-lg p-2 text-center shadow-lg">
-                  <div className="text-2xl font-bold text-primary">
-                    {new Date(event.event_date).getDate()}
-                  </div>
-                  <div className="text-xs text-muted-foreground uppercase">
-                    {new Date(event.event_date).toLocaleDateString(locale, { month: 'short' })}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </Link>
-
-        <CardContent className="p-4 space-y-3">
-          {/* Title */}
-          <h3 className="font-bold text-lg line-clamp-2 group-hover:text-primary transition-colors">
-            <Link href={`/${locale}/events/${event.slug}`}>
-              {event.title}
-            </Link>
-          </h3>
-
-          {/* Event Details */}
-          <div className="space-y-2 text-sm text-muted-foreground">
-            {event.event_time && (
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                <span>{event.event_time}</span>
-              </div>
-            )}
-            {event.location && (
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                <span className="line-clamp-1">{event.location}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Excerpt */}
-          {event.excerpt && (
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {event.excerpt}
-            </p>
+        <Link href={`/${locale}/events/${event.slug}`} className="relative block z-10 w-full aspect-[3/2] sm:aspect-[16/10] overflow-hidden m-2 rounded-[24px] mb-0">
+          {event.featured_image ? (
+            <Image
+              src={resolveImageSrc(event.featured_image, getDefaultImage())}
+              alt={event.title}
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-primary/10 to-amber-50 flex items-center justify-center">
+              <Calendar className="w-16 h-16 text-primary/30" />
+            </div>
           )}
 
-          {/* CTA Button */}
-          <Button variant="outline" size="sm" className="w-full mt-2" asChild>
-            <Link href={`/${locale}/events/${event.slug}`}>
-              {content.details}
+          {/* Overlay Gradient for Text Contrast */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-60" />
+
+          {/* Featured Badge */}
+          {event.is_featured && (
+            <div className="absolute top-3 right-3">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/20 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-widest text-white shadow-lg backdrop-blur-md">
+                <Sparkles className="h-3 w-3 fill-amber-400 text-amber-400" />
+                {content.featured}
+              </span>
+            </div>
+          )}
+
+          {/* Date Badge - Floating Style */}
+          {event.event_date && (
+            <div className="absolute top-3 left-3">
+              <div className="flex flex-col items-center justify-center rounded-2xl border border-white/20 bg-white/90 p-2 text-center shadow-lg backdrop-blur-md min-w-[3.5rem]">
+                <span className="text-xl font-black text-slate-800 leading-none">
+                  {new Date(event.event_date).getDate()}
+                </span>
+                <span className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">
+                  {new Date(event.event_date).toLocaleDateString(locale, { month: 'short' })}
+                </span>
+              </div>
+            </div>
+          )}
+        </Link>
+
+        {/* Content */}
+        <div className="relative z-10 p-5 flex flex-col flex-1">
+          <div className="space-y-3 flex-1">
+            {/* Title */}
+            <h3 className="font-bold text-lg leading-tight line-clamp-2 text-slate-800 group-hover:text-primary transition-colors">
+              <Link href={`/${locale}/events/${event.slug}`}>
+                {event.title}
+              </Link>
+            </h3>
+
+            {/* Metadata */}
+            <div className="flex flex-col gap-1.5 text-xs font-medium text-slate-500">
+              {event.event_time && (
+                <div className="flex items-center gap-2">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10">
+                    <Clock className="w-3 h-3 text-primary" />
+                  </div>
+                  <span>{event.event_time}</span>
+                </div>
+              )}
+              {event.location && (
+                <div className="flex items-center gap-2">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10">
+                    <MapPin className="w-3 h-3 text-primary" />
+                  </div>
+                  <span className="line-clamp-1">{event.location}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Excerpt */}
+            {event.excerpt && (
+              <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed opacity-80">
+                {event.excerpt}
+              </p>
+            )}
+          </div>
+
+          {/* Premium CTA Button */}
+          <div className="mt-5 pt-4 border-t border-slate-200/50">
+            <Link href={`/${locale}/events/${event.slug}`} className="block">
+              <Button className="w-full rounded-full bg-white border border-slate-200 text-slate-700 font-semibold shadow-sm hover:bg-slate-50 hover:text-primary hover:border-primary/20 transition-all group/btn">
+                {content.details}
+                <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+              </Button>
             </Link>
-          </Button>
-        </CardContent>
-      </Card>
+          </div>
+        </div>
+      </div>
     </AnimatedCard>
   )
 }

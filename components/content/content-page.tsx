@@ -34,17 +34,24 @@ const gridColumns = (columns?: number) => {
 }
 
 const SectionWrapper = ({ section, children }: { section: ContentSection; children: React.ReactNode }) => (
-  <section className="py-16 border-b border-border/60 bg-background/80">
-    <div className="container space-y-6">
-      <div className="max-w-3xl space-y-3">
+  <section className="py-16 md:py-24 relative z-10">
+    <div className="container space-y-12">
+      <div className="max-w-3xl space-y-4">
         {section.eyebrow && (
-          <span className="inline-flex text-xs uppercase tracking-[0.3em] text-primary font-semibold">
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-bold uppercase tracking-widest text-primary shadow-sm backdrop-blur-md">
             {section.eyebrow}
           </span>
         )}
-        <h2 className="text-3xl font-bold">{section.title}</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">{section.title}</h2>
         {section.description && (
-          <p className="text-muted-foreground leading-relaxed">{section.description}</p>
+          <div
+            className="text-lg text-slate-600 leading-relaxed [&_p]:leading-relaxed [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:font-bold [&_em]:italic"
+            dangerouslySetInnerHTML={{
+              __html: section.description.startsWith('<')
+                ? section.description
+                : section.description.split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('')
+            }}
+          />
         )}
       </div>
       {children}
@@ -57,22 +64,29 @@ const GridSection = ({ section }: { section: ContentSection }) => (
     {section.items?.map((item) => (
       <div
         key={item.title}
-        className="rounded-2xl border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+        className="group relative flex flex-col rounded-[32px] border border-white/40 bg-white/50 p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] backdrop-blur-md transition-all duration-300 hover:bg-white/80 hover:shadow-[0_10px_40px_rgba(0,0,0,0.05)] hover:-translate-y-1"
       >
         {item.badge && (
-          <span className="inline-flex text-xs font-semibold uppercase tracking-wider text-primary">
+          <span className="mb-4 inline-flex w-fit rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
             {item.badge}
           </span>
         )}
-        <h3 className="text-xl font-semibold">{item.title}</h3>
+        <h3 className="mb-3 text-xl font-bold text-slate-900 group-hover:text-primary transition-colors">{item.title}</h3>
         {item.description && (
-          <p className="mt-2 text-muted-foreground leading-relaxed">{item.description}</p>
+          <div
+            className="text-slate-600 leading-relaxed [&_p]:leading-relaxed [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:font-bold [&_em]:italic flex-1"
+            dangerouslySetInnerHTML={{
+              __html: item.description.startsWith('<')
+                ? item.description
+                : item.description.split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('')
+            }}
+          />
         )}
         {item.bullets && (
-          <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+          <ul className="mt-6 space-y-3 border-t border-slate-200/60 pt-6 text-sm text-slate-600">
             {item.bullets.map((bullet) => (
-              <li key={bullet} className="flex gap-2">
-                <span className="h-2 w-2 translate-y-2 rounded-full bg-primary/70" />
+              <li key={bullet} className="flex gap-3">
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                 <span>{bullet}</span>
               </li>
             ))}
@@ -87,21 +101,28 @@ const ListSection = ({ section }: { section: ContentSection }) => {
   const ordered = section.ordered
   const ListTag = ordered ? 'ol' : 'div'
   return (
-    <ListTag className="space-y-4">
+    <ListTag className="space-y-6">
       {section.items?.map((item, idx) => (
         <div
           key={item.title}
-          className="flex gap-4 rounded-2xl border bg-card/80 p-5 shadow-sm"
+          className="group flex gap-6 rounded-[32px] border border-white/40 bg-white/50 p-8 shadow-sm backdrop-blur-md transition-all hover:bg-white/80 hover:shadow-md"
         >
           {ordered && (
-            <span className="text-2xl font-bold text-primary">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-2xl font-bold text-primary group-hover:bg-primary group-hover:text-white transition-colors">
               {(idx + 1).toString().padStart(2, '0')}
             </span>
           )}
-          <div>
-            <h3 className="text-xl font-semibold">{item.title}</h3>
+          <div className="space-y-2">
+            <h3 className="text-xl font-bold text-slate-900">{item.title}</h3>
             {item.description && (
-              <p className="text-muted-foreground">{item.description}</p>
+              <div
+                className="text-slate-600 leading-relaxed [&_p]:leading-relaxed [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:font-bold [&_em]:italic"
+                dangerouslySetInnerHTML={{
+                  __html: item.description.startsWith('<')
+                    ? item.description
+                    : item.description.split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('')
+                }}
+              />
             )}
           </div>
         </div>
@@ -111,18 +132,25 @@ const ListSection = ({ section }: { section: ContentSection }) => {
 }
 
 const TimelineSection = ({ section }: { section: ContentSection }) => (
-  <div className="relative pl-6">
-    <div className="absolute left-2 top-0 h-full w-px bg-gradient-to-b from-primary/60 to-transparent" />
-    <div className="space-y-8">
+  <div className="relative pl-8">
+    <div className="absolute left-3 top-0 h-full w-0.5 bg-gradient-to-b from-primary/40 via-primary/20 to-transparent" />
+    <div className="space-y-10">
       {section.items?.map((item, idx) => (
-        <div key={item.title} className="relative rounded-2xl border bg-card p-6 shadow-sm">
-          <span className="absolute -left-6 top-6 h-4 w-4 rounded-full border-4 border-background bg-primary shadow-md" />
-          <div className="flex items-center gap-3 text-sm text-primary font-semibold uppercase tracking-wider">
+        <div key={item.title} className="relative rounded-[32px] border border-white/40 bg-white/60 p-8 shadow-sm backdrop-blur-md transition-all hover:bg-white/90">
+          <span className="absolute -left-[29px] top-9 h-3 w-3 rounded-full border-[3px] border-white bg-primary shadow-[0_0_0_4px_rgba(249,115,22,0.2)]" />
+          <div className="mb-2 flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-primary/80">
             <span>{item.meta || `Adım ${idx + 1}`}</span>
           </div>
-          <h3 className="mt-2 text-2xl font-semibold">{item.title}</h3>
+          <h3 className="text-2xl font-bold text-slate-900">{item.title}</h3>
           {item.description && (
-            <p className="text-muted-foreground leading-relaxed mt-2">{item.description}</p>
+            <div
+              className="mt-3 text-slate-600 leading-relaxed [&_p]:leading-relaxed [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:font-bold [&_em]:italic"
+              dangerouslySetInnerHTML={{
+                __html: item.description.startsWith('<')
+                  ? item.description
+                  : item.description.split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('')
+              }}
+            />
           )}
         </div>
       ))}
@@ -133,10 +161,10 @@ const TimelineSection = ({ section }: { section: ContentSection }) => (
 const StatsSection = ({ section }: { section: ContentSection }) => (
   <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
     {section.stats?.map((stat) => (
-      <div key={stat.label} className="rounded-2xl border bg-card/80 p-6 shadow-sm">
-        <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">{stat.label}</p>
-        <p className="mt-4 text-4xl font-bold text-primary">{stat.value}</p>
-        {stat.helper && <p className="text-muted-foreground">{stat.helper}</p>}
+      <div key={stat.label} className="group rounded-[32px] border border-white/40 bg-white/60 p-8 shadow-sm backdrop-blur-md transition-all hover:-translate-y-1 hover:bg-white/80 hover:shadow-lg">
+        <p className="text-xs font-bold uppercase tracking-widest text-slate-500">{stat.label}</p>
+        <p className="mt-4 bg-gradient-to-br from-slate-900 to-slate-700 bg-clip-text text-5xl font-black text-transparent group-hover:from-primary group-hover:to-orange-600 transition-all duration-300">{stat.value}</p>
+        {stat.helper && <p className="mt-2 text-sm font-medium text-slate-400">{stat.helper}</p>}
       </div>
     ))}
   </div>
@@ -177,80 +205,110 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
     .filter((action) => action.label && action.href)
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background to-slate-50">
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-background to-background">
-        <div className="pointer-events-none absolute inset-0 opacity-40">
-          <div className="absolute -top-24 right-10 h-60 w-60 rounded-full bg-primary/20 blur-3xl" />
-          <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-purple-300/20 blur-3xl" />
-        </div>
-        <div className="container relative py-20">
-          <div className="space-y-6">
-            <div className="max-w-3xl space-y-5">
-              {page.hero.eyebrow && (
-                <span className="inline-flex text-xs uppercase tracking-[0.3em] text-primary font-semibold">
-                  {page.hero.eyebrow}
-                </span>
-              )}
-              <h1 className="text-4xl font-bold md:text-5xl">{page.hero.title}</h1>
-              <p className="text-xl text-muted-foreground">{page.hero.subtitle}</p>
-              {!showNarrative && description && (
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  {description}
-                </p>
-              )}
-            </div>
-            {showNarrative && description && (
-              <div className="relative max-w-5xl">
-                <div className="absolute inset-0 -z-10 rounded-[32px] bg-white/70 blur-2xl" />
-                <div className="rounded-[32px] border border-white/80 bg-white/85 p-6 shadow-[0_30px_70px_rgba(15,23,42,0.08)] backdrop-blur">
-                  <div className="h-1 w-12 rounded-full bg-primary/70" />
-                  <div className="mt-4 space-y-4 text-base leading-7 text-muted-foreground">
-                    {descriptionParagraphs.map((paragraph, index) => (
-                      <p
-                        key={`${index}-${paragraph.slice(0, 24)}`}
-                        className={
-                          index === 0
-                            ? 'first-letter:text-3xl first-letter:font-semibold first-letter:text-slate-700'
-                            : ''
-                        }
-                      >
-                        {paragraph}
-                      </p>
-                    ))}
+    <main className="relative min-h-screen overflow-hidden">
+      {/* Global Background Pattern */}
+      <div
+        className="fixed inset-0 z-0 opacity-90 pointer-events-none bg-amber-pattern"
+        aria-hidden="true"
+      />
+
+      <section className="relative z-10 pt-28 lg:pt-36 pb-12">
+        <div className="container">
+          {/* Grand Hero Card */}
+          <div className="relative overflow-hidden rounded-[40px] md:rounded-[56px] border border-white/40 bg-white/60 p-8 shadow-[0_40px_100px_rgba(15,23,42,0.1),inset_0_0_0_1px_rgba(255,255,255,0.5)] backdrop-blur-3xl md:p-16">
+            {/* Noise Texture */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
+            {/* Ambient Orbs */}
+            <div className="absolute -left-20 -top-20 h-[400px] w-[400px] rounded-full bg-amber-500/10 blur-[100px]" />
+            <div className="absolute -right-20 bottom-0 h-[400px] w-[400px] rounded-full bg-primary/5 blur-[100px]" />
+
+            <div className="relative z-10 space-y-8">
+              <div className="max-w-4xl space-y-6">
+                {page.hero.eyebrow && (
+                  <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary shadow-sm backdrop-blur-md">
+                    {page.hero.eyebrow}
+                  </span>
+                )}
+                <h1 className="text-4xl font-black tracking-tight text-slate-900 md:text-6xl md:leading-[1.1]">{page.hero.title}</h1>
+                <p className="text-xl font-medium text-slate-600 leading-relaxed md:text-2xl">{page.hero.subtitle}</p>
+
+                {!showNarrative && description && (
+                  <div
+                    className="text-lg text-slate-600 leading-relaxed max-w-3xl [&_p]:leading-relaxed [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:font-bold [&_em]:italic"
+                    dangerouslySetInnerHTML={{
+                      __html: description.startsWith('<')
+                        ? description
+                        : description.split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('')
+                    }}
+                  />
+                )}
+              </div>
+
+              {showNarrative && description && (
+                <div className="relative mt-12 rounded-[32px] border border-white/50 bg-white/50 p-8 shadow-sm backdrop-blur-md">
+                  <div className="h-1.5 w-16 rounded-full bg-primary/80 mb-6" />
+                  <div className="space-y-4 text-lg leading-8 text-slate-600">
+                    {description.startsWith('<') ? (
+                      <div
+                        className="[&_p]:leading-8 [&_p]:mb-6 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-2 [&_strong]:font-bold [&_strong]:text-slate-900 [&_em]:italic"
+                        dangerouslySetInnerHTML={{ __html: description }}
+                      />
+                    ) : (
+                      descriptionParagraphs.map((paragraph, index) => (
+                        <p
+                          key={`${index}-${paragraph.slice(0, 24)}`}
+                          className={
+                            index === 0
+                              ? 'first-letter:float-left first-letter:mr-3 first-letter:text-5xl first-letter:font-bold first-letter:text-slate-900'
+                              : ''
+                          }
+                        >
+                          {paragraph}
+                        </p>
+                      ))
+                    )}
                   </div>
                 </div>
-              </div>
-            )}
-            {heroActions.length > 0 && (
-              <div className="flex flex-wrap gap-4">
-                {heroActions.map((action) => (
-                  <Button
-                    key={action.label}
-                    variant={action.variant === 'secondary' ? 'outline' : 'default'}
-                    asChild
-                  >
-                    <Link href={localizeHref(locale, action.href)}>{action.label}</Link>
-                  </Button>
+              )}
+
+              {heroActions.length > 0 && (
+                <div className="flex flex-wrap gap-4 pt-4">
+                  {heroActions.map((action) => (
+                    <Button
+                      key={action.label}
+                      size="lg"
+                      variant={action.variant === 'secondary' ? 'outline' : 'default'}
+                      className={cn(
+                        "rounded-full px-8 font-bold transition-all hover:scale-105",
+                        action.variant === 'secondary'
+                          ? "border-slate-300 bg-white/50 text-slate-700 hover:bg-white hover:text-primary hover:border-primary/30"
+                          : "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg hover:shadow-orange-500/25 border-0"
+                      )}
+                      asChild
+                    >
+                      <Link href={localizeHref(locale, action.href)}>{action.label}</Link>
+                    </Button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {!hideExtraSections && page.hero.stats && (
+              <div className="mt-16 grid gap-6 md:grid-cols-3 border-t border-white/20 pt-10">
+                {page.hero.stats.map((stat) => (
+                  <div key={stat.label} className="group rounded-[24px] bg-white/40 p-6 transition-colors hover:bg-white/60">
+                    <p className="text-xs font-bold uppercase tracking-widest text-slate-500 opacity-70">
+                      {stat.label}
+                    </p>
+                    <p className="mt-2 text-4xl font-black text-slate-800 tracking-tight group-hover:text-primary transition-colors">{stat.value}</p>
+                    {stat.helper && (
+                      <p className="mt-1 text-sm font-medium text-slate-500">{stat.helper}</p>
+                    )}
+                  </div>
                 ))}
               </div>
             )}
           </div>
-
-          {!hideExtraSections && page.hero.stats && (
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
-              {page.hero.stats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border bg-card/80 p-6 shadow-sm">
-                  <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
-                    {stat.label}
-                  </p>
-                  <p className="mt-3 text-4xl font-bold text-primary">{stat.value}</p>
-                  {stat.helper && (
-                    <p className="text-muted-foreground">{stat.helper}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </section>
 
@@ -261,33 +319,43 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
           </SectionWrapper>
         ))}
 
-      <section className="py-20 bg-primary text-primary-foreground">
-        <div className="container flex flex-col gap-6 text-center">
-          <p className="text-sm uppercase tracking-[0.3em] font-semibold text-primary-foreground/80">
-            {page.category === 'yasal' ? 'Yasal destek' : 'Birlikte üretelim'}
-          </p>
-          <h2 className="text-4xl font-bold">{page.cta.title}</h2>
-          <p className="mx-auto max-w-3xl text-lg text-primary-foreground/90">
-            {page.cta.description}
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg" variant="secondary" asChild>
-              <Link href={localizeHref(locale, page.cta.primaryAction.href)}>
-                {page.cta.primaryAction.label}
-              </Link>
-            </Button>
-            {page.cta.secondaryAction && (
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-primary-foreground bg-primary-foreground text-primary hover:bg-white hover:text-primary"
-                asChild
-              >
-                <Link href={localizeHref(locale, page.cta.secondaryAction.href)}>
-                  {page.cta.secondaryAction.label}
-                </Link>
-              </Button>
-            )}
+      <section className="py-20 lg:py-32">
+        <div className="container relative z-10">
+          <div className="relative overflow-hidden rounded-[48px] border border-white/30 bg-gradient-to-br from-amber-500 to-orange-600 px-6 py-16 text-center shadow-[0_40px_100px_rgba(249,115,22,0.3)] md:px-12 md:py-20 text-white">
+            {/* Decorative shapes */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+              <div className="absolute top-[-50%] left-[-20%] w-[80%] h-[200%] bg-white/10 rotate-12 blur-3xl opacity-50" />
+              <div className="absolute bottom-[-50%] right-[-20%] w-[80%] h-[200%] bg-black/10 rotate-12 blur-3xl opacity-20" />
+            </div>
+
+            <div className="relative z-10 max-w-3xl mx-auto space-y-8">
+              <p className="text-sm font-bold uppercase tracking-[0.3em] text-white/80">
+                {page.category === 'yasal' ? 'Yasal destek' : 'Birlikte üretelim'}
+              </p>
+              <h2 className="text-4xl font-black tracking-tight md:text-5xl drop-shadow-sm">{page.cta.title}</h2>
+              <p className="text-lg md:text-xl font-medium text-amber-50 leading-relaxed">
+                {page.cta.description}
+              </p>
+              <div className="flex flex-wrap justify-center gap-6 pt-4">
+                <Button size="lg" className="h-14 rounded-full bg-white px-10 text-lg font-bold text-orange-600 hover:bg-slate-50 hover:scale-105 transition-all shadow-xl" asChild>
+                  <Link href={localizeHref(locale, page.cta.primaryAction.href)}>
+                    {page.cta.primaryAction.label}
+                  </Link>
+                </Button>
+                {page.cta.secondaryAction && (
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-14 rounded-full border-2 border-white/30 bg-transparent px-10 text-lg font-bold text-white hover:bg-white/10 hover:border-white/50 transition-all"
+                    asChild
+                  >
+                    <Link href={localizeHref(locale, page.cta.secondaryAction.href)}>
+                      {page.cta.secondaryAction.label}
+                    </Link>
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </section>

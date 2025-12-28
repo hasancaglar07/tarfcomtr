@@ -131,7 +131,7 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
   }
 
   return (
-    <form className="relative mt-6 space-y-4" onSubmit={handleSubmit}>
+    <form className="relative mt-10 space-y-6" onSubmit={handleSubmit}>
       <Input
         type="text"
         name="name"
@@ -139,9 +139,9 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
         required
         value={formData.name}
         onChange={handleChange}
-        className="h-12 border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
+        className="h-14 rounded-2xl border-white/40 bg-white/50 px-6 text-base text-slate-800 placeholder:text-slate-400 shadow-sm backdrop-blur-sm transition-all focus:bg-white focus:border-primary/50 focus:ring-4 focus:ring-primary/10"
       />
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <Input
           type="email"
           name="email"
@@ -149,7 +149,7 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
           required
           value={formData.email}
           onChange={handleChange}
-          className="h-12 border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
+          className="h-14 rounded-2xl border-white/40 bg-white/50 px-6 text-base text-slate-800 placeholder:text-slate-400 shadow-sm backdrop-blur-sm transition-all focus:bg-white focus:border-primary/50 focus:ring-4 focus:ring-primary/10"
         />
         <Input
           type="tel"
@@ -157,7 +157,7 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
           placeholder={copy.placeholders.phone}
           value={formData.phone}
           onChange={handleChange}
-          className="h-12 border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
+          className="h-14 rounded-2xl border-white/40 bg-white/50 px-6 text-base text-slate-800 placeholder:text-slate-400 shadow-sm backdrop-blur-sm transition-all focus:bg-white focus:border-primary/50 focus:ring-4 focus:ring-primary/10"
         />
       </div>
       <Input
@@ -166,26 +166,31 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
         placeholder={copy.placeholders.company}
         value={formData.company}
         onChange={handleChange}
-        className="h-12 border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
+        className="h-14 rounded-2xl border-white/40 bg-white/50 px-6 text-base text-slate-800 placeholder:text-slate-400 shadow-sm backdrop-blur-sm transition-all focus:bg-white focus:border-primary/50 focus:ring-4 focus:ring-primary/10"
       />
-      <div className="space-y-2">
-        <label className="text-sm font-semibold text-slate-700">{copy.typeLabel}</label>
-        <select
-          name="applicationType"
-          required
-          value={formData.applicationType}
-          onChange={handleSelectChange}
-          className="h-12 w-full rounded-lg border border-white/70 bg-white/85 px-3 text-base text-slate-900 shadow-sm outline-none transition focus:border-primary/40 focus-visible:ring-primary/30"
-        >
-          <option value="" disabled>
-            {copy.typeLabel}
-          </option>
-          {copy.applicationTypes.map((type) => (
-            <option key={type} value={type}>
-              {type}
+      <div className="space-y-3">
+        <label className="ml-2 text-sm font-bold uppercase tracking-wide text-slate-500">{copy.typeLabel}</label>
+        <div className="relative">
+          <select
+            name="applicationType"
+            required
+            value={formData.applicationType}
+            onChange={handleSelectChange}
+            className="h-14 w-full appearance-none rounded-2xl border border-white/40 bg-white/50 px-6 text-base text-slate-800 shadow-sm backdrop-blur-sm outline-none transition-all focus:bg-white focus:border-primary/50 focus:ring-4 focus:ring-primary/10 cursor-pointer"
+          >
+            <option value="" disabled>
+              {copy.typeLabel}
             </option>
-          ))}
-        </select>
+            {copy.applicationTypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+          </div>
+        </div>
       </div>
       <Input
         type="text"
@@ -193,7 +198,7 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
         placeholder={copy.placeholders.topic}
         value={formData.topic}
         onChange={handleChange}
-        className="h-12 border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
+        className="h-14 rounded-2xl border-white/40 bg-white/50 px-6 text-base text-slate-800 placeholder:text-slate-400 shadow-sm backdrop-blur-sm transition-all focus:bg-white focus:border-primary/50 focus:ring-4 focus:ring-primary/10"
       />
       <Textarea
         name="message"
@@ -201,24 +206,24 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
         required
         value={formData.message}
         onChange={handleChange}
-        className="min-h-[160px] resize-none border-white/70 bg-white/85 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-primary/30"
+        className="min-h-[160px] resize-none rounded-2xl border-white/40 bg-white/50 px-6 py-4 text-base text-slate-800 placeholder:text-slate-400 shadow-sm backdrop-blur-sm transition-all focus:bg-white focus:border-primary/50 focus:ring-4 focus:ring-primary/10"
       />
 
       {/* KVKK Onay Checkbox */}
-      <div className="flex items-start gap-3 rounded-xl border border-slate-200/80 bg-white/90 p-4 shadow-sm">
+      <div className="flex items-start gap-3 rounded-2xl border border-white/40 bg-white/40 p-5 backdrop-blur-sm transition-colors hover:bg-white/60">
         <input
           type="checkbox"
           id="kvkk-consent"
           checked={kvkkAccepted}
           onChange={(e) => setKvkkAccepted(e.target.checked)}
-          className="mt-1 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 text-primary accent-primary focus:ring-primary/30"
+          className="mt-1 h-5 w-5 shrink-0 cursor-pointer rounded-md border-slate-300 text-primary accent-primary focus:ring-primary/30"
         />
         <label htmlFor="kvkk-consent" className="cursor-pointer text-sm leading-relaxed text-slate-600">
           {copy.kvkkLabel || 'Kişisel verilerimin işlenmesine ilişkin'}{' '}
           <Link
             href={copy.kvkkLink || '/tr/kvkk-aydinlatma-metni'}
             target="_blank"
-            className="font-semibold text-primary underline decoration-primary/30 underline-offset-2 transition-colors hover:text-primary/80 hover:decoration-primary/50"
+            className="font-bold text-slate-900 underline decoration-primary/50 decoration-2 underline-offset-4 transition-colors hover:text-primary hover:decoration-primary"
           >
             {copy.kvkkLinkText || 'KVKK Aydınlatma Metni'}
           </Link>
@@ -227,17 +232,17 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-700">
-          <AlertTriangle className="h-4 w-4 mt-0.5 text-red-500" />
+        <div className="flex items-start gap-3 rounded-2xl border border-red-500/20 bg-red-50 p-4 text-sm text-red-600">
+          <AlertTriangle className="h-5 w-5 shrink-0 text-red-500" />
           <div>
-            <p className="font-semibold">{copy.errorTitle || 'Gönderim hatası'}</p>
+            <p className="font-bold mb-1">{copy.errorTitle || 'Gönderim hatası'}</p>
             <p>{error || copy.errorBody || 'Lütfen alanları kontrol edin.'}</p>
           </div>
         </div>
       )}
       <Button
         type="submit"
-        className="h-12 w-full text-base font-semibold shadow-lg"
+        className="h-14 w-full rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-lg font-bold text-white shadow-xl shadow-orange-500/20 transition-all hover:scale-[1.02] hover:shadow-orange-500/30 disabled:opacity-70 disabled:hover:scale-100"
         disabled={loading || !kvkkAccepted}
       >
         {loading ? 'Gönderiliyor…' : copy.submit}

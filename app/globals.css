@@ -585,18 +585,17 @@
   }
 
   /* Responsive amber background (lighter on mobile) */
+  /* Responsive amber background (lighter on mobile) */
   .bg-amber-pattern {
-    background-image: radial-gradient(120% 120% at 50% 16%, #ffffff 45%, rgba(245, 158, 11, 0.55) 100%);
-    background-size: 140% 140%;
+    background-image: radial-gradient(circle at 50% 0%, #ffffff 40%, #fffbeb 80%, #fef3c7 100%);
+    background-size: 100% 100%;
     background-repeat: no-repeat;
-    background-attachment: scroll;
+    background-attachment: fixed;
   }
 
   @media (min-width: 768px) {
     .bg-amber-pattern {
-      background-image: radial-gradient(125% 125% at 50% 10%, #ffffff 40%, #f59e0b 100%);
-      background-size: 100% 100%;
-      background-attachment: fixed;
+      background-image: radial-gradient(circle at 50% -20%, #ffffff 30%, #fffbeb 60%, #fde68a 120%);
     }
   }
 }

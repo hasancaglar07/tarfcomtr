@@ -35,32 +35,41 @@ export function FutureContribution({ locale }: FutureContributionProps) {
     <section className="py-12">
       <div className="container">
         {/* CTA Card */}
-        <Animate variant="fadeIn" delay={0.4}>
-          <Card className="relative overflow-hidden">
-            {/* Background Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" />
+        <Animate variant="slideUp" delay={0.2}>
+          <div className="relative group overflow-hidden rounded-[40px] border border-white/40 bg-gradient-to-br from-white/90 via-white/60 to-white/30 p-8 md:p-14 shadow-[0_40px_100px_rgba(15,23,42,0.1),inset_0_0_0_1px_rgba(255,255,255,0.6)] backdrop-blur-3xl lg:flex lg:items-center lg:justify-between lg:gap-16">
+            {/* Noise Texture */}
+            <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
 
-            {/* Content */}
-            <div className="relative p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl md:text-3xl font-bold mb-2">
-                  {content.cta_title}
-                </h3>
-                <p className="text-lg text-muted-foreground">
-                  {content.cta_description}
-                </p>
-              </div>
+            {/* Ambient Background Glow (Orange/Amber) */}
+            <div className="absolute -right-20 -bottom-40 h-[400px] w-[400px] rounded-full bg-amber-500/20 blur-[100px] pointer-events-none group-hover:bg-amber-500/30 transition-colors duration-700" />
+            <div className="absolute -left-20 -top-40 h-[400px] w-[400px] rounded-full bg-primary/10 blur-[100px] pointer-events-none" />
+
+            {/* Content Left */}
+            <div className="relative z-10 max-w-2xl text-center lg:text-left">
+              <h3 className="mb-4 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+                {content.cta_title}
+              </h3>
+              <p className="text-lg font-medium text-slate-600 sm:text-xl">
+                {content.cta_description}
+              </p>
+            </div>
+
+            {/* CTA Button Right */}
+            <div className="relative z-10 mt-8 flex flex-shrink-0 justify-center lg:mt-0">
               <Link href={`/${locale}/contact`}>
                 <Button
                   size="lg"
-                  className="whitespace-nowrap group"
+                  className="relative h-16 overflow-hidden rounded-full px-10 text-lg font-bold text-white shadow-[0_10px_40px_rgba(249,115,22,0.4)] transition-transform hover:scale-105 hover:shadow-[0_20px_60px_rgba(249,115,22,0.5)] bg-gradient-to-r from-amber-500 to-orange-600 border-0 group/btn"
                 >
-                  {content.cta_button}
-                  <Rocket className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover/btn:animate-shimmer" />
+                  <span className="relative flex items-center gap-2">
+                    {content.cta_button}
+                    <Rocket className="h-5 w-5 transition-transform group-hover/btn:-translate-y-1 group-hover/btn:translate-x-1" />
+                  </span>
                 </Button>
               </Link>
             </div>
-          </Card>
+          </div>
         </Animate>
       </div>
     </section>
