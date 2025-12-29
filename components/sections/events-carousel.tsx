@@ -264,7 +264,7 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
                         transition={{ delay: index * 0.08 }}
                         className="h-full"
                       >
-                        <EventCard event={event} content={content} locale={locale} />
+                        <EventCard event={event} content={content} locale={locale} index={index} />
                       </motion.div>
                     </div>
                   ))
@@ -339,10 +339,12 @@ function EventCard({
   event,
   content,
   locale,
+  index = 0,
 }: {
   event: EventPost
   content: typeof defaultContent[keyof typeof defaultContent]
   locale: string
+  index?: number
 }) {
   return (
     <AnimatedCard className="h-full">
@@ -361,6 +363,8 @@ function EventCard({
               src={resolveImageSrc(event.featured_image, getDefaultImage())}
               alt={event.title}
               fill
+              priority={index < 4}
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
               className="object-cover transition-transform duration-700 group-hover:scale-110"
             />
           ) : (

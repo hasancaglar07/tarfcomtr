@@ -590,12 +590,12 @@
     background-image: radial-gradient(circle at 50% 0%, #ffffff 40%, #fffbeb 80%, #fef3c7 100%);
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    background-attachment: fixed;
   }
 
   @media (min-width: 768px) {
     .bg-amber-pattern {
       background-image: radial-gradient(circle at 50% -20%, #ffffff 30%, #fffbeb 60%, #fde68a 120%);
+      background-attachment: fixed;
     }
   }
 }

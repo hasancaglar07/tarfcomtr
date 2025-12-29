@@ -368,7 +368,14 @@ export function Hero({ locale, data, events }: HeroProps) {
                         ) : (
                           <>
                             {heroVideoCover ? (
-                              <Image src={heroVideoCover} alt={currentHeroVideo?.title || 'Hero visual'} fill className="object-cover transition-transform duration-700 group-hover/video:scale-105" />
+                              <Image
+                                src={heroVideoCover}
+                                alt={currentHeroVideo?.title || 'Hero visual'}
+                                fill
+                                priority
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                                className="object-cover transition-transform duration-700 group-hover/video:scale-105"
+                              />
                             ) : (
                               <div className="absolute inset-0 flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
                                 <Sparkles className="h-16 w-16 text-white/20" />
