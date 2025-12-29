@@ -114,15 +114,6 @@ export default async function EventDetailPage({
                               {event.category.name}
                             </Badge>
                           )}
-                          {event.is_featured && (
-                            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-bold uppercase tracking-widest text-primary shadow-sm backdrop-blur-md">
-                              <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                              </span>
-                              {locale === 'tr' ? 'Öne Çıkan' : locale === 'ar' ? 'متميز' : 'Featured'}
-                            </span>
-                          )}
                         </div>
 
                         {/* Title */}

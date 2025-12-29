@@ -57,13 +57,11 @@ export function FutureContribution({ locale }: FutureContributionProps) {
             <div className="relative z-10 mt-8 flex flex-shrink-0 justify-center lg:mt-0">
               <Link href={`/${locale}/contact`}>
                 <Button
-                  size="lg"
-                  className="relative h-16 overflow-hidden rounded-full px-10 text-lg font-bold text-white shadow-[0_10px_40px_rgba(249,115,22,0.4)] transition-transform hover:scale-105 hover:shadow-[0_20px_60px_rgba(249,115,22,0.5)] bg-gradient-to-r from-amber-500 to-orange-600 border-0 group/btn"
+                  className="relative h-16 rounded-full px-10 text-lg font-bold text-white shadow-lg transition-all hover:bg-slate-900 hover:shadow-xl hover:-translate-y-0.5 bg-slate-950 border-0 group/btn"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover/btn:animate-shimmer" />
-                  <span className="relative flex items-center gap-2">
+                  <span className="flex items-center gap-2">
                     {content.cta_button}
-                    <Rocket className="h-5 w-5 transition-transform group-hover/btn:-translate-y-1 group-hover/btn:translate-x-1" />
+                    <Rocket className="h-5 w-5 transition-transform group-hover/btn:translate-x-1" />
                   </span>
                 </Button>
               </Link>

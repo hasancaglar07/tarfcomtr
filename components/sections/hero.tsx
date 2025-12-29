@@ -262,180 +262,191 @@ export function Hero({ locale, data, events }: HeroProps) {
               </div>
 
               {/* Grand Unified Hero Card - with Spotlight Effect */}
-              <div
-                className="relative z-10 overflow-hidden rounded-[32px] md:rounded-[48px] border border-white/40 bg-gradient-to-br from-white/80 via-white/50 to-white/30 p-2 shadow-[0_40px_100px_rgba(15,23,42,0.1),0_20px_50px_rgba(15,23,42,0.05),inset_0_0_0_1px_rgba(255,255,255,0.5)] backdrop-blur-3xl group/card"
-                onMouseMove={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                  e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-                }}
-              >
-                {/* Spotlight Overlay */}
+              <div className="relative z-10 group/card">
+                {/* Beam & Glow - "Divine Luminous" Effect (High Visibility) */}
+                <div className="absolute -inset-[8px] rounded-[38px] md:rounded-[54px] overflow-hidden pointer-events-none">
+                  <div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] animate-[spin_4s_linear_infinite]"
+                    style={{ background: 'conic-gradient(from 0deg, transparent 0 200deg, #fcd34d 280deg, #ffffff 320deg, #ffffff 360deg)' }}
+                  />
+                </div>
+                {/* Strong Outer Halo for visibility on white */}
+                <div className="absolute -inset-[12px] rounded-[42px] md:rounded-[58px] bg-gradient-to-tr from-amber-400/0 via-amber-400/30 to-amber-400/0 blur-xl animate-pulse pointer-events-none" />
+                {/* Inner Brightness */}
+                <div className="absolute -inset-[3px] rounded-[34px] md:rounded-[50px] bg-white/70 blur-md pointer-events-none" />
+
                 <div
-                  className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
-                  style={{
-                    background: 'radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.4), transparent 40%)'
+                  className="relative z-10 overflow-hidden rounded-[32px] md:rounded-[48px] border border-white/80 bg-white/90 p-2 shadow-[0_40px_100px_rgba(234,88,12,0.15)] backdrop-blur-3xl"
+                  onMouseMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                    e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
                   }}
-                />
-                {/* Noise Texture */}
-                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
+                >
+                  {/* Spotlight Overlay */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none z-20"
+                    style={{
+                      background: 'radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.4), transparent 40%)'
+                    }}
+                  />
 
-                {/* Decorative Shine */}
-                <div className="absolute -top-[50%] -left-[50%] w-[200%] h-[200%] bg-gradient-to-br from-transparent via-white/20 to-transparent rotate-45 pointer-events-none" />
 
-                <div className="relative z-10 grid gap-8 lg:grid-cols-2 lg:gap-12 p-6 sm:p-10 lg:p-14 items-center">
 
-                  {/* Left Side: Content */}
-                  <div className="flex flex-col gap-6 sm:gap-8 text-center lg:text-left h-[420px] sm:h-[450px] lg:h-[600px] justify-center">
-                    <AnimatePresence mode="wait" initial={false}>
-                      <motion.div
-                        key={`${headlineIndex}-${activeHeadline?.title}`}
-                        className="flex flex-col gap-6"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.4 }}
-                      >
-                        <div className="space-y-6">
-                          {/* Premium Badge */}
-                          <div className="flex justify-center lg:justify-start">
-                            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-bold uppercase tracking-widest text-primary shadow-[0_2px_10px_rgba(249,115,22,0.1)] backdrop-blur-md">
-                              <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                  <div className="relative z-10 grid gap-8 lg:grid-cols-2 lg:gap-12 p-6 sm:p-10 lg:p-14 items-center">
+
+                    {/* Left Side: Content */}
+                    <div className="flex flex-col gap-6 sm:gap-8 text-center lg:text-left h-[420px] sm:h-[450px] lg:h-[600px] justify-center">
+                      <AnimatePresence mode="wait" initial={false}>
+                        <motion.div
+                          key={`${headlineIndex}-${activeHeadline?.title}`}
+                          className="flex flex-col gap-6"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.4 }}
+                        >
+                          <div className="space-y-6">
+                            {/* Premium Badge */}
+                            <div className="flex justify-center lg:justify-start">
+                              <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-bold uppercase tracking-widest text-primary shadow-[0_2px_10px_rgba(249,115,22,0.1)] backdrop-blur-md">
+                                <span className="relative flex h-2 w-2">
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                                </span>
+                                {locale === 'tr' ? 'Öne Çıkan' : locale === 'ar' ? 'متميز' : 'Featured'}
                               </span>
-                              {locale === 'tr' ? 'Öne Çıkan' : locale === 'ar' ? 'متميز' : 'Featured'}
-                            </span>
+                            </div>
+
+                            {/* Title */}
+                            <h1 className="text-4xl font-black leading-[1.1] tracking-tight bg-[linear-gradient(110deg,#0f172a,45%,#334155,55%,#0f172a)] bg-[length:200%_100%] animate-text-shimmer bg-clip-text text-transparent sm:text-5xl lg:text-6xl xl:text-[4.5rem] filter drop-shadow-sm">
+                              {activeHeadline?.title || content.title || defaultContent.en.title}
+                            </h1>
+
+                            {/* Subtitle - Dynamic Sizing */}
+                            {(() => {
+                              const subt = activeHeadline?.subtitle || content.subtitle || defaultContent.en.subtitle || '';
+                              const len = subt.length;
+                              const sizeClass = len > 300
+                                ? 'text-xs sm:text-sm lg:text-base'
+                                : len > 150
+                                  ? 'text-sm sm:text-base lg:text-lg'
+                                  : 'text-base sm:text-lg lg:text-xl';
+
+                              return (
+                                <p className={`${sizeClass} font-medium text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0`}>
+                                  {subt}
+                                </p>
+                              );
+                            })()}
                           </div>
 
-                          {/* Title */}
-                          <h1 className="text-4xl font-black leading-[1.1] tracking-tight bg-[linear-gradient(110deg,#0f172a,45%,#334155,55%,#0f172a)] bg-[length:200%_100%] animate-text-shimmer bg-clip-text text-transparent sm:text-5xl lg:text-6xl xl:text-[4.5rem] filter drop-shadow-sm">
-                            {activeHeadline?.title || content.title || defaultContent.en.title}
-                          </h1>
-
-                          {/* Subtitle - Dynamic Sizing */}
-                          {(() => {
-                            const subt = activeHeadline?.subtitle || content.subtitle || defaultContent.en.subtitle || '';
-                            const len = subt.length;
-                            const sizeClass = len > 300
-                              ? 'text-xs sm:text-sm lg:text-base'
-                              : len > 150
-                                ? 'text-sm sm:text-base lg:text-lg'
-                                : 'text-base sm:text-lg lg:text-xl';
-
-                            return (
-                              <p className={`${sizeClass} font-medium text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0`}>
-                                {subt}
-                              </p>
-                            );
-                          })()}
-                        </div>
-
-                        {/* Action Bar */}
-                        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-2">
+                          {/* Action Bar */}
+                          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-2">
 
 
-                          {headlineSlides.length > 1 && (
-                            <div className="flex gap-2" aria-hidden="true">
-                              {headlineSlides.map((_, index) => (
-                                <button
-                                  key={`headline-dot-${index}`}
-                                  onClick={() => setHeadlineIndex(index)}
-                                  className={`h-2 rounded-full transition-all duration-500 ${index === headlineIndex ? 'w-8 bg-primary' : 'w-2 bg-slate-300'
-                                    }`}
-                                />
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Right Side: Video Player (Integrated) */}
-                  <div className="relative">
-                    <div className="relative overflow-hidden rounded-[32px] bg-slate-900 shadow-2xl ring-1 ring-white/10 group/video aspect-video">
-                      <div className="absolute inset-0 z-0">
-                        {heroVideoPlaying && heroVideoId ? (
-                          <iframe
-                            className="h-full w-full"
-                            src={`https://www.youtube.com/embed/${heroVideoId}?autoplay=1&rel=0&modestbranding=1`}
-                            title={currentHeroVideo?.title || 'Hero video'}
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                          />
-                        ) : (
-                          <>
-                            {heroVideoCover ? (
-                              <Image
-                                src={heroVideoCover}
-                                alt={currentHeroVideo?.title || 'Hero visual'}
-                                fill
-                                priority
-                                sizes="(max-width: 768px) 100vw, 50vw"
-                                className="object-cover transition-transform duration-700 group-hover/video:scale-105"
-                              />
-                            ) : (
-                              <div className="absolute inset-0 flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-                                <Sparkles className="h-16 w-16 text-white/20" />
+                            {headlineSlides.length > 1 && (
+                              <div className="flex gap-2" aria-hidden="true">
+                                {headlineSlides.map((_, index) => (
+                                  <button
+                                    key={`headline-dot-${index}`}
+                                    onClick={() => setHeadlineIndex(index)}
+                                    className={`h-2 rounded-full transition-all duration-500 ${index === headlineIndex ? 'w-8 bg-primary' : 'w-2 bg-slate-300'
+                                      }`}
+                                  />
+                                ))}
                               </div>
                             )}
-                            <div className="absolute inset-0 bg-black/20 group-hover/video:bg-black/10 transition-colors duration-500" />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              {heroVideoId ? (
-                                <button
-                                  type="button"
-                                  onClick={() => setHeroVideoPlaying(true)}
-                                  className="group/play relative flex h-20 w-20 items-center justify-center rounded-full bg-white/10 backdrop-blur-md transition-all hover:scale-110 hover:bg-white/20"
-                                >
-                                  <div className="absolute inset-0 rounded-full border border-white/30 animate-[ping_2s_ease-in-out_infinite]" />
-                                  <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-white text-primary shadow-lg">
-                                    <Play className="h-6 w-6 ml-1 fill-current" />
-                                  </div>
-                                </button>
-                              ) : (
-                                <Link href={heroVideoLink} target="_blank" rel="noopener noreferrer">
-                                  <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-white text-primary shadow-lg transition-transform hover:scale-110">
-                                    <Play className="h-6 w-6 ml-1 fill-current" />
-                                  </div>
-                                </Link>
-                              )}
-                            </div>
-                          </>
-                        )}
-                      </div>
+                          </div>
+                        </motion.div>
+                      </AnimatePresence>
                     </div>
 
-                    {/* Unique Video Controls / Title */}
-                    <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
-                      <div className="flex-1 min-w-0 text-center sm:text-left w-full sm:w-auto">
-                        <h3 className="text-sm font-bold text-slate-800 truncate px-4 sm:px-0">
-                          {currentHeroVideo?.title}
-                        </h3>
-                        <div className="mt-2 flex gap-1 justify-center sm:justify-start">
-                          <span className="h-1 w-12 rounded-full bg-primary/20">
-                            <span className="block h-full w-2/3 bg-primary rounded-full" />
-                          </span>
+                    {/* Right Side: Video Player (Integrated) */}
+                    <div className="relative">
+                      <div className="relative overflow-hidden rounded-[32px] bg-slate-900 shadow-2xl ring-1 ring-white/10 group/video aspect-video">
+                        <div className="absolute inset-0 z-0">
+                          {heroVideoPlaying && heroVideoId ? (
+                            <iframe
+                              className="h-full w-full"
+                              src={`https://www.youtube.com/embed/${heroVideoId}?autoplay=1&rel=0&modestbranding=1`}
+                              title={currentHeroVideo?.title || 'Hero video'}
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                            />
+                          ) : (
+                            <>
+                              {heroVideoCover ? (
+                                <Image
+                                  src={heroVideoCover}
+                                  alt={currentHeroVideo?.title || 'Hero visual'}
+                                  fill
+                                  priority
+                                  sizes="(max-width: 768px) 100vw, 50vw"
+                                  className="object-cover transition-transform duration-700 group-hover/video:scale-105"
+                                />
+                              ) : (
+                                <div className="absolute inset-0 flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
+                                  <Sparkles className="h-16 w-16 text-white/20" />
+                                </div>
+                              )}
+                              <div className="absolute inset-0 bg-black/20 group-hover/video:bg-black/10 transition-colors duration-500" />
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                {heroVideoId ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => setHeroVideoPlaying(true)}
+                                    className="group/play relative flex h-20 w-20 items-center justify-center rounded-full bg-white/10 backdrop-blur-md transition-all hover:scale-110 hover:bg-white/20"
+                                  >
+                                    <div className="absolute inset-0 rounded-full border border-white/30 animate-[ping_2s_ease-in-out_infinite]" />
+                                    <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-white text-primary shadow-lg">
+                                      <Play className="h-6 w-6 ml-1 fill-current" />
+                                    </div>
+                                  </button>
+                                ) : (
+                                  <Link href={heroVideoLink} target="_blank" rel="noopener noreferrer">
+                                    <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-white text-primary shadow-lg transition-transform hover:scale-110">
+                                      <Play className="h-6 w-6 ml-1 fill-current" />
+                                    </div>
+                                  </Link>
+                                )}
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
 
-                      {hasMultipleHeroVideos && (
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => setHeroVideoIndex((prev) => (prev - 1 + heroVideos.length) % heroVideos.length)}
-                            className="p-2 rounded-full hover:bg-slate-100/50 text-slate-500 hover:text-primary transition-colors"
-                          >
-                            <ChevronLeft className="h-5 w-5" />
-                          </button>
-                          <button
-                            onClick={() => setHeroVideoIndex((prev) => (prev + 1) % heroVideos.length)}
-                            className="p-2 rounded-full hover:bg-slate-100/50 text-slate-500 hover:text-primary transition-colors"
-                          >
-                            <ChevronRight className="h-5 w-5" />
-                          </button>
+                      {/* Unique Video Controls / Title */}
+                      <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
+                        <div className="flex-1 min-w-0 text-center sm:text-left w-full sm:w-auto">
+                          <h3 className="text-sm font-bold text-slate-800 truncate px-4 sm:px-0">
+                            {currentHeroVideo?.title}
+                          </h3>
+                          <div className="mt-2 flex gap-1 justify-center sm:justify-start">
+                            <span className="h-1 w-12 rounded-full bg-primary/20">
+                              <span className="block h-full w-2/3 bg-primary rounded-full" />
+                            </span>
+                          </div>
                         </div>
-                      )}
+
+                        {hasMultipleHeroVideos && (
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setHeroVideoIndex((prev) => (prev - 1 + heroVideos.length) % heroVideos.length)}
+                              className="p-2 rounded-full hover:bg-slate-100/50 text-slate-500 hover:text-primary transition-colors"
+                            >
+                              <ChevronLeft className="h-5 w-5" />
+                            </button>
+                            <button
+                              onClick={() => setHeroVideoIndex((prev) => (prev + 1) % heroVideos.length)}
+                              className="p-2 rounded-full hover:bg-slate-100/50 text-slate-500 hover:text-primary transition-colors"
+                            >
+                              <ChevronRight className="h-5 w-5" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -460,7 +471,7 @@ export function Hero({ locale, data, events }: HeroProps) {
                   </div>
                   <Link
                     href={`/${locale}/events`}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl sm:w-auto sm:text-xs sm:tracking-[0.22em]"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl hover:bg-slate-900 sm:w-auto sm:text-xs sm:tracking-[0.22em] border-0"
                   >
                     {labels.all}
                     <ArrowRight className="h-3.5 w-3.5" />

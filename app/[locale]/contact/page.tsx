@@ -336,7 +336,7 @@ export default async function ContactPage({
                   href={mapUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-primary hover:shadow-orange-500/25"
+                  className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-slate-900 hover:shadow-xl"
                 >
                   {copy.directions}
                   <ArrowUpRight className="h-4 w-4" />

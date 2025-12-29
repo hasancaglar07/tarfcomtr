@@ -41,7 +41,7 @@ export interface Post {
   location?: string | null
   duration?: string | null
   gallery?: string[]
-  is_featured?: boolean
+  // is_featured?: boolean
   category: Category | null
   post_type: PostTypeRef | null
   author: Author | null
@@ -215,7 +215,7 @@ const mapPost = (post: PostRecord): Post => {
     location: post.location ?? null,
     duration: null,
     gallery,
-    is_featured: typeof meta?.is_featured === 'boolean' ? meta.is_featured : false,
+    // is_featured: typeof meta?.is_featured === 'boolean' ? meta.is_featured : false,
     category: mapCategory(post.category),
     post_type: mapPostType(post.type),
     author: null,

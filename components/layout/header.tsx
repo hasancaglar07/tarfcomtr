@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   ChevronDown,
+  ArrowRight,
 } from 'lucide-react'
 
 interface HeaderProps {
@@ -638,12 +639,11 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
                 </div>
               </div>
 
-              {/* Action Button */}
               <Link href={`/${locale}/contact`} onClick={closeMobileMenu} className="block">
-                <Button className="group relative w-full h-14 rounded-2xl text-base font-bold text-white shadow-lg overflow-hidden bg-gradient-to-r from-amber-500 to-orange-600 border-0">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:animate-shimmer" />
-                  <span className="relative flex items-center justify-center gap-2">
+                <Button className="w-full h-14 rounded-2xl text-base font-bold text-white shadow-md bg-slate-950 hover:bg-slate-900 transition-all border-0">
+                  <span className="flex items-center justify-center gap-2">
                     {locale === 'tr' ? 'Başvuru Yap' : locale === 'ar' ? 'قدّم الآن' : 'Send Application'}
+                    <ArrowRight className="h-4 w-4" />
                   </span>
                 </Button>
               </Link>
@@ -669,15 +669,16 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
             className="container flex h-16 items-center justify-between lg:h-20"
           >
             <motion.div whileHover={{ scale: 1.02 }} className="flex items-center">
-              <Link href={`/${locale}`} className="flex items-center">
+              <Link href={`/${locale}`} className="group relative flex items-center overflow-hidden rounded-xl px-1">
                 <Image
                   src="/img/tarf.png"
                   alt="TARF - Türkiye Araştırma Fonları Derneği"
                   width={120}
                   height={40}
-                  className="h-10 w-auto object-contain"
+                  className="h-10 w-auto object-contain relative z-10"
                   priority
                 />
+                <div className="absolute inset-0 -translate-x-[150%] bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 animate-[shimmer_6s_infinite] z-20 pointer-events-none" />
               </Link>
             </motion.div>
 
@@ -686,12 +687,11 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
             <motion.div className="flex items-center gap-3" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}>
               <Link href={`/${locale}/contact`} className="hidden lg:inline-flex">
                 <Button
-                  size="lg"
-                  className="group relative overflow-hidden rounded-full px-8 py-6 text-base font-bold text-white shadow-[0_10px_30px_rgba(249,115,22,0.3)] transition-all hover:scale-105 hover:shadow-[0_20px_50px_rgba(249,115,22,0.4)] bg-gradient-to-r from-amber-500 to-orange-600 border-0"
+                  className="rounded-full px-8 py-6 text-sm font-bold text-white shadow-md transition-all hover:bg-slate-900 hover:shadow-lg hover:-translate-y-0.5 bg-slate-950 border-0"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:animate-shimmer" />
-                  <span className="relative z-10 flex items-center gap-2">
+                  <span className="flex items-center gap-2">
                     {locale === 'tr' ? 'Başvuru Yap' : locale === 'ar' ? 'قدّم الآن' : 'Send Application'}
+                    <ArrowRight className="h-4 w-4" />
                   </span>
                 </Button>
               </Link>

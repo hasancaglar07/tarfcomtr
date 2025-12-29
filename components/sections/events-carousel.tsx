@@ -177,7 +177,7 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
             <TabsList className="inline-flex h-auto p-1 bg-secondary/50 backdrop-blur-sm flex-wrap gap-2">
               <TabsTrigger
                 value="past"
-                className="px-4 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full"
+                className="px-4 py-2 data-[state=active]:bg-slate-950 data-[state=active]:text-white rounded-full transition-colors"
               >
                 {locale === 'tr'
                   ? 'Gerçekleşen Etkinlikler'
@@ -187,7 +187,7 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
               </TabsTrigger>
               <TabsTrigger
                 value="upcoming"
-                className="px-4 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full"
+                className="px-4 py-2 data-[state=active]:bg-slate-950 data-[state=active]:text-white rounded-full transition-colors"
               >
                 {locale === 'tr'
                   ? 'Yaklaşan Etkinlikler'
@@ -321,7 +321,7 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
               <Link href={`/${locale}/events`}>
                 <Button
                   variant="outline"
-                  className="rounded-full px-8 py-6 h-auto text-base font-semibold border-primary/20 hover:bg-primary hover:text-white transition-all group"
+                  className="rounded-full px-8 py-6 h-auto text-base font-semibold border-slate-200 hover:bg-slate-950 hover:text-white hover:border-slate-950 transition-all group"
                 >
                   {content.see_all}
                   <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -442,7 +442,7 @@ function EventCard({
           {/* Premium CTA Button */}
           <div className="mt-5 pt-4 border-t border-slate-200/50">
             <Link href={`/${locale}/events/${event.slug}`} className="block">
-              <Button className="w-full rounded-full bg-white border border-slate-200 text-slate-700 font-semibold shadow-sm hover:bg-slate-50 hover:text-primary hover:border-primary/20 transition-all group/btn">
+              <Button className="w-full rounded-full bg-white border border-slate-200 text-slate-700 font-semibold shadow-sm hover:bg-slate-50 hover:text-slate-950 hover:border-slate-300 transition-all group/btn">
                 {content.details}
                 <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
               </Button>

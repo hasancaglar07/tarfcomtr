@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { CheckCircle2, AlertTriangle } from 'lucide-react'
+import { CheckCircle2, AlertTriangle, ArrowRight } from 'lucide-react'
 
 type Copy = {
   placeholders: {
@@ -242,10 +242,13 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
       )}
       <Button
         type="submit"
-        className="h-14 w-full rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-lg font-bold text-white shadow-xl shadow-orange-500/20 transition-all hover:scale-[1.02] hover:shadow-orange-500/30 disabled:opacity-70 disabled:hover:scale-100"
+        className="h-14 w-full rounded-full bg-slate-950 text-lg font-bold text-white shadow-lg transition-all hover:bg-slate-900 hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0 border-0"
         disabled={loading || !kvkkAccepted}
       >
-        {loading ? 'Gönderiliyor…' : copy.submit}
+        <span className="flex items-center gap-2">
+          {loading ? 'Gönderiliyor…' : copy.submit}
+          {!loading && <ArrowRight className="h-5 w-5" />}
+        </span>
       </Button>
     </form>
   )
