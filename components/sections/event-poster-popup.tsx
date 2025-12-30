@@ -122,109 +122,111 @@ export function EventPosterPopup({ locale, events = [] }: EventPosterPopupProps)
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4 py-8"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
       role="dialog"
       aria-modal="true"
       onClick={dismissActive}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity" />
 
-      {/* Popup Container - Matching Hero Card Style */}
+      {/* Popup Container */}
       <div
-        className="relative w-full max-w-[400px] overflow-hidden rounded-[32px] border border-white/80 bg-white/95 p-5 shadow-[0_40px_100px_rgba(234,88,12,0.25)] backdrop-blur-3xl animate-in fade-in zoom-in-95 duration-300"
+        className="relative w-full max-w-sm sm:max-w-md overflow-hidden rounded-[32px] bg-slate-900 shadow-[0_40px_100px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in-95 duration-300 ring-1 ring-white/10"
         onClick={(event) => event.stopPropagation()}
       >
-        {/* Spotlight Effect (Static match to hero hover) */}
-        <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-primary/10 blur-[80px] pointer-events-none" />
+        {/* Main Image Area - Full Cover */}
+        <div className="relative aspect-[3/4] sm:aspect-[4/5] w-full">
+          <Link href={`/${locale}/events/${active.slug}`} className="block h-full w-full group/image">
+            <Image
+              src={resolveImageSrc(active.featured_image, getDefaultImage())}
+              alt={active.title}
+              fill
+              className="object-cover transition-transform duration-700 group-hover/image:scale-105"
+              priority
+            />
+            {/* Gradient Overlay for Text Readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-slate-950/10" />
 
-        {/* Header with Hero-style Badge */}
-        <div className="relative flex items-center justify-between gap-3 px-1 pt-1 pb-5">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-bold uppercase tracking-widest text-primary shadow-[0_2px_10px_rgba(249,115,22,0.1)] backdrop-blur-md">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-            </span>
-            {content.badge}
-          </span>
-          <button
-            type="button"
-            onClick={dismissActive}
-            aria-label={content.close}
-            className="group flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-900"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
+            {/* Top Bar (Floating) */}
+            <div className="absolute top-0 left-0 right-0 p-4 flex items-start justify-between z-10">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-md shadow-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                </span>
+                {content.badge}
+              </span>
 
-        {/* Poster Image Container */}
-        <div className="relative">
-          <Link href={`/${locale}/events/${active.slug}`} className="block group/image">
-            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-[24px] border border-slate-100 bg-slate-50 shadow-lg">
-              <Image
-                src={resolveImageSrc(active.featured_image, getDefaultImage())}
-                alt={active.title}
-                fill
-                sizes="(max-width: 768px) 90vw, 360px"
-                className="object-cover transition-transform duration-500 group-hover/image:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300" />
+              <button
+                type="button"
+                onClick={dismissActive}
+                aria-label={content.close}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-md border border-white/20 transition-transform active:scale-95 hover:bg-white hover:text-black hover:border-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
           </Link>
 
+          {/* Navigation Arrows (Floating Sides) */}
           {hasMultiple && (
             <>
               <button
                 type="button"
-                onClick={prev}
+                onClick={(e) => { e.stopPropagation(); prev(); }}
                 aria-label={content.prev}
-                className="absolute -left-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full border border-white bg-white/90 text-slate-700 shadow-lg transition-transform hover:scale-110 hover:bg-white"
+                className="absolute left-2 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-black/20 text-white/70 backdrop-blur-sm border border-white/10 transition-all hover:bg-white hover:text-black hover:scale-110 sm:left-4 sm:h-10 sm:w-10"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <button
                 type="button"
-                onClick={next}
+                onClick={(e) => { e.stopPropagation(); next(); }}
                 aria-label={content.next}
-                className="absolute -right-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full border border-white bg-white/90 text-slate-700 shadow-lg transition-transform hover:scale-110 hover:bg-white"
+                className="absolute right-2 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-black/20 text-white/70 backdrop-blur-sm border border-white/10 transition-all hover:bg-white hover:text-black hover:scale-110 sm:right-4 sm:h-10 sm:w-10"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
             </>
           )}
-        </div>
 
-        {/* Content */}
-        <div className="mt-5 space-y-4 text-center">
-          <h3 className="line-clamp-2 text-lg font-bold leading-tight text-slate-900">
-            {active.title}
-          </h3>
+          {/* Bottom Content Area (Overlay) */}
+          <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 z-10 flex flex-col items-center text-center space-y-4">
 
-          <div className="flex justify-center gap-3">
+            {/* Title */}
+            <Link href={`/${locale}/events/${active.slug}`} className="block">
+              <h3 className="line-clamp-2 text-xl sm:text-2xl font-black leading-tight text-white drop-shadow-md">
+                {active.title}
+              </h3>
+            </Link>
+
+            {/* Action Button */}
             <Link
               href={`/${locale}/events/${active.slug}`}
-              className="inline-flex h-10 items-center justify-center rounded-full bg-slate-900 px-6 text-sm font-bold text-white shadow-lg transition-transform hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl"
+              className="inline-flex h-11 w-full sm:w-auto min-w-[160px] items-center justify-center rounded-full bg-white px-6 text-sm font-bold text-slate-950 shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-transform hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] active:scale-95"
             >
               {content.cta}
             </Link>
-          </div>
 
-          {hasMultiple && (
-            <div className="flex justify-center gap-1.5 pt-1">
-              {posters.map((_, dotIndex) => (
-                <button
-                  key={`poster-dot-${dotIndex}`}
-                  type="button"
-                  onClick={() => setIndex(dotIndex)}
-                  aria-label={`${dotIndex + 1}`}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${dotIndex === index
+            {/* Pagination Dots */}
+            {hasMultiple && (
+              <div className="flex justify-center gap-1.5 pt-1">
+                {posters.map((_, dotIndex) => (
+                  <button
+                    key={`poster-dot-${dotIndex}`}
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); setIndex(dotIndex); }}
+                    aria-label={`${dotIndex + 1}`}
+                    className={`h-1.5 rounded-full transition-all duration-300 shadow-sm ${dotIndex === index
                       ? 'w-6 bg-primary'
-                      : 'w-1.5 bg-slate-200 hover:bg-slate-300'
-                    }`}
-                />
-              ))}
-            </div>
-          )}
+                      : 'w-1.5 bg-white/30 hover:bg-white/50'
+                      }`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
