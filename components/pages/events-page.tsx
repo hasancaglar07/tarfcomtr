@@ -3,7 +3,9 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar, MapPin, Clock3, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Animate, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/animate'
+import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 type EventsPageProps = {
   locale: string
@@ -114,16 +116,35 @@ export async function EventsPage({ locale, pastPage = 1 }: EventsPageProps) {
                     <AnimatedCard className="h-full">
                       <Link href={`/${locale}/events/${event.slug}`} className="group block h-full">
                         <div className="relative h-full flex flex-col sm:flex-row gap-6 p-6 rounded-[32px] border border-white/40 bg-white/60 shadow-[0_10px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:-translate-y-1 hover:bg-white/80">
-                          {/* Date Box */}
-                          <div className="shrink-0 flex sm:flex-col items-center justify-center gap-1 sm:w-24 sm:h-auto rounded-2xl bg-white border border-white/50 shadow-sm p-4 text-center">
-                            <span className="text-3xl sm:text-4xl font-black text-slate-900 leading-none">
-                              {event.event_date ? new Date(event.event_date).getDate() : '--'}
-                            </span>
-                            <span className="text-xs font-bold uppercase tracking-widest text-primary">
-                              {event.event_date
-                                ? new Date(event.event_date).toLocaleDateString(locale, { month: 'short' })
-                                : ''}
-                            </span>
+                          {/* Poster */}
+                          <div className="relative w-full sm:w-40 shrink-0">
+                            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-white/60 bg-white shadow-sm">
+                              {event.featured_image ? (
+                                <Image
+                                  src={resolveImageSrc(event.featured_image, getDefaultImage())}
+                                  alt={event.title}
+                                  fill
+                                  sizes="(max-width: 768px) 100vw, 160px"
+                                  className="object-cover"
+                                />
+                              ) : (
+                                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-amber-50 to-white">
+                                  <Calendar className="h-12 w-12 text-primary/40" />
+                                </div>
+                              )}
+                            </div>
+                            {event.event_date && (
+                              <div className="absolute bottom-3 left-3">
+                                <div className="flex flex-col items-center justify-center rounded-xl bg-white/90 px-3 py-2 text-center shadow-md backdrop-blur">
+                                  <span className="text-xl font-black text-slate-900 leading-none">
+                                    {new Date(event.event_date).getDate()}
+                                  </span>
+                                  <span className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-500">
+                                    {new Date(event.event_date).toLocaleDateString(locale, { month: 'short' })}
+                                  </span>
+                                </div>
+                              </div>
+                            )}
                           </div>
 
                           <div className="flex-1 space-y-3 min-w-0">
@@ -178,11 +199,6 @@ export async function EventsPage({ locale, pastPage = 1 }: EventsPageProps) {
           <section className="space-y-8">
             <div className="flex items-end justify-between gap-4 px-2">
               <h2 className="text-3xl font-bold tracking-tight text-slate-900">{labels.past}</h2>
-              {pastEvents.total > 0 && (
-                <span className="text-sm font-medium text-slate-500 bg-white/50 px-3 py-1 rounded-full border border-white/40">
-                  {labels.page} {pastEvents.page} / {pastEvents.totalPages}
-                </span>
-              )}
             </div>
 
             {pastEvents.total === 0 ? (
@@ -238,11 +254,11 @@ export async function EventsPage({ locale, pastPage = 1 }: EventsPageProps) {
                   ))}
                 </StaggerContainer>
 
-                {pastEvents.totalPages > 1 && (
-                  <div className="flex items-center justify-between pt-8 border-t border-slate-200/50">
-                    <div className="text-sm font-medium text-slate-500">
-                      {labels.page} {pastEvents.page} / {pastEvents.totalPages}
-                    </div>
+                <div className="flex flex-col items-center gap-4 pt-8 border-t border-slate-200/50">
+                  <div className="text-sm font-medium text-slate-500 bg-white/50 px-3 py-1 rounded-full border border-white/40">
+                    {labels.page} {pastEvents.page} / {pastEvents.totalPages}
+                  </div>
+                  {pastEvents.totalPages > 1 && (
                     <div className="flex gap-3">
                       {pastEvents.page > 1 && (
                         <Button variant="outline" asChild className="rounded-full bg-white/50 border-white/60 hover:bg-white">
@@ -259,8 +275,8 @@ export async function EventsPage({ locale, pastPage = 1 }: EventsPageProps) {
                         </Button>
                       )}
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </>
             )}
           </section>

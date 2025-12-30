@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import type { ContentPageCategory, ContentPageDefinition } from '@/content/content-pages'
 import { ArrowRight } from 'lucide-react'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
@@ -12,6 +13,15 @@ interface StrategicPagesProps {
 }
 
 const groupOrder: ContentPageCategory[] = ['kurumsal', 'dusunce', 'akademi', 'yazilim', 'kulupler', 'yayinlar']
+const categoryArtwork: Record<ContentPageCategory, string> = {
+  kurumsal: '/img/icons/hero-projects.png',
+  dusunce: '/img/icons/pillar-policy.png',
+  akademi: '/img/icons/pillar-academy.png',
+  yazilim: '/img/icons/pillar-digital.png',
+  kulupler: '/img/icons/pillar-ecosystem.png',
+  yayinlar: '/img/icons/stat-blog.png',
+  yasal: '/img/icons/hero-services.png',
+}
 
 export function StrategicPages({ locale, groups }: StrategicPagesProps) {
   return (
@@ -109,13 +119,24 @@ export function StrategicPages({ locale, groups }: StrategicPagesProps) {
                         </p>
                         <h3 className="mt-3 text-2xl font-semibold text-slate-900">{group.description}</h3>
                       </div>
-                      <span className="rounded-2xl border border-slate-200/70 bg-slate-50/70 px-3 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
-                        {locale === 'tr'
-                          ? `${group.pages.length} sayfa`
-                          : locale === 'ar'
-                          ? `${group.pages.length} صفحة`
-                          : `${group.pages.length} pages`}
-                      </span>
+                      <div className="flex flex-col items-end gap-3">
+                        <span className="rounded-2xl border border-slate-200/70 bg-slate-50/70 px-3 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
+                          {locale === 'tr'
+                            ? `${group.pages.length} sayfa`
+                            : locale === 'ar'
+                            ? `${group.pages.length} صفحة`
+                            : `${group.pages.length} pages`}
+                        </span>
+                        <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/70 shadow-sm">
+                          <Image
+                            src={categoryArtwork[category]}
+                            alt={`${group.label} görseli`}
+                            fill
+                            sizes="64px"
+                            className="object-contain p-2"
+                          />
+                        </div>
+                      </div>
                     </div>
 
                     <div className="space-y-3">

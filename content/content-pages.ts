@@ -613,7 +613,6 @@ const kurumsalPages: ContentPageDefinition[] = [
       description:
         'Topluluk meclisleri, danışma kurulları ve gönüllü çalışma gruplarına katılarak yönetişim süreçlerini birlikte iyileştirelim.',
       primaryAction: { label: 'Katılım Formu', href: 'contact' },
-      secondaryAction: { label: 'Etik Komite', href: 'etik-beyan' },
     },
     seo: {
       title: 'TARF Yönetim İlkeleri | Şeffaf ve Katılımcı Yapı',
@@ -1017,7 +1016,6 @@ const dusuncePages: ContentPageDefinition[] = [
       description:
         'Okulları, üniversiteleri ve alternatif öğrenme modellerini kapsayan bütüncül bir perspektifle çalışıyoruz.',
       actions: [
-        { label: 'Araştırma Dosyası', href: 'dusunce-enstitusu/egitim' },
         { label: 'Program Talep Et', href: 'contact', variant: 'secondary' },
       ],
       stats: [
@@ -1085,7 +1083,6 @@ const dusuncePages: ContentPageDefinition[] = [
       description:
         'Okulunuz, belediyeniz veya kurumunuz için eğitim dönüşümü projesini birlikte kurgulayalım.',
       primaryAction: { label: 'İletişim Kur', href: 'contact' },
-      secondaryAction: { label: 'Raporu İndir', href: 'dusunce-enstitusu' },
     },
     seo: {
       title: 'Eğitim Araştırmaları | TARF Düşünce Enstitüsü',
@@ -1340,7 +1337,7 @@ const dusuncePages: ContentPageDefinition[] = [
       description:
         'Sanatçı rezidansları, sergiler ve araştırma yayınları için işbirliği fırsatlarını konuşalım.',
       primaryAction: { label: 'İletişim Kur', href: 'contact' },
-      secondaryAction: { label: 'Yayınları Gör', href: 'blog' },
+      secondaryAction: { label: 'İlgili Yazılar', href: 'blog' },
     },
     seo: {
       title: 'Kültür ve Sanat Programları | TARF Düşünce Enstitüsü',
@@ -1617,7 +1614,7 @@ const akademiPages: ContentPageDefinition[] = [
         'TARF Akademi, lisans öğrencilerine yönelik olarak; kendi akademik alanlarında derinlik kazanmalarını, etik ilkelere dayalı bir duruş geliştirmelerini ve liderlik vasfı taşıyan bireyler olarak yetişmelerini hedefleyen nitelikli bir eğitim platformudur.\n\nMisyon & Vizyon: TARF Akademi, üniversite gençliğini yalnızca mesleki bilgiyle değil; ahlâk, sorumluluk, düşünce disiplini ve toplumsal bilinçle donatmayı amaçlar. Bilginin hikmetle, bilimin irfanla buluştuğu bir anlayışla; çağın sorunlarını okuyabilen, çözüm üretebilen ve bulunduğu alana değer katan bireyler yetiştirmeyi hedefler.\n\nAkademi, öğrencilerin entelektüel birikimlerini derinleştirirken; kişisel gelişim, liderlik, etik farkındalık ve kamusal sorumluluk bilinci kazanmalarını esas alır. TARF Akademi, Türkiye’nin yarınlarını inşa edecek nitelikli insan kaynağını yetiştirmeyi stratejik bir sorumluluk olarak görür.',
       actions: [
         { label: 'Programları Keşfet', href: 'akademi' },
-        { label: 'Başvuru Yap', href: 'contact', variant: 'secondary' },
+        { label: 'İletişime Geç', href: 'contact', variant: 'secondary' },
       ],
       stats: [
         { label: 'Aktif modül', value: '32', helper: 'Bilim & teknoloji' },
@@ -1729,7 +1726,7 @@ const akademiPages: ContentPageDefinition[] = [
       title: 'Akademi yolculuğuna katıl',
       description:
         'Seviyenize uygun programı seçin, danışmanlarımızla görüşerek kişisel öğrenme planınızı oluşturun.',
-      primaryAction: { label: 'Başvuruyu Başlat', href: 'contact' },
+      primaryAction: { label: 'İletişime Geç', href: 'contact' },
       secondaryAction: { label: 'Program Kataloğu', href: 'services' },
     },
     seo: {
@@ -2310,8 +2307,7 @@ const yazilimPages: ContentPageDefinition[] = [
       description:
         'Kurumsal ekipler için teknoloji yol haritası, mimari tasarım, DevOps ve kapasite geliştirme danışmanlığı sunuyoruz.',
       actions: [
-        { label: 'Danışmanlık Paketleri', href: 'yazilim/danismanlik' },
-        { label: 'Ücretsiz Görüşme', href: 'contact', variant: 'secondary' },
+        { label: 'İletişime Geç', href: 'contact' },
       ],
       stats: [
         { label: 'Kurumsal müşteri', value: '24', helper: 'Sürdürülen proje' },
@@ -2364,8 +2360,7 @@ const yazilimPages: ContentPageDefinition[] = [
       title: 'Ücretsiz danışmanlık görüşmesi planlayın',
       description:
         'Teknoloji dönüşümünüz için birlikte değerlendirme yapalım, yol haritanızı çıkaralım.',
-      primaryAction: { label: 'Görüşme Planla', href: 'contact' },
-      secondaryAction: { label: 'Başarı Hikayeleri', href: 'blog' },
+      primaryAction: { label: 'İletişime Geç', href: 'contact' },
     },
     seo: {
       title: 'Teknoloji Danışmanlığı | TARF Yazılım',
@@ -2597,7 +2592,6 @@ const kuluplerPages: ContentPageDefinition[] = [
       description:
         'Topluluk koordinatörleri doğru kulüp ve mentor ile eşleşmenize yardımcı olur.',
       primaryAction: { label: 'Kulübe Katıl', href: 'contact' },
-      secondaryAction: { label: 'Kulüp El Kitabı', href: 'kulupler' },
     },
     seo: {
       title: 'Öğrenci Kulüpleri | TARF Toplulukları',
@@ -2615,8 +2609,7 @@ const kuluplerPages: ContentPageDefinition[] = [
       description:
         'Robotik, yapay zekâ, web & mobile, oyun, AR/VR ve araştırma takımları Türkiye’nin teknoloji dönüşümüne katkı sağlıyor.',
       actions: [
-        { label: 'Takımları Gör', href: 'kulupler/teknoloji-takimlari' },
-        { label: 'Takıma Başvur', href: 'contact', variant: 'secondary' },
+        { label: 'İletişime Geç', href: 'contact', variant: 'secondary' },
       ],
       stats: [
         { label: 'Aktif takım', value: '11', helper: 'Farklı alanlarda' },
@@ -2682,8 +2675,7 @@ const kuluplerPages: ContentPageDefinition[] = [
       title: 'Teknoloji takımına katıl',
       description:
         'Yeteneklerinizi gerçek projelerde kullanmak için başvuru formunu doldurun.',
-      primaryAction: { label: 'Başvuruyu Başlat', href: 'contact' },
-      secondaryAction: { label: 'Proje Portföyü', href: 'events' },
+      primaryAction: { label: 'İletişime Geç', href: 'contact' },
     },
     seo: {
       title: 'Teknoloji Takımları | TARF',

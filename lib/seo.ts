@@ -98,7 +98,7 @@ export const siteSeoConfig = {
     },
     services: {
       tr: {
-        title: 'Programlar ve hizmetler · TARF Akademi',
+        title: 'Program Kataloğu · TARF Akademi',
         description: 'Kurumlara özel danışmanlık, eğitim ve teknoloji programlarımızı inceleyin.',
       },
       en: {

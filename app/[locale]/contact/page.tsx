@@ -50,11 +50,11 @@ type ContactCopy = {
 const localizedContent: Record<'tr' | 'en' | 'ar', ContactCopy> = {
   tr: {
     heroEyebrow: 'TARF Akademi',
-    heroTitle: 'Bilim, teknoloji ve etik ekseninde ortaklık kurun',
+    heroTitle: 'Bilgiyle hikmeti, teknolojiyle irfanı buluşturan çalışmalarımızda siz de yerinizi alın',
     heroSubtitle:
-      'TARF, gençleri üretken kılan çok katmanlı teknoloji ekosistemi. Formu doldurun, 24 saat içinde yol haritamızı paylaşalım.',
+      'Eğitim programlarımıza katılabilir, projelerimize katkı sunabilir, ilgi alanlarınıza uygun çalışma gruplarında gönüllü olarak yer alabilirsiniz. Birlikte düşünmek, üretmek ve topluma değer katmak için bize katılın.',
     heroBody:
-      'Bilimsel araştırma, yazılım teknolojileri, dergi ve teknoloji takımları aynı çatı altında. İhtiyacınızı anlatın; Ankara stüdyomuzdan hibrit görüşme ayarlayalım ve sprint bazlı planımızı sizinle paylaşalım.',
+      'Üreten, düşünen ve sorumluluk alan bir topluluğun parçası olun. Eğitimlerimizde, projelerimizde ve çalışma alanlarımızda yeteneklerinizi geliştirin, geleceğe katkı sunun. Fikirlerinizle, emeğinizle ve heyecanınızla aramıza katılın.',
     emailLabel: 'E-posta',
     phoneLabel: 'Telefon',
     addressLabel: 'Adres',
@@ -67,6 +67,9 @@ const localizedContent: Record<'tr' | 'en' | 'ar', ContactCopy> = {
       'Düşünce Enstitüsü',
       'Akademi',
       'Yazılım Geliştirme',
+      'Teknoloji Danışmanlığı',
+      'Öğrenci Kulüpleri',
+      'Teknoloji Takımları',
       'Sertifika Programlarına Katılım',
       'Konferanslara Katılım',
       'Çalıştaylara Katılım',
@@ -270,7 +273,7 @@ export default async function ContactPage({
             {/* Left Column: Hero Content & Contact Info */}
             <div className="space-y-12">
               {/* Hero Text Area */}
-              <div className="space-y-6 relative">
+              <div className="space-y-5 relative">
                 <div className="absolute -left-20 -top-20 h-[300px] w-[300px] rounded-full bg-primary/10 blur-[80px] pointer-events-none" />
 
                 <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary shadow-sm backdrop-blur-md">
@@ -281,13 +284,13 @@ export default async function ContactPage({
                   {copy.heroEyebrow}
                 </div>
 
-                <h1 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl leading-[1.1]">
+                <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl lg:text-4xl leading-snug">
                   {copy.heroTitle}
                 </h1>
-                <p className="text-xl font-medium text-slate-600 leading-relaxed">
+                <p className="text-base font-medium text-slate-600 leading-relaxed">
                   {copy.heroSubtitle}
                 </p>
-                <p className="text-lg text-slate-500 leading-relaxed font-normal">
+                <p className="text-sm text-slate-500 leading-relaxed font-normal">
                   {copy.heroBody}
                 </p>
               </div>

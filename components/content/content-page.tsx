@@ -45,7 +45,7 @@ const SectionWrapper = ({ section, children }: { section: ContentSection; childr
         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">{section.title}</h2>
         {section.description && (
           <div
-            className="text-lg text-slate-600 leading-relaxed [&_p]:leading-relaxed [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:font-bold [&_em]:italic"
+            className="text-lg text-slate-600 leading-relaxed [&_p]:leading-relaxed [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-0.5 [&_strong]:font-bold [&_em]:italic"
             dangerouslySetInnerHTML={{
               __html: section.description.startsWith('<')
                 ? section.description
@@ -74,7 +74,7 @@ const GridSection = ({ section }: { section: ContentSection }) => (
         <h3 className="mb-3 text-xl font-bold text-slate-900 group-hover:text-primary transition-colors">{item.title}</h3>
         {item.description && (
           <div
-            className="text-slate-600 leading-relaxed [&_p]:leading-relaxed [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:font-bold [&_em]:italic flex-1"
+            className="text-slate-600 leading-relaxed [&_p]:leading-relaxed [&_p]:mb-1.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-0.5 [&_strong]:font-bold [&_em]:italic flex-1"
             dangerouslySetInnerHTML={{
               __html: item.description.startsWith('<')
                 ? item.description
@@ -116,7 +116,7 @@ const ListSection = ({ section }: { section: ContentSection }) => {
             <h3 className="text-xl font-bold text-slate-900">{item.title}</h3>
             {item.description && (
               <div
-                className="text-slate-600 leading-relaxed [&_p]:leading-relaxed [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:font-bold [&_em]:italic"
+                className="text-slate-600 leading-relaxed [&_p]:leading-relaxed [&_p]:mb-1.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-0.5 [&_strong]:font-bold [&_em]:italic"
                 dangerouslySetInnerHTML={{
                   __html: item.description.startsWith('<')
                     ? item.description
@@ -144,7 +144,7 @@ const TimelineSection = ({ section }: { section: ContentSection }) => (
           <h3 className="text-2xl font-bold text-slate-900">{item.title}</h3>
           {item.description && (
             <div
-              className="mt-3 text-slate-600 leading-relaxed [&_p]:leading-relaxed [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:font-bold [&_em]:italic"
+              className="mt-3 text-slate-600 leading-relaxed [&_p]:leading-relaxed [&_p]:mb-1.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-0.5 [&_strong]:font-bold [&_em]:italic"
               dangerouslySetInnerHTML={{
                 __html: item.description.startsWith('<')
                   ? item.description
@@ -234,7 +234,7 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
 
                 {!showNarrative && description && (
                   <div
-                    className="text-lg text-slate-600 leading-relaxed max-w-3xl [&_p]:leading-relaxed [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:font-bold [&_em]:italic"
+                    className="text-lg text-slate-600 leading-relaxed max-w-3xl [&_p]:leading-relaxed [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-0.5 [&_strong]:font-bold [&_em]:italic"
                     dangerouslySetInnerHTML={{
                       __html: description.startsWith('<')
                         ? description
@@ -250,7 +250,7 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
                   <div className="space-y-4 text-lg leading-8 text-slate-600">
                     {description.startsWith('<') ? (
                       <div
-                        className="[&_p]:leading-8 [&_p]:mb-6 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-2 [&_strong]:font-bold [&_strong]:text-slate-900 [&_em]:italic"
+                        className="[&_p]:leading-8 [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:font-bold [&_strong]:text-slate-900 [&_em]:italic"
                         dangerouslySetInnerHTML={{ __html: description }}
                       />
                     ) : (
@@ -319,34 +319,34 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
           </SectionWrapper>
         ))}
 
-      <section className="py-20 lg:py-32">
+      <section className="pt-12 pb-16 lg:pt-16 lg:pb-20">
         <div className="container relative z-10">
-          <div className="relative overflow-hidden rounded-[48px] border border-white/30 bg-gradient-to-br from-amber-500 to-orange-600 px-6 py-16 text-center shadow-[0_40px_100px_rgba(249,115,22,0.3)] md:px-12 md:py-20 text-white">
+          <div className="relative overflow-hidden rounded-[40px] border border-white/30 bg-gradient-to-br from-amber-500 to-orange-600 px-6 py-8 text-center shadow-[0_40px_100px_rgba(249,115,22,0.3)] md:px-10 md:py-10 text-white">
             {/* Decorative shapes */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
               <div className="absolute top-[-50%] left-[-20%] w-[80%] h-[200%] bg-white/10 rotate-12 blur-3xl opacity-50" />
               <div className="absolute bottom-[-50%] right-[-20%] w-[80%] h-[200%] bg-black/10 rotate-12 blur-3xl opacity-20" />
             </div>
 
-            <div className="relative z-10 max-w-3xl mx-auto space-y-8">
+            <div className="relative z-10 max-w-5xl mx-auto space-y-6">
               <p className="text-sm font-bold uppercase tracking-[0.3em] text-white/80">
                 {page.category === 'yasal' ? 'Yasal destek' : 'Birlikte üretelim'}
               </p>
-              <h2 className="text-4xl font-black tracking-tight md:text-5xl drop-shadow-sm">{page.cta.title}</h2>
-              <p className="text-lg md:text-xl font-medium text-amber-50 leading-relaxed">
+              <h2 className="text-3xl font-black tracking-tight md:text-4xl drop-shadow-sm">{page.cta.title}</h2>
+              <p className="text-base md:text-lg font-medium text-amber-50 leading-relaxed max-w-3xl mx-auto">
                 {page.cta.description}
               </p>
-              <div className="flex flex-wrap justify-center gap-6 pt-4">
-                <Button size="lg" className="h-14 rounded-full bg-white px-10 text-lg font-bold text-orange-600 hover:bg-slate-50 hover:scale-105 transition-all shadow-xl" asChild>
+              <div className="flex flex-wrap justify-center gap-6 pt-2">
+                <Button size="lg" className="h-12 rounded-full bg-white px-10 text-base font-bold text-orange-600 hover:bg-slate-50 hover:scale-105 transition-all shadow-xl" asChild>
                   <Link href={localizeHref(locale, page.cta.primaryAction.href)}>
-                    {page.cta.primaryAction.label}
+                    {page.slug === 'kulupler/teknoloji-takimlari' ? 'İletişime Geç' : page.cta.primaryAction.label}
                   </Link>
                 </Button>
-                {page.cta.secondaryAction && (
+                {page.cta.secondaryAction && !['kulupler/ogrenci-kulupleri', 'dusunce-enstitusu/egitim', 'yazilim/danismanlik', 'kulupler/teknoloji-takimlari'].includes(page.slug) && (
                   <Button
                     size="lg"
                     variant="outline"
-                    className="h-14 rounded-full border-2 border-white/30 bg-transparent px-10 text-lg font-bold text-white hover:bg-white/10 hover:border-white/50 transition-all"
+                    className="h-12 rounded-full border-2 border-white/30 bg-transparent px-10 text-base font-bold text-white hover:bg-white/10 hover:border-white/50 transition-all"
                     asChild
                   >
                     <Link href={localizeHref(locale, page.cta.secondaryAction.href)}>

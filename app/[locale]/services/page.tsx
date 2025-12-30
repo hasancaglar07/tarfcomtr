@@ -1,13 +1,11 @@
 import { api } from '@/lib/api'
 import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Layers, ArrowRight, Sparkles } from 'lucide-react'
-import { Animate, StaggerContainer, StaggerItem, AnimatedCard } from '@/components/ui/animate'
+import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 
 export const revalidate = 3600
@@ -40,7 +38,7 @@ export default async function ServicesPage({
   )
 
   const pageTitle = {
-    tr: 'Program ve Hizmetler',
+    tr: 'Program Kataloğu',
     en: 'Programs & Services',
     ar: 'البرامج والخدمات',
   }
@@ -53,27 +51,42 @@ export default async function ServicesPage({
 
   return (
     <>
-      <main className="min-h-screen">
-        <section className="bg-gradient-to-b from-primary/10 via-background to-background py-16 md:py-24">
-          <div className="container text-center">
-            <Animate variant="slideUp" className="space-y-6">
-              <div className="flex flex-col items-center gap-3">
-                <Badge className="w-fit" variant="secondary">
-                  <Layers className="h-4 w-4 mr-2" />
+      <main className="relative min-h-screen overflow-hidden bg-white">
+        {/* Global Background Pattern */}
+        <div
+          className="fixed inset-0 z-0 opacity-90 pointer-events-none bg-amber-pattern"
+          aria-hidden="true"
+        />
+
+        {/* Hero Section */}
+        <section className="relative z-10 pt-32 pb-12 md:pt-40 md:pb-20">
+          <div className="container relative text-center">
+            {/* Ambient Background Orbs */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+
+            <Animate variant="slideUp" className="relative space-y-6 max-w-4xl mx-auto">
+              <div className="flex flex-col items-center gap-4">
+                <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-bold uppercase tracking-widest text-primary shadow-sm backdrop-blur-md">
+                  <Layers className="h-3.5 w-3.5" />
                   {locale === 'tr' ? 'TARF Akademi Portföyü' : locale === 'ar' ? 'محفظة تاراف' : 'TARF portfolio'}
-                </Badge>
-                <h1 className="text-4xl md:text-5xl font-bold">
+                </span>
+
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-slate-900 leading-[1.1]">
                   {pageTitle[locale as keyof typeof pageTitle] || pageTitle.en}
                 </h1>
-                <p className="text-lg md:text-xl text-muted-foreground max-w-3xl">
+
+                <p className="text-lg md:text-xl font-medium text-slate-600 leading-relaxed max-w-2xl mx-auto">
                   {pageDescription[locale as keyof typeof pageDescription] || pageDescription.en}
                 </p>
               </div>
 
               {categories.length > 0 && (
-                <div className="flex flex-wrap justify-center gap-2">
+                <div className="flex flex-wrap justify-center gap-2 pt-4">
                   {categories.map((category) => (
-                    <span key={category} className="rounded-full border bg-background px-4 py-1 text-xs font-semibold uppercase tracking-wide">
+                    <span
+                      key={category}
+                      className="rounded-full border border-slate-200 bg-white/60 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-slate-600 shadow-sm backdrop-blur-sm"
+                    >
                       {category}
                     </span>
                   ))}
@@ -83,88 +96,128 @@ export default async function ServicesPage({
           </div>
         </section>
 
-        <div className="container py-16">
+        {/* Services Grid */}
+        <div className="relative z-10 container pb-24">
           {services.length === 0 ? (
-            <div className="text-center text-muted-foreground">
-              {locale === 'tr' ? 'Henüz hizmet eklenmedi.' : locale === 'ar' ? 'لا توجد خدمات بعد.' : 'No services available yet.'}
+            <div className="flex flex-col items-center justify-center p-12 text-center rounded-[32px] border border-dashed border-slate-300 bg-white/50">
+              <p className="text-lg font-medium text-slate-500">
+                {locale === 'tr' ? 'Henüz hizmet eklenmedi.' : locale === 'ar' ? 'لا توجد خدمات بعد.' : 'No services available yet.'}
+              </p>
             </div>
           ) : (
-            <StaggerContainer className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            <StaggerContainer className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {services.map((service) => (
                 <StaggerItem key={service.id}>
-                  <AnimatedCard className="h-full">
-                    <Card className="overflow-hidden flex flex-col h-full">
-                  {service.featured_image && (
-                    <div className="relative h-56 w-full">
-                      <Image
-                        src={resolveImageSrc(service.featured_image, getDefaultImage())}
-                        alt={service.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="flex flex-1 flex-col gap-4 p-6">
-                    <div className="flex items-center gap-2">
-                      {service.category && (
-                        <Badge variant="outline">{service.category.name}</Badge>
-                      )}
-                      <span className="text-xs uppercase tracking-wide text-muted-foreground">
-                        TARF
-                      </span>
-                    </div>
-                    <Link href={`/${locale}/services/${service.slug}`} className="text-2xl font-semibold hover:text-primary transition-colors">
-                      {service.title}
-                    </Link>
-                    <p className="text-sm text-muted-foreground line-clamp-3">
-                      {service.excerpt}
-                    </p>
-                    <Button className="mt-auto w-full" variant="secondary" asChild>
-                      <Link href={`/${locale}/services/${service.slug}`}>
-                        {locale === 'tr' ? 'Detayları Gör' : locale === 'ar' ? 'عرض التفاصيل' : 'View details'}
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                      </Button>
-                    </div>
-                  </Card>
-                </AnimatedCard>
-              </StaggerItem>
+                  <Link href={`/${locale}/services/${service.slug}`} className="group block h-full">
+                    <article className="relative flex flex-col h-full overflow-hidden rounded-[32px] border border-white/80 bg-white/60 p-2 shadow-[0_20px_40px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_80px_rgba(234,88,12,0.15)] hover:border-white">
+
+                      {/* Image Container */}
+                      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[24px] bg-slate-100">
+                        {service.featured_image ? (
+                          <Image
+                            src={resolveImageSrc(service.featured_image, getDefaultImage())}
+                            alt={service.title}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center bg-slate-50 text-slate-300">
+                            <Layers className="h-12 w-12" />
+                          </div>
+                        )}
+                        {/* Overlay Gradient on Image */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/30 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+
+                        {/* Category Badge on Image */}
+                        {service.category && (
+                          <div className="absolute top-4 left-4">
+                            <span className="inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-900 shadow-sm backdrop-blur-md">
+                              {service.category.name}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Content */}
+                      <div className="flex flex-1 flex-col gap-4 p-6">
+                        <div className="space-y-2">
+                          <h2 className="text-xl font-bold leading-tight text-slate-900 transition-colors group-hover:text-primary">
+                            {service.title}
+                          </h2>
+                          <p className="text-sm font-medium leading-relaxed text-slate-500 line-clamp-3">
+                            {service.excerpt}
+                          </p>
+                        </div>
+
+                        <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-100">
+                          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 group-hover:text-primary/70 transition-colors">
+                            {locale === 'tr' ? 'İncele' : locale === 'ar' ? 'عرض' : 'Explore'}
+                          </span>
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-all group-hover:bg-primary group-hover:text-white">
+                            <ArrowRight className="h-4 w-4" />
+                          </span>
+                        </div>
+                      </div>
+                    </article>
+                  </Link>
+                </StaggerItem>
               ))}
             </StaggerContainer>
           )}
         </div>
 
-        <section className="py-16 bg-primary text-primary-foreground">
+        {/* CTA Section */}
+        <section className="relative z-10 pb-20">
           <div className="container">
-            <Animate variant="fadeIn" className="flex flex-col gap-6 text-center">
-              <Sparkles className="mx-auto h-8 w-8" />
-              <h2 className="text-3xl font-bold">
-              {locale === 'tr'
-                ? 'Size özel bir program tasarlayalım'
-                : locale === 'ar'
-                  ? 'دعنا نصمم برنامجًا خاصًا بك'
-                  : 'Let us design a tailor-made program'}
-            </h2>
-            <p className="text-primary-foreground/80 max-w-2xl mx-auto">
-              {locale === 'tr'
-                ? 'İhtiyaçlarınıza göre kısa süreli workshoplardan kapsamlı dönüşüm yolculuklarına kadar çözümler sunuyoruz.'
-                : locale === 'ar'
-                  ? 'نقدم حلولًا تتراوح من ورش العمل القصيرة إلى رحلات التحول الشاملة وفقًا لاحتياجاتك.'
-                  : 'From short workshops to full transformation journeys, we match your needs end-to-end.'}
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button variant="secondary" size="lg" asChild>
-                <Link href={`/${locale}/contact`}>
-                  {locale === 'tr' ? 'Uzmanla görüş' : locale === 'ar' ? 'تحدث مع خبير' : 'Talk to an expert'}
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground" asChild>
-                <Link href={`/${locale}/faq`}>
-                  {locale === 'tr' ? 'Sık sorulan sorular' : locale === 'ar' ? 'الأسئلة الشائعة' : 'Frequently asked questions'}
-                </Link>
-                </Button>
+            <div className="relative overflow-hidden rounded-[40px] bg-slate-900 px-6 py-16 sm:px-12 sm:py-20 shadow-2xl">
+              {/* Decorative Background */}
+              <div className="absolute top-0 right-0 -mt-20 -mr-20 h-[500px] w-[500px] rounded-full bg-primary/20 blur-[100px] opacity-60" />
+              <div className="absolute bottom-0 left-0 -mb-20 -ml-20 h-[400px] w-[400px] rounded-full bg-blue-600/20 blur-[100px] opacity-40" />
+
+              <div className="relative z-10 mx-auto max-w-2xl text-center space-y-8">
+                <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/10 text-white shadow-inner backdrop-blur-md mb-2">
+                  <Sparkles className="h-8 w-8" />
+                </div>
+
+                <h2 className="text-3xl font-black tracking-tight text-white md:text-5xl">
+                  {locale === 'tr'
+                    ? 'Size özel bir program tasarlayalım'
+                    : locale === 'ar'
+                      ? 'دعنا نصمم برنامجًا خاصًا بك'
+                      : 'Let us design a tailor-made program'}
+                </h2>
+
+                <p className="text-lg font-medium text-slate-300 leading-relaxed">
+                  {locale === 'tr'
+                    ? 'İhtiyaçlarınıza göre kısa süreli workshoplardan kapsamlı dönüşüm yolculuklarına kadar çözümler sunuyoruz.'
+                    : locale === 'ar'
+                      ? 'نقدم حلولًا تتراوح من ورش العمل القصيرة إلى رحلات التحول الشاملة وفقًا لاحتياجاتك.'
+                      : 'From short workshops to full transformation journeys, we match your needs end-to-end.'}
+                </p>
+
+                <div className="flex flex-wrap items-center justify-center gap-4">
+                  <Button
+                    size="lg"
+                    className="h-14 rounded-full bg-white px-8 text-base font-bold text-slate-900 transition-transform hover:scale-105 hover:bg-slate-50"
+                    asChild
+                  >
+                    <Link href={`/${locale}/contact`}>
+                      {locale === 'tr' ? 'Uzmanla görüş' : locale === 'ar' ? 'تحدث مع خبير' : 'Talk to an expert'}
+                    </Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-14 rounded-full border-white/20 bg-transparent px-8 text-base font-bold text-white hover:bg-white/10 transition-transform hover:scale-105"
+                    asChild
+                  >
+                    <Link href={`/${locale}/faq`}>
+                      {locale === 'tr' ? 'Sık sorulan sorular' : locale === 'ar' ? 'الأسئلة الشائعة' : 'Frequently asked questions'}
+                    </Link>
+                  </Button>
+                </div>
               </div>
-            </Animate>
+            </div>
           </div>
         </section>
       </main>
