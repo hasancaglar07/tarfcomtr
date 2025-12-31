@@ -4,6 +4,21 @@ import { SettingsForm } from '@/components/admin/settings-form'
 import { upsertSettingsAction } from '@/app/admin/settings/actions'
 import { prisma } from '@/lib/prisma'
 
+type ContactPageContent = {
+  heroEyebrow?: string
+  heroTitle?: string
+  heroSubtitle?: string
+  heroBody?: string
+  formTitle?: string
+  formSubtitle?: string
+  cta?: {
+    title?: string
+    description?: string
+    primaryAction?: { label: string; href: string }
+    secondaryAction?: { label: string; href: string }
+  }
+}
+
 export default async function SettingsPage() {
   const settings = await prisma.setting.findUnique({ where: { locale: 'tr' } })
   const defaultContactCopy = {
@@ -20,7 +35,7 @@ export default async function SettingsPage() {
     settings?.contactContent &&
       typeof settings.contactContent === 'object' &&
       !Array.isArray(settings.contactContent)
-      ? (settings.contactContent as Record<string, Record<string, string>>)
+      ? (settings.contactContent as Record<string, ContactPageContent>)
       : undefined
   const contactCopy = contactContent?.tr
 
@@ -74,12 +89,12 @@ export default async function SettingsPage() {
               contactHeroBody: contactCopy?.heroBody || defaultContactCopy.heroBody,
               contactFormTitle: contactCopy?.formTitle || defaultContactCopy.formTitle,
               contactFormSubtitle: contactCopy?.formSubtitle || defaultContactCopy.formSubtitle,
-              contactCtaTitle: (contactCopy?.cta as any)?.title || '',
-              contactCtaDescription: (contactCopy?.cta as any)?.description || '',
-              contactCtaPrimaryLabel: (contactCopy?.cta as any)?.primaryAction?.label || '',
-              contactCtaPrimaryUrl: (contactCopy?.cta as any)?.primaryAction?.href || '',
-              contactCtaSecondaryLabel: (contactCopy?.cta as any)?.secondaryAction?.label || '',
-              contactCtaSecondaryUrl: (contactCopy?.cta as any)?.secondaryAction?.href || '',
+              contactCtaTitle: contactCopy?.cta?.title || '',
+              contactCtaDescription: contactCopy?.cta?.description || '',
+              contactCtaPrimaryLabel: contactCopy?.cta?.primaryAction?.label || '',
+              contactCtaPrimaryUrl: contactCopy?.cta?.primaryAction?.href || '',
+              contactCtaSecondaryLabel: contactCopy?.cta?.secondaryAction?.label || '',
+              contactCtaSecondaryUrl: contactCopy?.cta?.secondaryAction?.href || '',
             }}
           />
         </div>

@@ -229,11 +229,17 @@ const fallbackContact = {
   email: 'bilgi@verenel.org.tr',
   mapUrl:
     'https://www.google.com/maps/place/VERENEL+DERNE%C4%9E%C4%B0/@39.8937501,32.7488323,13z/data=!4m22!1m15!4m14!1m6!1m2!1s0x14d345001edf907f:0x11169b63277c4f7!2zVkVSRU5FTCBERVJORcSexLA!2m2!1d32.82505!2d39.8937501!1m6!1m2!1s0x14d345001edf907f:0x11169b63277c4f7!2zQcWfYcSfxLEgw5Z2ZcOnbGVyLCAxMzI0LiBDZC4gTm86NjMsIDA2NDYwIMOHYW5rYXlhL0Fua2FyYQ!2m2!1d32.82505!2d39.8937501!3m5!1s0x14d345001edf907f:0x11169b63277c4f7!8m2!3d39.8937501!4d32.82505!16s%2Fg%2F11y74p7_vw?hl=tr&entry=ttu&g_ep=EgoyMDI1MTExMi4wIKXMDSoASAFQAw%3D%3D',
-  mapUrl:
-    'https://www.google.com/maps/place/VERENEL+DERNE%C4%9E%C4%B0/@39.8937501,32.7488323,13z/data=!4m22!1m15!4m14!1m6!1m2!1s0x14d345001edf907f:0x11169b63277c4f7!2zVkVSRU5FTCBERVJORcSexLA!2m2!1d32.82505!2d39.8937501!1m6!1m2!1s0x14d345001edf907f:0x11169b63277c4f7!2zQcWfYcSfxLEgw5Z2ZcOnbGVyLCAxMzI0LiBDZC4gTm86NjMsIDA2NDYwIMOHYW5rYXlhL0Fua2FyYQ!2m2!1d32.82505!2d39.8937501!3m5!1s0x14d345001edf907f:0x11169b63277c4f7!8m2!3d39.8937501!4d32.82505!16s%2Fg%2F11y74p7_vw?hl=tr&entry=ttu&g_ep=EgoyMDI1MTExMi4wIKXMDSoASAFQAw%3D%3D',
+
 } as const
 
-const defaultCta = {
+type CtaContent = {
+  title: string
+  description: string
+  primaryAction: { label: string; href: string }
+  secondaryAction?: { label: string; href: string }
+}
+
+const defaultCta: Record<'tr' | 'en' | 'ar', CtaContent> = {
   tr: {
     title: 'Değerlerimizi hayata geçiren programlara katılın',
     description:
@@ -283,12 +289,14 @@ export default async function ContactPage({
   const showPhone = contactPhone.length > 0
   const dbCtaSettings =
     rawContactContent && typeof rawContactContent === 'object'
-      ? ((rawContactContent as Record<string, any>)[locale]?.cta as {
-        title?: string
-        description?: string
-        primaryAction?: { label: string; href: string }
-        secondaryAction?: { label: string; href: string }
-      } | undefined)
+      ? ((rawContactContent as Record<string, {
+        cta?: {
+          title?: string
+          description?: string
+          primaryAction?: { label: string; href: string }
+          secondaryAction?: { label: string; href: string }
+        }
+      }>)[locale]?.cta)
       : undefined
 
   const ctaSettings = dbCtaSettings?.title ? dbCtaSettings : defaultCta[locale as 'tr' | 'en' | 'ar'] || defaultCta.tr
