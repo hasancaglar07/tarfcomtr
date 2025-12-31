@@ -33,14 +33,25 @@ const mapRecordToPage = (record: {
 }) => {
   const data = record.data as ContentPageDefinition
 
+  const seoTitle =
+    record.seoTitle?.trim() ||
+    data.seo?.title?.trim() ||
+    data.hero?.title ||
+    record.slug
+  const seoDescription =
+    record.seoDescription?.trim() ||
+    data.seo?.description?.trim() ||
+    data.hero?.subtitle ||
+    data.hero?.description ||
+    ''
+
   return {
     ...data,
     slug: record.slug,
     category: record.category,
-    seo: data.seo ?? {
-      title: record.seoTitle ?? data.hero?.title ?? record.slug,
-      description:
-        record.seoDescription ?? data.hero?.subtitle ?? data.hero?.description ?? '',
+    seo: {
+      title: seoTitle,
+      description: seoDescription,
     },
   }
 }

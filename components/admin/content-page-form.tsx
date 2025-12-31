@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { ContentPageDefinition } from '@/content/content-pages'
+import { categoryLabels, type ContentPageCategory, type ContentPageDefinition } from '@/content/content-pages'
 
 import type { PageActionState } from '@/app/admin/actions'
 import { SectionEditor } from '@/components/admin/content-section'
@@ -19,6 +19,32 @@ type ContentPageFormProps = {
 type HeroAction = NonNullable<ContentPageDefinition['hero']['actions']>[number]
 
 const initialState: PageActionState = { status: 'idle' }
+const categories = Object.keys(categoryLabels) as ContentPageCategory[]
+
+const normalizeSlugInput = (value: string) => {
+  const normalized = value
+    .toLowerCase()
+    .trim()
+    .replace(/ğ/g, 'g')
+    .replace(/ü/g, 'u')
+    .replace(/ş/g, 's')
+    .replace(/ı/g, 'i')
+    .replace(/ö/g, 'o')
+    .replace(/ç/g, 'c')
+  const segments = normalized
+    .split('/')
+    .map((segment) =>
+      segment
+        .trim()
+        .replace(/[^a-z0-9\s-]/gi, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, ''),
+    )
+    .filter(Boolean)
+  const joined = segments.join('/')
+  return joined === 'new' ? 'new-page' : joined
+}
 
 const withDefaults = (value: ContentPageDefinition): ContentPageDefinition => {
   return {
@@ -61,20 +87,7 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
   })
 
   const safeSlug = useMemo(() => {
-    const value = data.slug || ''
-    return value
-      .toLowerCase()
-      .trim()
-      .replace(/ğ/g, 'g')
-      .replace(/ü/g, 'u')
-      .replace(/ş/g, 's')
-      .replace(/ı/g, 'i')
-      .replace(/ö/g, 'o')
-      .replace(/ç/g, 'c')
-      .replace(/[^a-z0-9\s-]/gi, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '')
+    return normalizeSlugInput(data.slug || '')
   }, [data.slug])
 
   const showSections = data.category === 'yasal'
@@ -238,13 +251,19 @@ export function ContentPageForm({ mode, action, defaultValues }: ContentPageForm
           <label className="text-sm text-slate-300" htmlFor="category">
             Kategori
           </label>
-          <input
+          <select
             id="category"
             value={data.category}
             onChange={(e) => updateData({ category: e.target.value as ContentPageDefinition['category'] })}
             required
             className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-          />
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {categoryLabels[cat].label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 

@@ -14,3 +14,17 @@ export function normalizeLocale(locale?: string | null): SupportedLocale {
 export function getDisplayLocale(locale?: string | null): string {
   return normalizeLocale(locale)
 }
+
+export const localizeHref = (locale: string, href?: string) => {
+  if (!href) return '#'
+  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) {
+    return href
+  }
+  if (href.startsWith('/')) {
+    return `/${locale}${href}`
+  }
+  if (href.startsWith('#')) {
+    return href
+  }
+  return `/${locale}/${href}`
+}

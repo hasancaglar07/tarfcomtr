@@ -1,0 +1,47 @@
+[
+  {
+    "id": "f0251ef7-b9bd-4879-ab9f-3994da9a2e06",
+    "slug": "genel",
+    "name": "Genel",
+    "type": "blog",
+    "locale": "tr",
+    "createdAt": "2025-11-25T11:41:31.540Z",
+    "updatedAt": "2025-12-30T01:23:43.840Z"
+  },
+  {
+    "id": "180ef22d-e87e-4f37-9f4e-ddac292f7867",
+    "slug": "egitim",
+    "name": "Eğitim Programları",
+    "type": "service",
+    "locale": "tr",
+    "createdAt": "2025-11-25T11:41:31.671Z",
+    "updatedAt": "2025-12-30T01:23:43.960Z"
+  },
+  {
+    "id": "61064518-a426-4c5f-8aa1-95f4dbe96001",
+    "slug": "etkinlik",
+    "name": "Etkinlikler",
+    "type": "event",
+    "locale": "tr",
+    "createdAt": "2025-11-25T11:41:31.732Z",
+    "updatedAt": "2025-12-30T01:23:44.020Z"
+  },
+  {
+    "id": "20d3eb8d-5c8d-484d-bbc7-594681586f19",
+    "slug": "video-kutuphanesi",
+    "name": "Video Kütüphanesi",
+    "type": "video",
+    "locale": "tr",
+    "createdAt": "2025-11-25T11:41:31.797Z",
+    "updatedAt": "2025-12-30T01:23:44.080Z"
+  },
+  {
+    "id": "1c2789a5-7e26-4314-85c2-2a5159c590d1",
+    "slug": "podcast",
+    "name": "Podcastler",
+    "type": "podcast",
+    "locale": "tr",
+    "createdAt": "2025-11-25T11:41:31.858Z",
+    "updatedAt": "2025-12-30T01:23:44.140Z"
+  }
+]

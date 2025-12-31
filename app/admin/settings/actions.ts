@@ -31,6 +31,12 @@ const settingsSchema = z.object({
   contactHeroBody: z.string().optional(),
   contactFormTitle: z.string().optional(),
   contactFormSubtitle: z.string().optional(),
+  contactCtaTitle: z.string().optional(),
+  contactCtaDescription: z.string().optional(),
+  contactCtaPrimaryLabel: z.string().optional(),
+  contactCtaPrimaryUrl: z.string().optional(),
+  contactCtaSecondaryLabel: z.string().optional(),
+  contactCtaSecondaryUrl: z.string().optional(),
 })
 
 async function requireAdmin() {
@@ -86,12 +92,27 @@ export async function upsertSettingsAction(
       socialTwitter: formData.get('socialTwitter')?.toString() || '',
       socialYoutube: formData.get('socialYoutube')?.toString() || '',
       contactContentJson: formData.get('contactContentJson')?.toString() || '',
+      contactHeroEyebrow: formData.get('contactHeroEyebrow')?.toString() || '',
+      contactHeroTitle: formData.get('contactHeroTitle')?.toString() || '',
+      contactHeroSubtitle: formData.get('contactHeroSubtitle')?.toString() || '',
+      contactHeroBody: formData.get('contactHeroBody')?.toString() || '',
+      contactFormTitle: formData.get('contactFormTitle')?.toString() || '',
+      contactFormSubtitle: formData.get('contactFormSubtitle')?.toString() || '',
+      contactCtaTitle: formData.get('contactCtaTitle')?.toString() || '',
+      contactCtaDescription: formData.get('contactCtaDescription')?.toString() || '',
+      contactCtaPrimaryLabel: formData.get('contactCtaPrimaryLabel')?.toString() || '',
+      contactCtaPrimaryUrl: formData.get('contactCtaPrimaryUrl')?.toString() || '',
+      contactCtaSecondaryLabel: formData.get('contactCtaSecondaryLabel')?.toString() || '',
+      contactCtaSecondaryUrl: formData.get('contactCtaSecondaryUrl')?.toString() || '',
     })
+
     if (!parsed.success) {
       return { status: 'error', message: parsed.error.errors[0]?.message ?? 'Form hatası' }
     }
 
     const data = parsed.data
+    console.log('Parsed Data:', JSON.stringify(data, null, 2))
+
     // Parse existing contact content if provided as JSON
     let contactContent: Record<string, unknown> | undefined = undefined
     if (data.contactContentJson && data.contactContentJson.trim().length > 0) {
@@ -103,7 +124,7 @@ export async function upsertSettingsAction(
     }
 
     // Merge locale-specific overrides from form fields
-    const localeContent: Record<string, string> = {}
+    const localeContent: Record<string, unknown> = {}
     const setIf = (key: string, value?: string) => {
       if (value && value.trim().length > 0) {
         localeContent[key] = value.trim()
@@ -116,12 +137,37 @@ export async function upsertSettingsAction(
     setIf('formTitle', data.contactFormTitle)
     setIf('formSubtitle', data.contactFormSubtitle)
 
+    // CTA Content
+    const cta: Record<string, unknown> = {}
+    if (data.contactCtaTitle) cta.title = data.contactCtaTitle
+    if (data.contactCtaDescription) cta.description = data.contactCtaDescription
+    if (data.contactCtaPrimaryLabel || data.contactCtaPrimaryUrl) {
+      cta.primaryAction = {
+        label: data.contactCtaPrimaryLabel || '',
+        href: data.contactCtaPrimaryUrl || '',
+      }
+    }
+    if (data.contactCtaSecondaryLabel || data.contactCtaSecondaryUrl) {
+      cta.secondaryAction = {
+        label: data.contactCtaSecondaryLabel || '',
+        href: data.contactCtaSecondaryUrl || '',
+      }
+    }
+    if (Object.keys(cta).length > 0) {
+      localeContent.cta = cta
+    }
+
+    console.log('Locale Content:', JSON.stringify(localeContent, null, 2))
+
     if (Object.keys(localeContent).length > 0) {
       const existing =
         !contactContent && data.contactContentJson
           ? undefined
           : contactContent && typeof contactContent === 'object'
       const currentSetting = await prisma.setting.findUnique({ where: { locale: data.locale } })
+
+      console.log('Current Setting in DB:', JSON.stringify(currentSetting?.contactContent, null, 2))
+
       const current: Record<string, unknown> =
         (existing as Record<string, unknown> | undefined) ||
         ((currentSetting as unknown as { contactContent?: Record<string, unknown> | null })?.contactContent ??
@@ -132,6 +178,9 @@ export async function upsertSettingsAction(
         [data.locale]: { ...(current?.[data.locale] as Record<string, unknown> | undefined), ...localeContent },
       }
     }
+
+    console.log('Final Contact Content to Save:', JSON.stringify(contactContent, null, 2))
+
     const updateData: Prisma.SettingUncheckedUpdateInput & {
       contactContent?: Prisma.InputJsonValue
     } = {
@@ -168,9 +217,12 @@ export async function upsertSettingsAction(
       create: createData,
     })
 
+    console.log('Settings Upsert Successful')
+
     await revalidate(data.locale)
     return { status: 'success', message: 'Ayarlar kaydedildi' }
   } catch (error) {
+    console.error('Settings Upsert Error:', error)
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
     return { status: 'error', message }
   }

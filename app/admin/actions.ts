@@ -2,7 +2,7 @@
 
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { ContentCategory } from '@prisma/client'
+import { ContentCategory, Prisma } from '@prisma/client'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
 
@@ -42,6 +42,39 @@ function parseJson(dataJson: string) {
   }
 }
 
+function normalizeSlug(slug: string) {
+  const normalized = slug
+    .toLowerCase()
+    .trim()
+    .replace(/ğ/g, 'g')
+    .replace(/ü/g, 'u')
+    .replace(/ş/g, 's')
+    .replace(/ı/g, 'i')
+    .replace(/ö/g, 'o')
+    .replace(/ç/g, 'c')
+  const segments = normalized
+    .split('/')
+    .map((segment) =>
+      segment
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, ''),
+    )
+    .filter(Boolean)
+  return segments.join('/')
+}
+
+function validateSlug(slug: string) {
+  if (slug === 'new') {
+    throw new Error('"new" geçersiz bir slug değeridir.')
+  }
+  if (!slug || slug.length === 0) {
+    throw new Error('Slug boş olamaz')
+  }
+}
+
 function revalidateForSlug(slug: string) {
   revalidateContentPaths(revalidatePath, slug)
   revalidateTag(cacheTags.contentPage(slug))
@@ -69,9 +102,15 @@ export async function createPageAction(
       return { status: 'error', message: parsed.error.errors[0]?.message ?? 'Form hatası' }
     }
 
-    const { slug, category, title, seoTitle, seoDescription, dataJson, publish } = parsed.data
+    const { slug: rawSlug, category, title, seoTitle, seoDescription, dataJson, publish } = parsed.data
+    const slug = normalizeSlug(rawSlug)
+    validateSlug(slug)
 
     const data = parseJson(dataJson)
+    if (data && typeof data === 'object') {
+      data.slug = slug
+      data.category = category
+    }
     await prisma.contentPage.create({
       data: {
         slug,
@@ -96,6 +135,12 @@ export async function createPageAction(
       redirectTo: `/admin/pages/${slug}?${params.toString()}`,
     }
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      return {
+        status: 'error',
+        message: 'Bu slug zaten kullanılıyor. Lütfen slug alanını değiştirin.',
+      }
+    }
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
     return { status: 'error', message }
   }
@@ -123,8 +168,11 @@ export async function updatePageAction(
       return { status: 'error', message: parsed.error.errors[0]?.message ?? 'Form hatası' }
     }
 
-    const { slug, category, title, seoTitle, seoDescription, dataJson, publish, originalSlug } =
+    const { slug: rawSlug, category, title, seoTitle, seoDescription, dataJson, publish, originalSlug } =
       parsed.data
+
+    const slug = normalizeSlug(rawSlug)
+    validateSlug(slug)
 
     const whereSlug = originalSlug || slug
 
@@ -134,6 +182,10 @@ export async function updatePageAction(
     }
 
     const data = parseJson(dataJson)
+    if (data && typeof data === 'object') {
+      data.slug = slug
+      data.category = category
+    }
     await prisma.contentPage.update({
       where: { slug: whereSlug },
       data: {
@@ -158,6 +210,12 @@ export async function updatePageAction(
     })
     return { status: 'success', message: 'Sayfa güncellendi', redirectTo: `/admin/pages/${slug}?${params.toString()}` }
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      return {
+        status: 'error',
+        message: 'Bu slug zaten kullanılıyor. Lütfen slug alanını değiştirin.',
+      }
+    }
     const message = error instanceof Error ? error.message : 'Beklenmeyen bir hata oluştu'
     return { status: 'error', message }
   }

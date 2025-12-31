@@ -18,8 +18,8 @@ export default async function SettingsPage() {
   }
   const contactContent =
     settings?.contactContent &&
-    typeof settings.contactContent === 'object' &&
-    !Array.isArray(settings.contactContent)
+      typeof settings.contactContent === 'object' &&
+      !Array.isArray(settings.contactContent)
       ? (settings.contactContent as Record<string, Record<string, string>>)
       : undefined
   const contactCopy = contactContent?.tr
@@ -58,9 +58,9 @@ export default async function SettingsPage() {
               socialTwitter:
                 settings?.social && typeof settings.social === 'object'
                   ? (settings.social as Record<string, string>).twitter ||
-                    (settings.social as Record<string, string>).x ||
-                    ''
-                : '',
+                  (settings.social as Record<string, string>).x ||
+                  ''
+                  : '',
               socialYoutube:
                 settings?.social && typeof settings.social === 'object'
                   ? (settings.social as Record<string, string>).youtube || ''
@@ -74,6 +74,12 @@ export default async function SettingsPage() {
               contactHeroBody: contactCopy?.heroBody || defaultContactCopy.heroBody,
               contactFormTitle: contactCopy?.formTitle || defaultContactCopy.formTitle,
               contactFormSubtitle: contactCopy?.formSubtitle || defaultContactCopy.formSubtitle,
+              contactCtaTitle: (contactCopy?.cta as any)?.title || '',
+              contactCtaDescription: (contactCopy?.cta as any)?.description || '',
+              contactCtaPrimaryLabel: (contactCopy?.cta as any)?.primaryAction?.label || '',
+              contactCtaPrimaryUrl: (contactCopy?.cta as any)?.primaryAction?.href || '',
+              contactCtaSecondaryLabel: (contactCopy?.cta as any)?.secondaryAction?.label || '',
+              contactCtaSecondaryUrl: (contactCopy?.cta as any)?.secondaryAction?.href || '',
             }}
           />
         </div>

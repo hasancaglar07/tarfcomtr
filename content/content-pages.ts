@@ -477,7 +477,6 @@ const kurumsalPages: ContentPageDefinition[] = [
       description:
         'Akademi modüllerinden teknoloji takımlarına kadar tüm içeriklerimizde aynı vizyonu taşıyoruz. Size uygun modülü seçin.',
       primaryAction: { label: 'Programları Keşfet', href: 'services' },
-      secondaryAction: { label: 'Vizyon Dokümanı', href: 'vizyon-degerler' },
     },
     seo: {
       title: 'TARF Vizyonu ve Değerleri | Geleceği İnşa Eden İlkeler',

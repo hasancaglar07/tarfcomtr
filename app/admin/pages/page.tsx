@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ContentCategory } from '@prisma/client'
 
-import { categoryLabels, headerPageSlugs } from '@/content/content-pages'
+import { categoryLabels } from '@/content/content-pages'
 import { prisma } from '@/lib/prisma'
 import { publishToggleAction } from '@/app/admin/actions'
 
@@ -34,7 +34,6 @@ export default async function AdminPagesList({
   const previewLocale = 'tr'
 
   const baseWhere = {
-    slug: { in: headerPageSlugs },
     ...(status === 'published' ? { publishedAt: { not: null } } : {}),
     ...(status === 'draft' ? { publishedAt: null } : {}),
     ...(q
@@ -100,7 +99,7 @@ export default async function AdminPagesList({
             </p>
             <h1 className="text-3xl font-semibold">İçerik sayfaları</h1>
             <p className="text-sm text-slate-400">
-              Header menüsündeki slug bazlı içerikleri burada yönetin.
+              Slug bazlı içerikleri burada yönetin.
             </p>
           </div>
           <div className="flex gap-3">

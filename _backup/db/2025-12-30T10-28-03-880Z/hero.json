@@ -1,0 +1,35 @@
+[
+  {
+    "id": "hero-tr",
+    "locale": "tr",
+    "title": "Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz",
+    "subtitle": "Eğitim, üretim ve topluluk programlarıyla ekosistem kuruyoruz.",
+    "description": "Gençlere yönelik eğitim, atölye, etkinlik ve teknoloji takımları.",
+    "headlineSlides": [
+      {
+        "title": "Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz",
+        "subtitle": "Eğitim, üretim ve topluluk programlarıyla ekosistem kuruyoruz."
+      },
+      {
+        "title": "Gençlerle birlikte yeni bir öğrenme kültürü kuruyoruz",
+        "subtitle": "Araştırma, atölye ve teknoloji takımlarıyla sahadayız."
+      },
+      {
+        "title": "TARF ekosistemiyle etki alanınızı büyütün",
+        "subtitle": "Eğitim ve proje programlarımızla birlikte üretelim."
+      }
+    ],
+    "buttonText": "Başvuru Yap",
+    "buttonUrl": "/tr/contact",
+    "backgroundImage": "",
+    "videoUrl": "https://www.youtube.com/watch?v=1Q7_ZfecC7o",
+    "videoCover": "",
+    "videoUrl2": "https://www.youtube.com/watch?v=Dn0_mblycJw&t=812s",
+    "videoCover2": "",
+    "videoUrl3": "",
+    "videoUrl4": "",
+    "videoUrl5": "",
+    "createdAt": "2025-11-25T11:41:33.087Z",
+    "updatedAt": "2025-12-30T01:23:45.286Z"
+  }
+]

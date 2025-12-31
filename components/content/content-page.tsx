@@ -1,25 +1,13 @@
 import Link from 'next/link'
 import { ContentPageDefinition, ContentSection } from '@/content/content-pages'
+import { CtaSection } from '@/components/shared/cta-section'
+import { localizeHref } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 interface ContentPageViewProps {
   page: ContentPageDefinition
   locale: string
-}
-
-const localizeHref = (locale: string, href?: string) => {
-  if (!href) return '#'
-  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) {
-    return href
-  }
-  if (href.startsWith('/')) {
-    return `/${locale}${href}`
-  }
-  if (href.startsWith('#')) {
-    return href
-  }
-  return `/${locale}/${href}`
 }
 
 const gridColumns = (columns?: number) => {
@@ -319,46 +307,23 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
           </SectionWrapper>
         ))}
 
-      <section className="pt-12 pb-16 lg:pt-16 lg:pb-20">
-        <div className="container relative z-10">
-          <div className="relative overflow-hidden rounded-[40px] border border-white/30 bg-gradient-to-br from-amber-500 to-orange-600 px-6 py-8 text-center shadow-[0_40px_100px_rgba(249,115,22,0.3)] md:px-10 md:py-10 text-white">
-            {/* Decorative shapes */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-              <div className="absolute top-[-50%] left-[-20%] w-[80%] h-[200%] bg-white/10 rotate-12 blur-3xl opacity-50" />
-              <div className="absolute bottom-[-50%] right-[-20%] w-[80%] h-[200%] bg-black/10 rotate-12 blur-3xl opacity-20" />
-            </div>
-
-            <div className="relative z-10 max-w-5xl mx-auto space-y-6">
-              <p className="text-sm font-bold uppercase tracking-[0.3em] text-white/80">
-                {page.category === 'yasal' ? 'Yasal destek' : 'Birlikte üretelim'}
-              </p>
-              <h2 className="text-3xl font-black tracking-tight md:text-4xl drop-shadow-sm">{page.cta.title}</h2>
-              <p className="text-base md:text-lg font-medium text-amber-50 leading-relaxed max-w-3xl mx-auto">
-                {page.cta.description}
-              </p>
-              <div className="flex flex-wrap justify-center gap-6 pt-2">
-                <Button size="lg" className="h-12 rounded-full bg-white px-10 text-base font-bold text-orange-600 hover:bg-slate-50 hover:scale-105 transition-all shadow-xl" asChild>
-                  <Link href={localizeHref(locale, page.cta.primaryAction.href)}>
-                    {page.slug === 'kulupler/teknoloji-takimlari' ? 'İletişime Geç' : page.cta.primaryAction.label}
-                  </Link>
-                </Button>
-                {page.cta.secondaryAction && !['kulupler/ogrenci-kulupleri', 'dusunce-enstitusu/egitim', 'yazilim/danismanlik', 'kulupler/teknoloji-takimlari'].includes(page.slug) && (
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-12 rounded-full border-2 border-white/30 bg-transparent px-10 text-base font-bold text-white hover:bg-white/10 hover:border-white/50 transition-all"
-                    asChild
-                  >
-                    <Link href={localizeHref(locale, page.cta.secondaryAction.href)}>
-                      {page.cta.secondaryAction.label}
-                    </Link>
-                  </Button>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CtaSection
+        locale={locale}
+        eyebrow={page.category === 'yasal' ? 'Yasal destek' : 'Birlikte üretelim'}
+        title={page.cta.title}
+        description={page.cta.description}
+        primaryAction={{
+          label: page.slug === 'kulupler/teknoloji-takimlari' ? 'İletişime Geç' : page.cta.primaryAction.label,
+          href: page.cta.primaryAction.href,
+        }}
+        secondaryAction={
+          !['kulupler/ogrenci-kulupleri', 'dusunce-enstitusu/egitim', 'yazilim/danismanlik', 'kulupler/teknoloji-takimlari', 'vizyon-degerler'].includes(
+            page.slug,
+          ) && page.cta.secondaryAction
+            ? page.cta.secondaryAction
+            : undefined
+        }
+      />
     </main>
   )
 }

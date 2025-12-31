@@ -34,7 +34,7 @@ export default async function EditPage({
 
   const fallbackContent: ContentPageDefinition = {
     slug: page.slug,
-    category: 'kurumsal',
+    category: page.category,
     hero: {
       eyebrow: '',
       title: page.title || page.slug,
@@ -50,15 +50,40 @@ export default async function EditPage({
       primaryAction: { label: '', href: '' },
     },
     seo: {
-      title: page.title || page.slug,
-      description: '',
+      title: page.seoTitle || page.title || page.slug,
+      description: page.seoDescription || '',
     },
   }
 
-  const contentData =
+  const rawData =
     page.data && typeof page.data === 'object'
-      ? (page.data as unknown as ContentPageDefinition)
-      : fallbackContent
+      ? (page.data as Partial<ContentPageDefinition>)
+      : {}
+
+  const contentData: ContentPageDefinition = {
+    ...fallbackContent,
+    ...rawData,
+    slug: page.slug,
+    category: page.category,
+    hero: {
+      ...fallbackContent.hero,
+      ...(rawData.hero ?? {}),
+    },
+    sections: rawData.sections ?? fallbackContent.sections,
+    cta: {
+      ...fallbackContent.cta,
+      ...(rawData.cta ?? {}),
+      primaryAction: {
+        ...fallbackContent.cta.primaryAction,
+        ...(rawData.cta?.primaryAction ?? {}),
+      },
+      secondaryAction: rawData.cta?.secondaryAction ?? fallbackContent.cta.secondaryAction,
+    },
+    seo: {
+      title: page.seoTitle ?? rawData.seo?.title ?? fallbackContent.seo.title,
+      description: page.seoDescription ?? rawData.seo?.description ?? fallbackContent.seo.description,
+    },
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">
@@ -96,7 +121,7 @@ export default async function EditPage({
           <ContentPageForm
             mode="edit"
             action={updatePageAction}
-            defaultValues={contentData}
+            defaultValues={{ ...contentData, status: page.status }}
           />
 
           <div className="mt-6 flex justify-end">

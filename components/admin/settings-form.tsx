@@ -24,6 +24,12 @@ type SettingsFormProps = {
     contactHeroBody?: string | null
     contactFormTitle?: string | null
     contactFormSubtitle?: string | null
+    contactCtaTitle?: string | null
+    contactCtaDescription?: string | null
+    contactCtaPrimaryLabel?: string | null
+    contactCtaPrimaryUrl?: string | null
+    contactCtaSecondaryLabel?: string | null
+    contactCtaSecondaryUrl?: string | null
   }
 }
 
@@ -229,6 +235,91 @@ export function SettingsForm({ action, defaultValues }: SettingsFormProps) {
               defaultValue={defaultValues?.contactFormSubtitle || ''}
               className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
               placeholder="Ekibimiz 24 saat içinde dönüş yapar."
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-3 rounded-xl border border-slate-800 bg-slate-900/70 p-4 shadow">
+        <div>
+          <p className="text-sm font-semibold text-slate-200">İletişim Sayfası - Alt CTA Alanı</p>
+          <p className="text-xs text-slate-500">Sayfanın altındaki turuncu aksiyon alanını buradan güncelleyin.</p>
+        </div>
+        <div className="space-y-1">
+          <label className="text-sm text-slate-300" htmlFor="contactCtaTitle">
+            CTA Başlık
+          </label>
+          <input
+            id="contactCtaTitle"
+            name="contactCtaTitle"
+            defaultValue={defaultValues?.contactCtaTitle || ''}
+            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+            placeholder="Örn: Birlikte üretelim"
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="text-sm text-slate-300" htmlFor="contactCtaDescription">
+            CTA Açıklama
+          </label>
+          <textarea
+            id="contactCtaDescription"
+            name="contactCtaDescription"
+            defaultValue={defaultValues?.contactCtaDescription || ''}
+            className="min-h-[80px] w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-3 text-sm text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+            placeholder="Kısa açıklama metni"
+          />
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="space-y-1">
+            <label className="text-sm text-slate-300" htmlFor="contactCtaPrimaryLabel">
+              Birinci Buton Metni
+            </label>
+            <input
+              id="contactCtaPrimaryLabel"
+              name="contactCtaPrimaryLabel"
+              defaultValue={defaultValues?.contactCtaPrimaryLabel || ''}
+              className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+              placeholder="Örn: Başvuru Yap"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm text-slate-300" htmlFor="contactCtaPrimaryUrl">
+              Birinci Buton Linki
+            </label>
+            <input
+              id="contactCtaPrimaryUrl"
+              name="contactCtaPrimaryUrl"
+              defaultValue={defaultValues?.contactCtaPrimaryUrl || ''}
+              className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+              placeholder="Örn: /basvuru"
+            />
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="space-y-1">
+            <label className="text-sm text-slate-300" htmlFor="contactCtaSecondaryLabel">
+              İkinci Buton Metni (Opsiyonel)
+            </label>
+            <input
+              id="contactCtaSecondaryLabel"
+              name="contactCtaSecondaryLabel"
+              defaultValue={defaultValues?.contactCtaSecondaryLabel || ''}
+              className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+              placeholder="Örn: Bilgi Al"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm text-slate-300" htmlFor="contactCtaSecondaryUrl">
+              İkinci Buton Linki (Opsiyonel)
+            </label>
+            <input
+              id="contactCtaSecondaryUrl"
+              name="contactCtaSecondaryUrl"
+              defaultValue={defaultValues?.contactCtaSecondaryUrl || ''}
+              className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+              placeholder="Örn: /iletisim"
             />
           </div>
         </div>

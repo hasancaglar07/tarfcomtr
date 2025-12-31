@@ -1,0 +1,43 @@
+[
+  {
+    "id": "hero-tr",
+    "locale": "tr",
+    "title": "Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz",
+    "subtitle": "Eğitim, üretim ve topluluk programlarıyla ekosistem kuruyoruz.",
+    "description": "Gençlere yönelik eğitim, atölye, etkinlik ve teknoloji takımları.",
+    "headlineSlides": [
+      {
+        "title": "Hikmetle Derinleşen, Teknolojiyle Yön Veren Düşünce",
+        "subtitle": "üşünce Enstitüsü; kadim irfan geleneğinden beslenen insan merkezli yaklaşımları, çağdaş teknoloji ve bilimle birleştirerek geleceğe dair düşünceler üretir."
+      },
+      {
+        "title": "Gençlerle birlikte yeni bir öğrenme kültürü kuruyoruz",
+        "subtitle": "Araştırma, atölye ve teknoloji takımlarıyla sahadayız."
+      },
+      {
+        "title": "Akademi ve Eğitimle Derinleşen Bilgi",
+        "subtitle": "Düşünce Enstitüsü Akademisi; eğitim programları, seminerler ve akademik çalışmalar yoluyla nitelikli bilgi üretimini hedefler. İnsan merkezli ve değer odaklı yaklaşımıyla, akademik disiplini çağdaş bilim ve teknolojik imkânlarla birleştirerek sürdürülebilir bir öğrenme ortamı sunar."
+      },
+      {
+        "title": "Güçlü Mimari, Sürdürülebilir Yazılım",
+        "subtitle": "Modern yazılım mimarileri ve güncel teknolojilerle, güvenli, performanslı ve uzun ömürlü yazılım çözümleri sunuyoruz."
+      },
+      {
+        "title": "KYP (Kurumsal Yönetim Platformu),",
+        "subtitle": "KYP (Kurumsal Yönetim Platformu), kurumların tüm iş süreçlerini tek bir merkezden yönetmelerini sağlayan entegre bir yazılım platformudur. Operasyonel verimliliği artırmak, süreçleri standartlaştırmak ve dijital yönetim kültürünü güçlendirmek amacıyla geliştirilmiştir."
+      }
+    ],
+    "buttonText": "Başvuru Yap",
+    "buttonUrl": "/tr/contact",
+    "backgroundImage": "",
+    "videoUrl": "https://www.youtube.com/watch?v=1Q7_ZfecC7o",
+    "videoCover": "",
+    "videoUrl2": "https://www.youtube.com/watch?v=Dn0_mblycJw&t=812s",
+    "videoCover2": "",
+    "videoUrl3": "",
+    "videoUrl4": "",
+    "videoUrl5": "",
+    "createdAt": "2025-11-25T11:41:33.087Z",
+    "updatedAt": "2025-12-30T16:53:48.352Z"
+  }
+]
