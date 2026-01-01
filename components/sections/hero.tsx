@@ -266,7 +266,9 @@ export function Hero({ locale, data, events }: HeroProps) {
 
                 {/* Left Card: Content */}
                 <div
-                  className="group/card relative z-10 overflow-hidden rounded-[32px] border border-white/80 bg-white/90 p-6 sm:p-10 lg:p-12 shadow-[0_20px_50px_rgba(234,88,12,0.15)] backdrop-blur-3xl flex flex-col justify-center"
+                  className="group/card relative z-10 overflow-hidden rounded-2xl md:rounded-[32px] border border-white/80 bg-white/90 p-5 sm:p-10 lg:p-12 shadow-[0_20px_50px_rgba(234,88,12,0.15)] backdrop-blur-3xl flex flex-col justify-center"
+
+
                   onMouseMove={(e) => {
                     const rect = e.currentTarget.getBoundingClientRect();
                     e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
@@ -349,7 +351,9 @@ export function Hero({ locale, data, events }: HeroProps) {
 
                 {/* Right Card: Video */}
                 <div
-                  className="group/card relative z-10 overflow-hidden rounded-[32px] border border-white/80 bg-white/90 p-6 sm:p-10 shadow-[0_20px_50px_rgba(234,88,12,0.15)] backdrop-blur-3xl flex flex-col justify-center"
+                  className="group/card relative z-10 overflow-hidden rounded-2xl md:rounded-[32px] border border-white/80 bg-white/90 p-5 sm:p-10 shadow-[0_20px_50px_rgba(234,88,12,0.15)] backdrop-blur-3xl flex flex-col justify-center"
+
+
                   onMouseMove={(e) => {
                     const rect = e.currentTarget.getBoundingClientRect();
                     e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);

@@ -52,7 +52,9 @@ const GridSection = ({ section }: { section: ContentSection }) => (
     {section.items?.map((item) => (
       <div
         key={item.title}
-        className="group relative flex flex-col rounded-[32px] border border-white/40 bg-white/50 p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] backdrop-blur-md transition-all duration-300 hover:bg-white/80 hover:shadow-[0_10px_40px_rgba(0,0,0,0.05)] hover:-translate-y-1"
+        className="group relative flex flex-col rounded-2xl md:rounded-[32px] border border-white/40 bg-white/50 p-5 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] backdrop-blur-md transition-all duration-300 hover:bg-white/80 hover:shadow-[0_10px_40px_rgba(0,0,0,0.05)] hover:-translate-y-1"
+
+
       >
         {item.badge && (
           <span className="mb-4 inline-flex w-fit rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
@@ -93,7 +95,9 @@ const ListSection = ({ section }: { section: ContentSection }) => {
       {section.items?.map((item, idx) => (
         <div
           key={item.title}
-          className="group flex gap-6 rounded-[32px] border border-white/40 bg-white/50 p-8 shadow-sm backdrop-blur-md transition-all hover:bg-white/80 hover:shadow-md"
+          className="group flex gap-6 rounded-2xl md:rounded-[32px] border border-white/40 bg-white/50 p-5 md:p-8 shadow-sm backdrop-blur-md transition-all hover:bg-white/80 hover:shadow-md"
+
+
         >
           {ordered && (
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-2xl font-bold text-primary group-hover:bg-primary group-hover:text-white transition-colors">
@@ -124,7 +128,9 @@ const TimelineSection = ({ section }: { section: ContentSection }) => (
     <div className="absolute left-3 top-0 h-full w-0.5 bg-gradient-to-b from-primary/40 via-primary/20 to-transparent" />
     <div className="space-y-10">
       {section.items?.map((item, idx) => (
-        <div key={item.title} className="relative rounded-[32px] border border-white/40 bg-white/60 p-8 shadow-sm backdrop-blur-md transition-all hover:bg-white/90">
+        <div key={item.title} className="relative rounded-2xl md:rounded-[32px] border border-white/40 bg-white/60 p-5 md:p-8 shadow-sm backdrop-blur-md transition-all hover:bg-white/90">
+
+
           <span className="absolute -left-[29px] top-9 h-3 w-3 rounded-full border-[3px] border-white bg-primary shadow-[0_0_0_4px_rgba(249,115,22,0.2)]" />
           <div className="mb-2 flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-primary/80">
             <span>{item.meta || `Adım ${idx + 1}`}</span>
@@ -149,7 +155,9 @@ const TimelineSection = ({ section }: { section: ContentSection }) => (
 const StatsSection = ({ section }: { section: ContentSection }) => (
   <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
     {section.stats?.map((stat) => (
-      <div key={stat.label} className="group rounded-[32px] border border-white/40 bg-white/60 p-8 shadow-sm backdrop-blur-md transition-all hover:-translate-y-1 hover:bg-white/80 hover:shadow-lg">
+      <div key={stat.label} className="group rounded-2xl md:rounded-[32px] border border-white/40 bg-white/60 p-5 md:p-8 shadow-sm backdrop-blur-md transition-all hover:-translate-y-1 hover:bg-white/80 hover:shadow-lg">
+
+
         <p className="text-xs font-bold uppercase tracking-widest text-slate-500">{stat.label}</p>
         <p className="mt-4 bg-gradient-to-br from-slate-900 to-slate-700 bg-clip-text text-5xl font-black text-transparent group-hover:from-primary group-hover:to-orange-600 transition-all duration-300">{stat.value}</p>
         {stat.helper && <p className="mt-2 text-sm font-medium text-slate-400">{stat.helper}</p>}
@@ -203,7 +211,9 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
       <section className="relative z-10 pt-28 lg:pt-36 pb-12">
         <div className="container">
           {/* Grand Hero Card */}
-          <div className="relative overflow-hidden rounded-[40px] md:rounded-[56px] border border-white/40 bg-white/60 p-8 shadow-[0_40px_100px_rgba(15,23,42,0.1),inset_0_0_0_1px_rgba(255,255,255,0.5)] backdrop-blur-3xl md:p-16">
+          <div className="relative overflow-hidden rounded-[24px] md:rounded-[56px] border border-white/40 bg-white/60 p-5 shadow-[0_40px_100px_rgba(15,23,42,0.1),inset_0_0_0_1px_rgba(255,255,255,0.5)] backdrop-blur-3xl md:p-16">
+
+
             {/* Noise Texture */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
             {/* Ambient Orbs */}
@@ -233,7 +243,9 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
               </div>
 
               {showNarrative && description && (
-                <div className="relative mt-12 rounded-[32px] border border-white/50 bg-white/50 p-8 shadow-sm backdrop-blur-md">
+                <div className="relative mt-12 rounded-2xl md:rounded-[32px] border border-white/50 bg-white/50 p-5 md:p-8 shadow-sm backdrop-blur-md">
+
+
                   <div className="h-1.5 w-16 rounded-full bg-primary/80 mb-6" />
                   <div className="space-y-4 text-lg leading-8 text-slate-600">
                     {description.startsWith('<') ? (

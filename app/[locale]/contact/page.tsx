@@ -406,7 +406,8 @@ export default async function ContactPage({
               </div>
               <div className="absolute -inset-[2px] rounded-[52px] bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 opacity-20 blur-xl animate-pulse pointer-events-none" />
 
-              <div className="relative rounded-[48px] border border-white/80 bg-white/90 p-8 md:p-10 shadow-[0_40px_100px_rgba(234,88,12,0.15)] backdrop-blur-3xl">
+              <div className="relative rounded-[48px] border border-white/80 bg-white/90 p-5 md:p-10 shadow-[0_40px_100px_rgba(234,88,12,0.15)] backdrop-blur-3xl">
+
                 {/* Badge */}
                 <div className="absolute top-8 right-8 hidden sm:block">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-orange-700 border border-orange-200">
