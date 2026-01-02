@@ -307,9 +307,12 @@ export function Hero({ locale, data, events }: HeroProps) {
                           </div>
 
                           {/* Title */}
-                          <h1 className="text-4xl font-black leading-[1.1] tracking-tight bg-[linear-gradient(110deg,#0f172a,45%,#334155,55%,#0f172a)] bg-[length:200%_100%] animate-text-shimmer bg-clip-text text-transparent sm:text-5xl lg:text-6xl xl:text-[4.5rem] filter drop-shadow-sm text-center lg:text-left">
-                            {activeHeadline?.title || content.title || defaultContent.en.title}
-                          </h1>
+                          <h1
+                            className="text-4xl font-black leading-[1.1] tracking-tight bg-[linear-gradient(110deg,#0f172a,45%,#334155,55%,#0f172a)] bg-[length:200%_100%] animate-text-shimmer bg-clip-text text-transparent sm:text-5xl lg:text-6xl xl:text-[4.5rem] filter drop-shadow-sm text-center lg:text-left"
+                            dangerouslySetInnerHTML={{
+                              __html: (activeHeadline?.title || content.title || defaultContent.en.title || '').replace(/\n/g, '<br />')
+                            }}
+                          />
 
                           {/* Subtitle - Dynamic Sizing */}
                           {(() => {
@@ -322,9 +325,10 @@ export function Hero({ locale, data, events }: HeroProps) {
                                 : 'text-base sm:text-lg lg:text-xl';
 
                             return (
-                              <p className={`${sizeClass} font-medium text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0 text-center lg:text-left`}>
-                                {subt}
-                              </p>
+                              <div
+                                className={`${sizeClass} font-medium text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0 text-center lg:text-left [&>p]:mb-2 last:[&>p]:mb-0`}
+                                dangerouslySetInnerHTML={{ __html: subt }}
+                              />
                             );
                           })()}
                         </div>
@@ -332,15 +336,21 @@ export function Hero({ locale, data, events }: HeroProps) {
                         {/* Action Bar */}
                         <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-2">
                           {headlineSlides.length > 1 && (
-                            <div className="flex gap-2" aria-hidden="true">
-                              {headlineSlides.map((_, index) => (
-                                <button
-                                  key={`headline-dot-${index}`}
-                                  onClick={() => setHeadlineIndex(index)}
-                                  className={`h-2 rounded-full transition-all duration-500 ${index === headlineIndex ? 'w-8 bg-primary' : 'w-2 bg-slate-300'
-                                    }`}
-                                />
-                              ))}
+                            <div className="flex items-center gap-3" aria-hidden="true">
+                              <button
+                                onClick={() => setHeadlineIndex((prev) => (prev - 1 + headlineSlides.length) % headlineSlides.length)}
+                                className="p-3 rounded-full bg-slate-100 hover:bg-primary/10 text-slate-500 hover:text-primary transition-colors border border-transparent hover:border-primary/20"
+                                aria-label="Previous headline"
+                              >
+                                <ChevronLeft className="h-5 w-5" />
+                              </button>
+                              <button
+                                onClick={() => setHeadlineIndex((prev) => (prev + 1) % headlineSlides.length)}
+                                className="p-3 rounded-full bg-slate-100 hover:bg-primary/10 text-slate-500 hover:text-primary transition-colors border border-transparent hover:border-primary/20"
+                                aria-label="Next headline"
+                              >
+                                <ChevronRight className="h-5 w-5" />
+                              </button>
                             </div>
                           )}
                         </div>

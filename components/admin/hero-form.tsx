@@ -7,6 +7,7 @@ import { useFormState, useFormStatus } from 'react-dom'
 import type { HeroActionState } from '@/app/admin/hero/actions'
 import { ActionToast } from '@/components/admin/action-toast'
 import { useInvalidToast } from '@/components/admin/use-invalid-toast'
+import { RichTextEditor } from '@/components/admin/rich-text-editor'
 
 type HeroFormProps = {
   action: (state: HeroActionState, formData: FormData) => Promise<HeroActionState>
@@ -57,9 +58,9 @@ export function HeroForm({ action, defaultValues }: HeroFormProps) {
     videoUrl: defaultValues?.videoUrl || '',
     videoUrl2: defaultValues?.videoUrl2 || '',
     videoUrl3: defaultValues?.videoUrl3 || '',
-      videoUrl4: defaultValues?.videoUrl4 || '',
-      videoUrl5: defaultValues?.videoUrl5 || '',
-    }))
+    videoUrl4: defaultValues?.videoUrl4 || '',
+    videoUrl5: defaultValues?.videoUrl5 || '',
+  }))
   const [headlineSlides, setHeadlineSlides] = useState<HeadlineSlide[]>(
     () => normalizeSlides(defaultValues?.headlineSlides),
   )
@@ -135,12 +136,13 @@ export function HeroForm({ action, defaultValues }: HeroFormProps) {
         <label className="text-sm text-slate-300" htmlFor="title">
           Başlık
         </label>
-        <input
+        <textarea
           id="title"
           name="title"
           required
           defaultValue={defaultValues?.title || ''}
           className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+          rows={3}
         />
       </div>
 
@@ -148,13 +150,25 @@ export function HeroForm({ action, defaultValues }: HeroFormProps) {
         <label className="text-sm text-slate-300" htmlFor="subtitle">
           Alt başlık
         </label>
-        <input
-          id="subtitle"
-          name="subtitle"
-          required
-          defaultValue={defaultValues?.subtitle || ''}
-          className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+        <RichTextEditor
+          value={defaultValues?.subtitle || ''}
+          onChange={(val) => {
+            // We need a hidden input to submit the value because useFormState/actions rely on FormData
+            // However, RichTextEditor is controlled. We'll handle this by syncing to a hidden input or state if needed.
+            // But here we might need to change how the form works if it relies purely on native FormData.
+            // Actually, for RichTextEditor in other forms, it seems to update state.
+            // But this form uses native <form action={formAction}>. 
+            // We need to inject the value into the form data. 
+            // The existing RichTextEditor integration in PageForm uses a state object `data` and then appends to FormData.
+            // Here, we are using `useFormState` and standard inputs.
+            // To make `RichTextEditor` work here without refactoring the whole form to state-based:
+            // We can use a hidden input that gets updated.
+            const input = document.getElementById('subtitle-hidden') as HTMLInputElement;
+            if (input) input.value = val;
+          }}
+          placeholder="Alt başlık"
         />
+        <input type="hidden" id="subtitle-hidden" name="subtitle" defaultValue={defaultValues?.subtitle || ''} />
       </div>
 
       <div className="space-y-2 rounded-xl border border-slate-800 bg-slate-950/40 p-3">
@@ -195,21 +209,28 @@ export function HeroForm({ action, defaultValues }: HeroFormProps) {
                   <label className="text-xs font-semibold text-slate-400">
                     Slogan {index + 1} başlık
                   </label>
-                  <input
+                  <textarea
                     value={slide.title}
                     onChange={(e) => updateHeadlineSlide(index, { title: e.target.value })}
                     className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+                    rows={2}
                   />
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-slate-400">
                     Slogan {index + 1} açıklama
                   </label>
-                  <input
-                    value={slide.subtitle}
-                    onChange={(e) => updateHeadlineSlide(index, { subtitle: e.target.value })}
-                    className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-                  />
+                  <div className="rich-text-wrapper">
+                    {/* 
+                         Problem: RichTextEditor expects `onChange` but updateHeadlineSlide updates state.
+                         This works fine because headlineSlides is already state-based.
+                      */}
+                    <RichTextEditor
+                      value={slide.subtitle}
+                      onChange={(val) => updateHeadlineSlide(index, { subtitle: val })}
+                      placeholder="Slogan açıklama"
+                    />
+                  </div>
                 </div>
                 <div className="flex justify-end">
                   <button
