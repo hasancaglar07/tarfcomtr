@@ -57,6 +57,7 @@ export interface ContentPageHero {
     label: string
     href: string
     variant?: 'primary' | 'secondary'
+    external?: boolean
   }>
 }
 
@@ -2695,7 +2696,7 @@ const yayinlarPages: ContentPageDefinition[] = [
       description:
         'Çalışmalarımızda okurları hakikate yakınlaştıran bir nazar, ölçüyü gözeten bir idrak, bilginin ötesini fark ettiren bir irfani duruş ve düşünce kazandırmak en büyük amacımızdır. Varlığı anlamlandırmak, eşyayı yerli yerine koymak ve bilginin hakikatle buluştuğu o ince çizgiyi gözetmek…',
       actions: [
-        { label: 'TARF Dergi', href: 'dergi' },
+        { label: 'TARF Dergi', href: 'dergi', external: true },
         { label: 'İletişime Geç', href: 'contact', variant: 'secondary' },
       ],
     },
@@ -2770,7 +2771,7 @@ const yayinlarPages: ContentPageDefinition[] = [
       description:
         'TARF Dergi, akademi ekosistemimizin düşünce ve üretim birikimini görünür kılan yayın platformudur. Araştırma yazıları, teknoloji dosyaları, röportajlar ve öğrenci projeleriyle bilgiyle irfanı aynı zeminde buluşturur.',
       actions: [
-        { label: 'TARF Dergi’ye Git', href: 'https://tarfdergisi.com.tr' },
+        { label: 'TARF Dergi’ye Git', href: 'https://tarfdergisi.com.tr', external: true },
         { label: 'Yayın Ekibine Yaz', href: 'contact', variant: 'secondary' },
       ],
       stats: [

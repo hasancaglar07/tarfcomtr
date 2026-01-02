@@ -197,6 +197,7 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
       ...action,
       label: action.label?.trim() ?? '',
       href: action.href?.trim() ?? '',
+      external: action.external,
     }))
     .filter((action) => action.label && action.href)
 
@@ -286,7 +287,13 @@ export function ContentPageView({ page, locale }: ContentPageViewProps) {
                       )}
                       asChild
                     >
-                      <Link href={localizeHref(locale, action.href)}>{action.label}</Link>
+                      <Link
+                        href={localizeHref(locale, action.href)}
+                        target={action.external ? "_blank" : undefined}
+                        rel={action.external ? "noopener noreferrer" : undefined}
+                      >
+                        {action.label}
+                      </Link>
                     </Button>
                   ))}
                 </div>
