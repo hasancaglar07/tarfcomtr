@@ -10,7 +10,7 @@ export default async function HeroPage() {
   })
   const current = heroes.find((h) => h.locale === 'tr') ?? heroes[0]
   const headlineSlides = Array.isArray(current?.headlineSlides)
-    ? (current?.headlineSlides as Array<{ title?: string; subtitle?: string }>)
+    ? (current?.headlineSlides as Array<{ title?: string; subtitle?: string; titleSize?: string }>)
     : []
 
   return (
@@ -40,23 +40,23 @@ export default async function HeroPage() {
             defaultValues={
               current
                 ? {
-                    id: current.id,
-                    locale: current.locale,
-                    title: current.title,
-                    subtitle: current.subtitle,
-                    description: current.description ?? '',
-                    headlineSlides,
-                    buttonText: current.buttonText ?? '',
-                    buttonUrl: current.buttonUrl ?? '',
-                    backgroundImage: current.backgroundImage ?? '',
-                    videoUrl: current.videoUrl ?? '',
-                    videoCover: current.videoCover ?? '',
-                    videoUrl2: current.videoUrl2 ?? '',
-                    videoCover2: current.videoCover2 ?? '',
-                    videoUrl3: current.videoUrl3 ?? '',
-                    videoUrl4: current.videoUrl4 ?? '',
-                    videoUrl5: current.videoUrl5 ?? '',
-                  }
+                  id: current.id,
+                  locale: current.locale,
+                  title: current.title,
+                  subtitle: current.subtitle,
+                  description: current.description ?? '',
+                  headlineSlides,
+                  buttonText: current.buttonText ?? '',
+                  buttonUrl: current.buttonUrl ?? '',
+                  backgroundImage: current.backgroundImage ?? '',
+                  videoUrl: current.videoUrl ?? '',
+                  videoCover: current.videoCover ?? '',
+                  videoUrl2: current.videoUrl2 ?? '',
+                  videoCover2: current.videoCover2 ?? '',
+                  videoUrl3: current.videoUrl3 ?? '',
+                  videoUrl4: current.videoUrl4 ?? '',
+                  videoUrl5: current.videoUrl5 ?? '',
+                }
                 : { locale: 'tr' }
             }
           />

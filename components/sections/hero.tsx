@@ -20,7 +20,7 @@ interface HeroProps {
     tertiary_cta_label?: string | null
     tertiary_cta_href?: string | null
     background_image?: string | null
-    headlineSlides?: Array<{ title: string; subtitle: string }> | null
+    headlineSlides?: Array<{ title: string; subtitle: string; titleSize?: string }> | null
     stats?: Array<{
       value: string
       label: string
@@ -107,6 +107,7 @@ export function Hero({ locale, data, events }: HeroProps) {
       .map((slide) => ({
         title: slide?.title?.trim() || '',
         subtitle: slide?.subtitle?.trim() || '',
+        titleSize: slide?.titleSize || 'medium',
       }))
       .filter((slide) => slide.title || slide.subtitle)
     if (cleaned.length > 0) {
@@ -116,6 +117,7 @@ export function Hero({ locale, data, events }: HeroProps) {
       {
         title: content.title || defaultContent.en.title,
         subtitle: content.subtitle || defaultContent.en.subtitle,
+        titleSize: 'medium',
       },
     ]
   }, [content.headlineSlides, content.subtitle, content.title])
@@ -262,7 +264,7 @@ export function Hero({ locale, data, events }: HeroProps) {
               </div>
 
               {/* Split Hero Section - Two Independent Cards */}
-              <div className="grid gap-6 lg:grid-cols-2 lg:gap-8 items-stretch relative z-10">
+              <div className="grid gap-6 lg:grid-cols-2 lg:gap-8 items-start relative z-10">
 
                 {/* Left Card: Content */}
                 <div
@@ -284,7 +286,7 @@ export function Hero({ locale, data, events }: HeroProps) {
                   />
 
                   {/* Inner Content */}
-                  <div className="relative z-10 flex flex-col gap-6 sm:gap-8 min-h-[400px] lg:min-h-[500px] justify-center">
+                  <div className="relative z-10 flex flex-col gap-6 sm:gap-8">
                     <AnimatePresence mode="wait" initial={false}>
                       <motion.div
                         key={`${headlineIndex}-${activeHeadline?.title}`}
@@ -307,12 +309,21 @@ export function Hero({ locale, data, events }: HeroProps) {
                           </div>
 
                           {/* Title */}
-                          <h1
-                            className="text-4xl font-black leading-[1.1] tracking-tight bg-[linear-gradient(110deg,#0f172a,45%,#334155,55%,#0f172a)] bg-[length:200%_100%] animate-text-shimmer bg-clip-text text-transparent sm:text-5xl lg:text-6xl xl:text-[4.5rem] filter drop-shadow-sm text-center lg:text-left"
-                            dangerouslySetInnerHTML={{
-                              __html: (activeHeadline?.title || content.title || defaultContent.en.title || '').replace(/\n/g, '<br />')
-                            }}
-                          />
+                          {(() => {
+                            const size = activeHeadline?.titleSize || '48px'
+                            // Ensure size is a valid CSS value, defaulting to 48px if it's "medium" or invalid
+                            const fontSize = size.endsWith('px') ? size : '48px'
+
+                            return (
+                              <h1
+                                className="font-black leading-[1.15] tracking-tight bg-[linear-gradient(110deg,#0f172a,45%,#334155,55%,#0f172a)] bg-[length:200%_100%] animate-text-shimmer bg-clip-text text-transparent filter drop-shadow-sm text-center lg:text-left pb-2"
+                                style={{ fontSize }}
+                                dangerouslySetInnerHTML={{
+                                  __html: (activeHeadline?.title || content.title || defaultContent.en.title || '').replace(/\n/g, '<br />')
+                                }}
+                              />
+                            )
+                          })()}
 
                           {/* Subtitle - Dynamic Sizing */}
                           {(() => {

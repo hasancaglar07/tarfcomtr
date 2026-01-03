@@ -16,7 +16,7 @@ type StaticHeroContent = {
   tertiary_cta_label: string
   tertiary_cta_href: string
   stats: Array<{ value: string; label: string }>
-  headlineSlides?: Array<{ title: string; subtitle: string }>
+  headlineSlides?: Array<{ title: string; subtitle: string; titleSize?: string }>
   background_image?: string | null
   video_cover?: string | null
   video_url?: string | null

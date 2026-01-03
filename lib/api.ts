@@ -55,7 +55,7 @@ export interface Hero {
   subtitle: string
   eyebrow?: string | null
   description: string | null
-  headline_slides?: Array<{ title: string; subtitle: string }> | null
+  headline_slides?: Array<{ title: string; subtitle: string; titleSize?: string }> | null
   button_text: string | null
   button_url: string | null
   image: string | null
@@ -232,10 +232,11 @@ const normalizeHeroSlides = (value: unknown): Array<{ title: string; subtitle: s
       const record = item as Record<string, unknown>
       const title = typeof record.title === 'string' ? record.title.trim() : ''
       const subtitle = typeof record.subtitle === 'string' ? record.subtitle.trim() : ''
+      const titleSize = typeof record.titleSize === 'string' ? record.titleSize : 'medium'
       if (!title && !subtitle) return null
-      return { title, subtitle }
+      return { title, subtitle, titleSize }
     })
-    .filter(Boolean) as Array<{ title: string; subtitle: string }>
+    .filter(Boolean) as Array<{ title: string; subtitle: string; titleSize: string }>
   return slides.length > 0 ? slides : null
 }
 

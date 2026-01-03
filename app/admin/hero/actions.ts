@@ -97,7 +97,7 @@ export async function upsertHeroAction(
 
     const data = parsed.data
     const id = data.id || `hero-${data.locale}`
-    let headlineSlides: Array<{ title: string; subtitle: string }> = []
+    let headlineSlides: Array<{ title: string; subtitle: string; titleSize?: string }> = []
 
     if (data.headlineSlidesJson) {
       try {
@@ -110,9 +110,10 @@ export async function upsertHeroAction(
               return {
                 title: typeof record.title === 'string' ? record.title.trim() : '',
                 subtitle: typeof record.subtitle === 'string' ? record.subtitle.trim() : '',
+                titleSize: typeof record.titleSize === 'string' ? record.titleSize : 'medium',
               }
             })
-            .filter((slide): slide is { title: string; subtitle: string } =>
+            .filter((slide): slide is { title: string; subtitle: string; titleSize: string } =>
               Boolean(slide && (slide.title || slide.subtitle)),
             )
         }

@@ -34,7 +34,7 @@ type HeroFormProps = {
 const initialState: HeroActionState = { status: 'idle' }
 
 type VideoKey = 'videoUrl' | 'videoUrl2' | 'videoUrl3' | 'videoUrl4' | 'videoUrl5'
-type HeadlineSlide = { title: string; subtitle: string }
+type HeadlineSlide = { title: string; subtitle: string; titleSize?: string }
 
 const getYouTubeVideoId = (url?: string) => {
   if (!url) return null
@@ -43,11 +43,12 @@ const getYouTubeVideoId = (url?: string) => {
   return match && match[2].length === 11 ? match[2] : null
 }
 
-const normalizeSlides = (slides?: Array<{ title?: string; subtitle?: string }>) => {
+const normalizeSlides = (slides?: Array<{ title?: string; subtitle?: string; titleSize?: string }>) => {
   if (!Array.isArray(slides)) return [] as HeadlineSlide[]
   return slides.map((slide) => ({
     title: slide?.title || '',
     subtitle: slide?.subtitle || '',
+    titleSize: slide?.titleSize || '48px',
   }))
 }
 
@@ -81,13 +82,13 @@ export function HeroForm({ action, defaultValues }: HeroFormProps) {
     [videoUrls],
   )
   const addHeadlineSlide = () => {
-    setHeadlineSlides((prev) => [...prev, { title: '', subtitle: '' }])
+    setHeadlineSlides((prev) => [...prev, { title: '', subtitle: '', titleSize: '48px' }])
   }
 
   const updateHeadlineSlide = (index: number, patch: Partial<HeadlineSlide>) => {
     setHeadlineSlides((prev) => {
       const next = [...prev]
-      const current = next[index] || { title: '', subtitle: '' }
+      const current = next[index] || { title: '', subtitle: '', titleSize: '48px' }
       next[index] = { ...current, ...patch }
       return next
     })
@@ -215,6 +216,32 @@ export function HeroForm({ action, defaultValues }: HeroFormProps) {
                     className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
                     rows={2}
                   />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-400">
+                    Başlık Boyutu
+                  </label>
+                  <select
+                    value={slide.titleSize || '48px'}
+                    onChange={(e) => updateHeadlineSlide(index, { titleSize: e.target.value })}
+                    className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+                  >
+                    <option value="20px">20px</option>
+                    <option value="24px">24px</option>
+                    <option value="28px">28px</option>
+                    <option value="32px">32px</option>
+                    <option value="36px">36px</option>
+                    <option value="40px">40px</option>
+                    <option value="42px">42px</option>
+                    <option value="48px">48px</option>
+                    <option value="52px">52px</option>
+                    <option value="58px">58px</option>
+                    <option value="64px">64px</option>
+                    <option value="72px">72px</option>
+                    <option value="84px">84px</option>
+                    <option value="96px">96px</option>
+                    <option value="128px">128px</option>
+                  </select>
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-slate-400">
