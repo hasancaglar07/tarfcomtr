@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { CheckCircle2, AlertTriangle, ArrowRight } from 'lucide-react'
+import { CheckCircle2, AlertTriangle, ArrowRight, Check as CheckIcon, ChevronDown, X } from 'lucide-react'
 
 type Copy = {
   placeholders: {
@@ -29,6 +29,7 @@ type Copy = {
 }
 
 export function ApplicationForm({ copy }: { copy: Copy }) {
+  const [dropdownOpen, setDropdownOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -40,18 +41,28 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
     company: '',
     topic: '',
     message: '',
-    applicationType: '',
+    applicationType: [] as string[],
   })
+
+  // Add Check import if not present, but for now I will use CheckCircle2 which is already there or just CSS check.
+  // Actually I need to add the toggle function.
+
+  const toggleApplicationType = (type: string) => {
+    setFormData((prev) => {
+      const types = prev.applicationType
+      if (types.includes(type)) {
+        return { ...prev, applicationType: types.filter((t) => t !== type) }
+      } else {
+        return { ...prev, applicationType: [...types, type] }
+      }
+    })
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -65,19 +76,17 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
     setError(null)
     setSuccess(false)
     try {
-      const selectedType =
-        copy.applicationTypes.find((t) => t === formData.applicationType)?.toString() ||
-        formData.applicationType
+      const selectedTypes = formData.applicationType.join(', ')
       const payload = {
         name: formData.name.trim(),
         email: formData.email.trim(),
         phone: formData.phone.trim() || undefined,
         subject:
-          selectedType && formData.topic.trim()
-            ? `${selectedType} - ${formData.topic.trim()}`
-            : selectedType || formData.topic.trim() || formData.company.trim() || undefined,
+          selectedTypes && formData.topic.trim()
+            ? `${selectedTypes} - ${formData.topic.trim()}`
+            : selectedTypes || formData.topic.trim() || formData.company.trim() || undefined,
         message: [
-          `Başvuru Türü: ${selectedType || 'Belirtilmedi'}`,
+          `Başvuru Türü: ${selectedTypes || 'Belirtilmedi'}`,
           `Konu: ${formData.topic || '-'}`,
           `Firma: ${formData.company || '-'}`,
           '',
@@ -101,7 +110,7 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
         company: '',
         topic: '',
         message: '',
-        applicationType: '',
+        applicationType: [],
       })
       setKvkkAccepted(false)
     } catch (err) {
@@ -171,25 +180,73 @@ export function ApplicationForm({ copy }: { copy: Copy }) {
       <div className="space-y-3">
         <label className="ml-2 text-sm font-bold uppercase tracking-wide text-slate-500">{copy.typeLabel}</label>
         <div className="relative">
-          <select
-            name="applicationType"
-            required
-            value={formData.applicationType}
-            onChange={handleSelectChange}
-            className="h-14 w-full appearance-none rounded-2xl border border-white/40 bg-white/50 px-6 text-base text-slate-800 shadow-sm backdrop-blur-sm outline-none transition-all focus:bg-white focus:border-primary/50 focus:ring-4 focus:ring-primary/10 cursor-pointer"
+          <button
+            type="button"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            className="flex min-h-[56px] w-full items-center justify-between rounded-2xl border border-white/40 bg-white/50 px-6 py-3 text-base text-slate-800 shadow-sm backdrop-blur-sm transition-all hover:bg-white focus:border-primary/50 focus:ring-4 focus:ring-primary/10"
           >
-            <option value="" disabled>
-              {copy.typeLabel}
-            </option>
-            {copy.applicationTypes.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
-          </div>
+            <div className="flex flex-wrap gap-2 text-left">
+              {formData.applicationType.length > 0 ? (
+                formData.applicationType.map((type) => (
+                  <span
+                    key={type}
+                    className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-sm font-medium text-primary"
+                  >
+                    {type}
+                    <span
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleApplicationType(type)
+                      }}
+                      className="ml-1 cursor-pointer rounded-full p-0.5 hover:bg-primary/20"
+                    >
+                      <X className="h-3 w-3" />
+                    </span>
+                  </span>
+                ))
+              ) : (
+                <span className="text-slate-400">{copy.typeLabel}</span>
+              )}
+            </div>
+            <ChevronDown
+              className={`h-5 w-5 text-slate-400 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
+            />
+          </button>
+
+          {dropdownOpen && (
+            <>
+              <div
+                className="fixed inset-0 z-10"
+                onClick={() => setDropdownOpen(false)}
+              />
+              <div className="absolute left-0 right-0 top-full z-20 mt-2 max-h-60 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                {copy.applicationTypes.map((type) => {
+                  const isSelected = formData.applicationType.includes(type)
+                  return (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => toggleApplicationType(type)}
+                      className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium transition-colors ${isSelected
+                          ? 'bg-primary/5 text-primary'
+                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                        }`}
+                    >
+                      <div
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors ${isSelected
+                            ? 'border-primary bg-primary text-white'
+                            : 'border-slate-300 bg-white'
+                          }`}
+                      >
+                        {isSelected && <CheckIcon className="h-3.5 w-3.5" />}
+                      </div>
+                      {type}
+                    </button>
+                  )
+                })}
+              </div>
+            </>
+          )}
         </div>
       </div>
       <Input

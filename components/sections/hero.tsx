@@ -482,41 +482,37 @@ export function Hero({ locale, data, events }: HeroProps) {
           </StaggerContainer>
         </div>
       </section>
-      <div className="mt-6 lg:-mt-8">
-        <div className="container">
-          <StaggerContainer className="min-w-0 space-y-6 lg:space-y-8">
-            <StaggerItem>
-              <div className="w-full rounded-[20px] sm:rounded-[28px] border border-primary/15 bg-gradient-to-br from-white/95 via-white/90 to-amber-50/80 p-4 sm:p-5 shadow-[0_26px_80px_rgba(15,23,42,0.16)] lg:p-6">
-                <div className="flex flex-col items-center gap-3 pb-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary shadow-sm">
-                      <Calendar className="h-5 w-5" />
-                    </span>
-                    <span className="text-balance text-sm font-semibold uppercase tracking-[0.14em] text-foreground sm:text-base sm:tracking-[0.25em]">
-                      {labels.title}
-                    </span>
+      {upcomingEvents.length > 0 && (
+        <div className="mt-6 lg:-mt-8">
+          <div className="container">
+            <StaggerContainer className="min-w-0 space-y-6 lg:space-y-8">
+              <StaggerItem>
+                <div className="w-full rounded-[20px] sm:rounded-[28px] border border-primary/15 bg-gradient-to-br from-white/95 via-white/90 to-amber-50/80 p-4 sm:p-5 shadow-[0_26px_80px_rgba(15,23,42,0.16)] lg:p-6">
+                  <div className="flex flex-col items-center gap-3 pb-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary shadow-sm">
+                        <Calendar className="h-5 w-5" />
+                      </span>
+                      <span className="text-balance text-sm font-semibold uppercase tracking-[0.14em] text-foreground sm:text-base sm:tracking-[0.25em]">
+                        {labels.title}
+                      </span>
+                    </div>
+                    <Link
+                      href={`/${locale}/events`}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl hover:bg-slate-900 sm:w-auto sm:text-xs sm:tracking-[0.22em] border-0"
+                    >
+                      {labels.all}
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
                   </div>
-                  <Link
-                    href={`/${locale}/events`}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl hover:bg-slate-900 sm:w-auto sm:text-xs sm:tracking-[0.22em] border-0"
-                  >
-                    {labels.all}
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
 
-                {upcomingEvents.length > 0 ? (
                   <HeroEventsMarquee locale={locale} events={upcomingEvents} />
-                ) : (
-                  <div className="rounded-2xl border border-dashed border-border/60 bg-white/80 p-5 text-center shadow-sm sm:p-6">
-                    <p className="text-sm text-muted-foreground sm:text-base">{labels.empty}</p>
-                  </div>
-                )}
-              </div>
-            </StaggerItem>
-          </StaggerContainer>
+                </div>
+              </StaggerItem>
+            </StaggerContainer>
+          </div>
         </div>
-      </div>
+      )}
     </>
   )
 }

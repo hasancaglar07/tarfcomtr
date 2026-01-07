@@ -1,0 +1,35 @@
+[
+  {
+    "id": "337b7b7b-59ec-44b0-b4e2-fcbdd84a9ec2",
+    "locale": "tr",
+    "siteName": "TARF Akademi",
+    "siteDescription": "Bilim, teknoloji ve irfanı birleştiren üretim ekosistemi.",
+    "contactEmail": "info@tarf.com.tr",
+    "contactPhone": "+90 (501) 427 83 65",
+    "contactAddress": "Aşağı Öveçler Mah., 1324. Cad., 63 Çankaya / ANKARA",
+    "social": {
+      "twitter": "https://twitter.com",
+      "youtube": "https://youtube.com"
+    },
+    "contactContent": {
+      "tr": {
+        "cta": {
+          "title": "Bilgiyle Hikmeti, Teknolojiyle İrfanı Buluşturan Çalışmalarımızda Siz de Yerinizi Alın.",
+          "description": "Eğitim programlarımıza katılabilir, projelerimize katkı sunabilir, ilgi alanlarınıza uygun çalışma gruplarında gönüllü olarak yer alabilirsiniz. Birlikte düşünmek, üretmek ve topluma değer katmak için bize katılın. Üreten, düşünen ve sorumluluk alan bir topluluğun parçası olun. Eğitimlerimizde, projelerimizde ve çalışma alanlarımızda yeteneklerinizi geliştirin, geleceğe katkı sunun. Fikirlerinizle, emeğinizle ve heyecanınızla aramıza katılın.Bilgiyle Hikmeti, Teknolojiyle İrfanı Buluşturan Çalışmalarımızda Siz de Yerinizi Alın.",
+          "primaryAction": {
+            "href": "",
+            "label": "Test Button"
+          }
+        },
+        "heroBody": "Üreten, düşünen ve sorumluluk alan bir topluluğun parçası olun. Eğitimlerimizde, projelerimizde ve çalışma alanlarımızda yeteneklerinizi geliştirin, geleceğe katkı sunun. Fikirlerinizle, emeğinizle ve heyecanınızla aramıza katılın.",
+        "formTitle": "Başvuru formu",
+        "heroTitle": "Bilgiyle hikmeti, teknolojiyle irfanı buluşturan çalışmalarımızda siz de yerinizi alın",
+        "heroEyebrow": "TARF Akademi",
+        "formSubtitle": "Ekibimiz 24 saat içinde dönüş yapar.",
+        "heroSubtitle": "Eğitim programlarımıza katılabilir, projelerimize katkı sunabilir, ilgi alanlarınıza uygun çalışma gruplarında gönüllü olarak yer alabilirsiniz. Birlikte düşünmek, üretmek ve topluma değer katmak için bize katılın."
+      }
+    },
+    "createdAt": "2025-11-25T11:41:33.215Z",
+    "updatedAt": "2026-01-05T08:11:55.594Z"
+  }
+]

@@ -184,7 +184,7 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
           description: locale === 'tr' ? 'Diplomasi ve bölgesel çalışmalar' : 'Diplomacy and regional studies',
         },
         {
-          label: locale === 'tr' ? 'Çevre-İklim-Şehir' : locale === 'ar' ? 'البيئة والمناخ والطبيعة' : 'Environment & Climate',
+          label: locale === 'tr' ? 'Ekoloji-İklim-Şehir' : locale === 'ar' ? 'البيئة والمناخ والطبيعة' : 'Environment & Climate',
           href: `/${locale}/dusunce-enstitusu/cevre-iklim-doga`,
           description: locale === 'tr' ? 'İklim ve sürdürülebilirlik' : 'Climate and sustainability',
         },

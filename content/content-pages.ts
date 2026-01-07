@@ -118,7 +118,7 @@ export const categoryLabels: Record<
     description: 'Teknoloji üretimi, danışmanlık ve güvenlik çözümlerimiz',
   },
   kulupler: {
-    label: 'Kulüpler & Takımlar',
+    label: 'Kulüpler ve Takımlar',
     description: 'Topluluklarımız, üretim takımları ve öğrenci kulüpleri',
   },
   yayinlar: {
@@ -936,7 +936,7 @@ const dusuncePages: ContentPageDefinition[] = [
           { title: 'Kültür & Sanat', description: 'Kültürel miras, çağdaş sanat ve kültürel diplomasi projeleri.' },
           { title: 'Gençlik Çalışmaları', description: 'Gençlik ve teknoloji, girişimcilik ve kariyer yolları üzerine araştırmalar.' },
           { title: 'Uluslararası İlişkiler', description: 'Küresel trendler, diplomasi ve bölgesel işbirliklerine odaklanan araştırmalar.' },
-          { title: 'Çevre-İklim-Doğa', description: 'İklim krizi, sürdürülebilirlik ve doğa temelli çözümler üzerine çalışmalar.' },
+          { title: 'Ekoloji-İklim-Şehir', description: 'İklim krizi, sürdürülebilirlik ve doğa temelli çözümler üzerine çalışmalar.' },
           { title: 'Bilim ve Teknoloji', description: 'Bilimsel gelişmelerin toplum ve ekonomi üzerindeki etkilerine dair analizler.' },
         ],
       },
@@ -2447,7 +2447,7 @@ const kuluplerPages: ContentPageDefinition[] = [
     slug: 'kulupler',
     category: 'kulupler',
     hero: {
-      eyebrow: 'Kulüpler & Takımlar',
+      eyebrow: 'Kulüpler ve Takımlar',
       title: 'TARF Kulüpler ve Takımları',
       subtitle: 'Takım bilinci, proje yönetimi ve üretim disiplini',
       description:
@@ -2518,7 +2518,7 @@ const kuluplerPages: ContentPageDefinition[] = [
     slug: 'kulupler/ogrenci-kulupleri',
     category: 'kulupler',
     hero: {
-      eyebrow: 'Kulüpler & Takımlar',
+      eyebrow: 'Kulüpler ve Takımlar',
       title: 'TARF Öğrenci Kulüpleri',
       subtitle: 'İlgi alanlarında topluluklar oluştur, arkadaşlıklar kur',
       description:
@@ -2603,7 +2603,7 @@ const kuluplerPages: ContentPageDefinition[] = [
     slug: 'kulupler/teknoloji-takimlari',
     category: 'kulupler',
     hero: {
-      eyebrow: 'Kulüpler & Takımlar',
+      eyebrow: 'Kulüpler ve Takımlar',
       title: 'TARF Teknoloji Takımları',
       subtitle: 'Gerçek projeler, gerçek sonuçlar',
       description:

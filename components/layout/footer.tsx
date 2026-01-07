@@ -22,7 +22,7 @@ const footerNavigation = (locale: string) => ({
     { label: locale === 'tr' ? 'Aile' : locale === 'ar' ? 'الأسرة' : 'Family', href: `/${locale}/dusunce-enstitusu/aile` },
     { label: locale === 'tr' ? 'Tarih, Kültür ve Medeniyet' : locale === 'ar' ? 'الثقافة والفن' : 'Culture & Art', href: `/${locale}/dusunce-enstitusu/kultur-sanat` },
     { label: locale === 'tr' ? 'Uluslararası İlişkiler' : locale === 'ar' ? 'العلاقات الدولية' : 'International Relations', href: `/${locale}/dusunce-enstitusu/uluslararasi-iliskiler` },
-    { label: locale === 'tr' ? 'Çevre-İklim-Şehir' : locale === 'ar' ? 'البيئة والمناخ والطبيعة' : 'Environment & Climate', href: `/${locale}/dusunce-enstitusu/cevre-iklim-doga` },
+    { label: locale === 'tr' ? 'Ekoloji-İklim-Şehir' : locale === 'ar' ? 'البيئة والمناخ والطبيعة' : 'Environment & Climate', href: `/${locale}/dusunce-enstitusu/cevre-iklim-doga` },
     { label: locale === 'tr' ? 'Bilim ve Teknoloji' : locale === 'ar' ? 'العلم والتكنولوجيا' : 'Science & Technology', href: `/${locale}/dusunce-enstitusu/bilim-teknoloji` },
   ],
   akademi: [
@@ -56,7 +56,7 @@ const socialLinks = [
 ]
 
 const highlightPills: Record<string, string[]> = {
-  tr: ['Bilim', 'Teknoloji', 'Topluluk'],
+  tr: ['Bilim', 'Teknoloji', 'İrfan', 'Hikmet'],
   ar: ['العلم', 'التكنولوجيا', 'المجتمع'],
   en: ['Science', 'Technology', 'Community'],
 }
@@ -157,11 +157,11 @@ export function Footer({ locale, settings, contentPageSlugs, publishedPageSlugs 
                 {locale === 'tr' ? 'Araştırma Fonları' : locale === 'ar' ? 'صناديق البحث' : 'Research Funds'}
               </p>
               <h3 className="text-lg font-bold text-white sm:text-xl">
-                TARF Akademi
+                TARF Düşünce Enstitüsü
               </h3>
               <p className="mt-1 text-xs leading-relaxed text-slate-400 sm:text-sm lg:max-w-md">
                 {locale === 'tr'
-                  ? 'Bilim, teknoloji ve irfanı bir araya getirerek geleceği inşa ediyoruz.'
+                  ? 'Bilim, teknoloji ve irfanı bir araya getirerek geleceğin inşası yolunda bir tuğla koyuyoruz.'
                   : locale === 'ar'
                     ? 'نبني المستقبل من خلال الجمع بين العلم والتكنولوجيا والحكمة.'
                     : 'Building the future by bringing together science, technology and wisdom.'}
