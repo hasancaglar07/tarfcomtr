@@ -4,7 +4,7 @@ import type { Post } from '@/lib/api'
 
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Calendar, MapPin, Clock, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
+import { Calendar, MapPin, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState, useRef, useCallback } from 'react'
