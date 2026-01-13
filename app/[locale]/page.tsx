@@ -2,6 +2,7 @@ import { api } from '@/lib/api'
 import { normalizeLocale, SUPPORTED_LOCALES } from '@/lib/i18n'
 import { buildPageMetadata } from '@/lib/seo'
 import { Hero } from '@/components/sections/hero'
+import { BlogShowcase } from '@/components/sections/blog-showcase'
 import { EventsCarousel } from '@/components/sections/events-carousel'
 import { FutureContribution } from '@/components/sections/future-contribution'
 import { ScrollReveal } from '@/components/ui/scroll-reveal'
@@ -155,6 +156,13 @@ export default async function Home({
           <EventPosterPopup locale={locale} events={data.events} />
           {/* Hero Section - Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz */}
           <Hero locale={locale} data={heroContent} events={data.events} />
+
+          {/* Blog Showcase - Uzmanlardan görüşler */}
+          <ScrollReveal delay={0.2}>
+            {data.blog_posts && data.blog_posts.length > 0 ? (
+              <BlogShowcase locale={locale} posts={data.blog_posts} />
+            ) : null}
+          </ScrollReveal>
 
           {/* Events Carousel - Aktif etkinliklerimiz ve seminerler */}
           <ScrollReveal delay={0.2}>

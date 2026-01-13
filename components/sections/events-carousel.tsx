@@ -413,12 +413,12 @@ function EventCard({
 
             {/* Metadata */}
             <div className="flex flex-col gap-1.5 text-xs font-medium text-slate-500">
-              {event.event_time && (
+              {event.event_date && (
                 <div className="flex items-center gap-2">
                   <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10">
-                    <Clock className="w-3 h-3 text-primary" />
+                    <Calendar className="w-3 h-3 text-primary" />
                   </div>
-                  <span>{event.event_time}</span>
+                  <span>{new Date(event.event_date).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                 </div>
               )}
               {event.location && (

@@ -36,8 +36,8 @@ export function CtaSection({
                         <div className="absolute bottom-[-50%] right-[-20%] w-[80%] h-[200%] bg-black/10 rotate-12 blur-3xl opacity-20" />
                     </div>
 
-                    <div className="relative z-10 mx-auto flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
-                        <div className="flex-1 space-y-4 text-left">
+                    <div className="relative z-10 flex flex-col gap-6">
+                        <div className="w-full space-y-4 text-left">
                             {eyebrow && (
                                 <p className="text-xs font-bold uppercase tracking-[0.3em] text-white/80">
                                     {eyebrow}
@@ -46,11 +46,11 @@ export function CtaSection({
                             <h2 className="text-2xl font-black tracking-tight md:text-3xl drop-shadow-sm">
                                 {title}
                             </h2>
-                            <p className="text-sm md:text-base font-medium text-amber-50 leading-relaxed max-w-4xl">
+                            <p className="text-sm md:text-base font-medium text-amber-50 leading-relaxed w-full">
                                 {description}
                             </p>
                         </div>
-                        <div className="flex flex-shrink-0 flex-wrap gap-4 pt-2 lg:pt-0">
+                        <div className="flex flex-wrap gap-4">
                             {primaryAction && primaryAction.label && primaryAction.href && (
                                 <Button
                                     size="lg"

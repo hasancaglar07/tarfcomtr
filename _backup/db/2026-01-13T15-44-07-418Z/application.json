@@ -1,0 +1,62 @@
+[
+  {
+    "id": "626e2d1d-30b8-4660-b5e1-77d387f5cb46",
+    "name": "nida şahin",
+    "email": "nida-sahin07@hotmail.com",
+    "phone": "05320602577",
+    "subject": "iş başvurusu",
+    "message": "iş başvurusunda bulunmak istiyorum\n\nFirma: nida",
+    "status": "closed",
+    "adminNote": "olumsuz ",
+    "createdAt": "2025-11-26T01:18:52.635Z",
+    "updatedAt": "2025-11-26T17:52:46.929Z"
+  },
+  {
+    "id": "d7f6c702-08f0-4423-82ef-2fa9379afbc3",
+    "name": "çağlar şahin",
+    "email": "caglar07@hotmail.com.tr",
+    "phone": "05320602573",
+    "subject": "Etkinlik Başvurusu - etkinlik başvurmak istiyorum",
+    "message": "Başvuru Türü: Etkinlik Başvurusu\nKonu: etkinlik başvurmak istiyorum\nFirma: -\n\netkinlik başvurusu",
+    "status": "closed",
+    "adminNote": "olumsuz",
+    "createdAt": "2025-11-27T12:15:03.036Z",
+    "updatedAt": "2025-12-23T19:26:49.612Z"
+  },
+  {
+    "id": "e85ee718-92b1-4735-a6bd-79c3c72d581e",
+    "name": "Çağlar ŞAHİN",
+    "email": "bubutiko13@gmail.com",
+    "phone": "05320602573",
+    "subject": "EVET",
+    "message": "EVETTT\n\nFirma: EVET",
+    "status": "in_review",
+    "adminNote": "inceliyoruız",
+    "createdAt": "2025-11-25T21:35:17.574Z",
+    "updatedAt": "2025-12-23T19:27:10.422Z"
+  },
+  {
+    "id": "666591a0-acf6-41b4-9cbe-03d7ff6066be",
+    "name": "mehmet furkan arvas",
+    "email": "arvasfurkan8@gmail.com",
+    "phone": "05532476513",
+    "subject": "Akademi - selamun aleyküm , ben Bitlis'te üniversite ve medrese eğitimi gören bir öğrenciyim. Vizyonunuzu ve programınızı çok beğendim, ve üniversitemizde'de kulüp kurulmasını istiyorum.",
+    "message": "Başvuru Türü: Akademi\nKonu: selamun aleyküm , ben Bitlis'te üniversite ve medrese eğitimi gören bir öğrenciyim. Vizyonunuzu ve programınızı çok beğendim, ve üniversitemizde'de kulüp kurulmasını istiyorum.\nFirma: bitlis eren üniversitesi ilahiyat fakültesi\n\nAllahın izniyle, şuur ve maneviyet iklimini tam bir şekilde oturtarak, teklonoji konusunda kendimi geliştirmek istiyorum.\n",
+    "status": "new",
+    "adminNote": null,
+    "createdAt": "2025-12-29T17:14:42.764Z",
+    "updatedAt": "2025-12-29T17:14:42.764Z"
+  },
+  {
+    "id": "06b89f76-d739-456f-888c-a95331664801",
+    "name": "RÜMEYSA TATAR",
+    "email": "rmsttrms@gmail.com",
+    "phone": null,
+    "subject": "Genel Soru / Diğer - KYP demo talep başvurusu",
+    "message": "Başvuru Türü: Genel Soru / Diğer\nKonu: KYP demo talep başvurusu\nFirma: -\n\nBulunduğum kurum için ürünlerinizden istifade etmek istiyorum.",
+    "status": "new",
+    "adminNote": "deneme\r\n",
+    "createdAt": "2026-01-08T09:23:49.877Z",
+    "updatedAt": "2026-01-08T09:24:45.238Z"
+  }
+]

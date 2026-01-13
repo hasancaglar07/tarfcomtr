@@ -1,0 +1,20 @@
+[
+  {
+    "id": "faq-1-tr",
+    "question": "Programlara nasıl başvurabilirim?",
+    "answer": "İletişim formu veya başvuru sayfası üzerinden başvuru yapabilirsiniz.",
+    "order": 1,
+    "locale": "tr",
+    "createdAt": "2025-11-25T11:41:32.879Z",
+    "updatedAt": "2025-12-30T01:23:45.103Z"
+  },
+  {
+    "id": "faq-2-tr",
+    "question": "Eğitimler ücretli mi?",
+    "answer": "Bazı programlar ücretsiz, bazıları burs/ücretli; detaylar program sayfasında.",
+    "order": 2,
+    "locale": "tr",
+    "createdAt": "2025-11-25T11:41:33.005Z",
+    "updatedAt": "2025-12-30T01:23:45.225Z"
+  }
+]
