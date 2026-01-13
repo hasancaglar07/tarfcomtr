@@ -10,7 +10,8 @@
     "lint": "next lint",
     "db:seed": "prisma db seed",
     "db:backup": "tsx scripts/backup-db.ts",
-    "db:restore": "tsx scripts/restore-db.ts"
+    "db:restore": "tsx scripts/restore-db.ts",
+    "db:pull": "tsx scripts/pull_prod_content.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
