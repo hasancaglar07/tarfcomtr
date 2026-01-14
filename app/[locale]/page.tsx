@@ -152,20 +152,13 @@ export default async function Home({
           aria-hidden="true"
         />
 
-        <div className="relative z-10 flex flex-col gap-4 lg:gap-6">
+        <div className="relative z-10 flex flex-col gap-0">
           <EventPosterPopup locale={locale} events={data.events} />
           {/* Hero Section - Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz */}
           <Hero locale={locale} data={heroContent} events={data.events} />
 
-          {/* Blog Showcase - Uzmanlardan görüşler */}
-          <ScrollReveal delay={0.2}>
-            {data.blog_posts && data.blog_posts.length > 0 ? (
-              <BlogShowcase locale={locale} posts={data.blog_posts} />
-            ) : null}
-          </ScrollReveal>
-
           {/* Events Carousel - Aktif etkinliklerimiz ve seminerler */}
-          <ScrollReveal delay={0.2}>
+          <ScrollReveal delay={0.05}>
             {(data.events && data.events.length > 0) || (data.past_events && data.past_events.length > 0) ? (
               <EventsCarousel
                 locale={locale}
@@ -175,8 +168,15 @@ export default async function Home({
             ) : null}
           </ScrollReveal>
 
+          {/* Blog Showcase - Uzmanlardan görüşler */}
+          <ScrollReveal delay={0.1}>
+            {data.blog_posts && data.blog_posts.length > 0 ? (
+              <BlogShowcase locale={locale} posts={data.blog_posts} />
+            ) : null}
+          </ScrollReveal>
+
           {/* Join CTA */}
-          <ScrollReveal delay={0.2}>
+          <ScrollReveal delay={0.15}>
             <FutureContribution locale={locale} />
           </ScrollReveal>
         </div>

@@ -230,7 +230,7 @@ export function Hero({ locale, data, events }: HeroProps) {
   return (
     <>
       <section className="relative overflow-hidden">
-        <div className="container relative z-10 pt-24 pb-10 lg:pt-28 lg:pb-20">
+        <div className="container relative z-10 pt-20 pb-6 lg:pt-24 lg:pb-8">
           <StaggerContainer>
             <StaggerItem>
               {/* Ambient Background Orbs */}
@@ -483,7 +483,7 @@ export function Hero({ locale, data, events }: HeroProps) {
         </div>
       </section>
       {upcomingEvents.length > 0 && (
-        <div className="mt-6 lg:-mt-8">
+        <div className="mt-4 lg:-mt-4 relative z-20">
           <div className="container">
             <StaggerContainer className="min-w-0 space-y-6 lg:space-y-8">
               <StaggerItem>

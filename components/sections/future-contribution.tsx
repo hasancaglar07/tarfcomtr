@@ -31,7 +31,7 @@ export function FutureContribution({ locale }: FutureContributionProps) {
   const content = defaultContent[locale as keyof typeof defaultContent] || defaultContent.en
 
   return (
-    <section className="py-12">
+    <section className="py-6">
       <div className="container">
         {/* CTA Card */}
         <Animate variant="slideUp" delay={0.2}>

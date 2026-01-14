@@ -46,9 +46,9 @@ export function BlogShowcase({ locale, posts }: BlogShowcaseProps) {
   }
 
   return (
-    <section className="py-12" aria-labelledby="home-blog-title">
+    <section className="py-4" aria-labelledby="home-blog-title">
       <div className="container">
-        <Animate variant="slideUp" className="text-center mb-10">
+        <Animate variant="slideUp" className="text-center mb-4">
           <h2 id="home-blog-title" className="text-3xl md:text-4xl font-bold mb-4">
             {content.title}
           </h2>
@@ -71,7 +71,7 @@ export function BlogShowcase({ locale, posts }: BlogShowcaseProps) {
           ))}
         </div>
 
-        <div className="flex flex-col items-center gap-8 mt-10">
+        <div className="flex flex-col items-center gap-6 mt-6">
           <Animate variant="slideUp" delay={0.3}>
             <Link href={`/${locale}/blog`} aria-label={content.see_all}>
               <Button

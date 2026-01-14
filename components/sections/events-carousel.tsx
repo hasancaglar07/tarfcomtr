@@ -146,7 +146,7 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
 
   return (
     <section
-      className="py-12 overflow-hidden"
+      className="py-4 overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -157,7 +157,7 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
           className="w-full"
         >
           {/* Header (centered) + Navigation */}
-          <div className="relative mb-10">
+          <div className="relative mb-4">
             <Animate variant="slideUp" className="text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">{content.title}</h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -173,7 +173,7 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
           </div>
 
           {/* Tabs under title (centered) */}
-          <div className="flex justify-center mb-12">
+          <div className="flex justify-center mb-6">
             <TabsList className="inline-flex h-auto p-1 bg-secondary/50 backdrop-blur-sm flex-wrap gap-2">
               <TabsTrigger
                 value="past"
@@ -299,7 +299,7 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
 
           {/* Dots Indicator */}
           {showNavigation && (
-            <div className="flex justify-center gap-2 mt-6">
+            <div className="flex justify-center gap-2 mt-4">
               {Array.from({ length: maxIndex + 1 }).map((_, index) => (
                 <button
                   key={index}
@@ -315,7 +315,7 @@ export function EventsCarousel({ locale, upcomingEvents, pastEvents }: EventsCar
           )}
 
           {/* Bottom Bar: See All */}
-          <div className="flex flex-col items-center gap-8 mt-10">
+          <div className="flex flex-col items-center gap-6 mt-6">
             {/* See All Button */}
             <Animate variant="slideUp" delay={0.4}>
               <Link href={`/${locale}/events`}>
