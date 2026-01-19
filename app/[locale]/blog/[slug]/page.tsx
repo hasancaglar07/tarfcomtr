@@ -269,9 +269,9 @@ export default async function BlogPost({
                     <div className="mt-12 pt-8 border-t border-slate-200">
                       <PostEngagement
                         postId={post.id}
-                        initialLikes={(post as any).likes || 0}
+                        initialLikes={(post as unknown as { likes?: number }).likes || 0}
                         tags={(() => {
-                          const postMeta = (post as any).meta
+                          const postMeta = (post as unknown as { meta?: { tags?: string } }).meta
                           if (postMeta?.tags) {
                             return String(postMeta.tags)
                               .split(/[,#]/)

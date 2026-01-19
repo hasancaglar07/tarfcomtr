@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { ImageIcon, FolderOpen, Upload, X, Loader2, Plus } from 'lucide-react'
+import { FolderOpen, Upload, X, Loader2 } from 'lucide-react'
 import { MediaPickerModal } from './media-picker'
 
 interface GalleryInputProps {
@@ -105,6 +105,7 @@ export function GalleryInput({
                         key={`${url}-${index}`}
                         className="group relative h-16 w-16 overflow-hidden rounded-lg border border-slate-700"
                     >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src={url}
                             alt={`Gallery ${index + 1}`}

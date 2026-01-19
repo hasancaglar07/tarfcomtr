@@ -84,8 +84,10 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
 
   const getQuillEditor = useCallback(() => {
     if (!quillRef.current) return null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const editor = (quillRef.current as any)?.getEditor?.()
     if (editor) return editor
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (quillRef.current as any)?.editor || null
   }, [])
 
@@ -229,8 +231,9 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
 
       {mounted && (
         <ReactQuill
-          ref={(el) => {
-            quillRef.current = el as ReactQuillType | null
+          // @ts-expect-error - ReactQuill has ref support but types are incomplete
+          ref={(el: ReactQuillType | null) => {
+            quillRef.current = el
           }}
           theme="snow"
           value={value}

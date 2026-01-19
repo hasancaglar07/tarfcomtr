@@ -196,11 +196,12 @@ export function MediaPickerModal({ isOpen, onClose, onSelect, filter = 'all' }: 
                   type="button"
                   onClick={() => setSelectedUrl(item.url)}
                   className={`group relative aspect-square overflow-hidden rounded-lg border-2 transition ${selectedUrl === item.url
-                      ? 'border-orange-400 ring-2 ring-orange-400/50'
-                      : 'border-slate-700 hover:border-slate-500'
+                    ? 'border-orange-400 ring-2 ring-orange-400/50'
+                    : 'border-slate-700 hover:border-slate-500'
                     }`}
                 >
                   {isImage(item) ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={item.url}
                       alt={item.altText || ''}

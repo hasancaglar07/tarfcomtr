@@ -88,6 +88,7 @@ export function ImageInput({
                 <div className="relative h-20 w-32 flex-shrink-0 overflow-hidden rounded-lg border border-slate-700 bg-slate-800">
                     {value ? (
                         <>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={value}
                                 alt="Preview"

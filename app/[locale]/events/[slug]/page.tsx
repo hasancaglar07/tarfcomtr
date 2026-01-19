@@ -284,9 +284,9 @@ export default async function EventDetailPage({
                     <div className="mt-12 pt-8 border-t border-slate-200">
                       <PostEngagement
                         postId={event.id}
-                        initialLikes={(event as any).likes || 0}
+                        initialLikes={(event as unknown as { likes?: number }).likes || 0}
                         tags={(() => {
-                          const eventMeta = (event as any).meta
+                          const eventMeta = (event as unknown as { meta?: { tags?: string } }).meta
                           if (eventMeta?.tags) {
                             return String(eventMeta.tags)
                               .split(/[,#]/)
