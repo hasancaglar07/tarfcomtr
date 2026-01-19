@@ -7,8 +7,8 @@ import type { Category, Post, PostType } from '@prisma/client'
 
 import type { PostActionState } from '@/app/admin/posts/actions'
 import { RichTextEditor } from '@/components/admin/rich-text'
-import { MediaPicker } from '@/components/admin/media-picker'
-import { BlobUpload } from '@/components/admin/blob-upload'
+import { ImageInput } from '@/components/admin/image-input'
+import { GalleryInput } from '@/components/admin/gallery-input'
 import { ActionToast } from '@/components/admin/action-toast'
 import { useInvalidToast } from '@/components/admin/use-invalid-toast'
 
@@ -39,6 +39,12 @@ export function PostForm({ mode, action, type, categories, defaultValues }: Post
   const [slug, setSlug] = useState(defaultValues?.slug ?? '')
   const [content, setContent] = useState(defaultValues?.content ?? '')
   const [featuredImage, setFeaturedImage] = useState(defaultValues?.featuredImage || '')
+  const [gallery, setGallery] = useState(galleryValue)
+  const [tags, setTags] = useState(
+    defaultValues?.meta && typeof defaultValues.meta === 'object'
+      ? ((defaultValues.meta as { tags?: string }).tags || '')
+      : ''
+  )
   const [ogImage, setOgImage] = useState(
     (defaultValues as Partial<Post> & { ogImage?: string })?.ogImage || '',
   )
@@ -228,6 +234,23 @@ export function PostForm({ mode, action, type, categories, defaultValues }: Post
       </div>
 
       <div className="space-y-2">
+        <label className="text-sm text-slate-300" htmlFor="tags">
+          Etiketler
+        </label>
+        <input
+          id="tags"
+          name="tags"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+          className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+          placeholder="#Doğa #Çevre #Sürdürülebilirlik"
+        />
+        <p className="text-xs text-slate-500">
+          Etiketleri # ile başlatın veya virgülle ayırın. Örnek: #Teknoloji, #Yenilik
+        </p>
+      </div>
+
+      <div className="space-y-2">
         <label className="text-sm text-slate-300" htmlFor="content">
           İçerik
         </label>
@@ -274,52 +297,22 @@ export function PostForm({ mode, action, type, categories, defaultValues }: Post
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <label className="text-sm text-slate-300" htmlFor="featuredImage">
-            Kapak görseli (URL)
-          </label>
-          <input
-            id="featuredImage"
-            name="featuredImage"
-            value={featuredImage}
-            onChange={(e) => setFeaturedImage(e.target.value)}
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-          />
-          <p className="text-xs text-slate-500">Medya yükledikten sonra URL’yi buraya yapıştırın.</p>
-          <div className="space-y-2">
-            <BlobUpload />
-            <MediaPicker
-              onSelect={(url) => setFeaturedImage(url)}
-              filterKind="image"
-              filterLocale={defaultValues?.locale || 'tr'}
-            />
-          </div>
-        </div>
-        <div className="space-y-2">
-          <label className="text-sm text-slate-300" htmlFor="gallery">
-            Galeri (virgül ile ayırın)
-          </label>
-          <input
-            id="gallery"
-            name="gallery"
-            defaultValue={galleryValue}
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-            placeholder="https://... , https://..."
-          />
-          <p className="text-xs text-slate-500">Etkinlik/konferans fotoğrafları için çoklu URL ekleyin.</p>
-          <div className="space-y-2">
-            <BlobUpload />
-            <MediaPicker
-              onSelect={(url) => {
-                const current = galleryValue ? `${galleryValue}, ${url}` : url
-                const input = document.getElementById('gallery') as HTMLInputElement | null
-                if (input) input.value = current
-              }}
-              filterKind="image"
-              filterLocale={defaultValues?.locale || 'tr'}
-            />
-          </div>
-        </div>
+        <ImageInput
+          label="Kapak görseli"
+          id="featuredImage"
+          name="featuredImage"
+          value={featuredImage}
+          onChange={setFeaturedImage}
+          helpText="Kütüphaneden seçin veya yeni yükleyin."
+        />
+        <GalleryInput
+          label="Galeri"
+          id="gallery"
+          name="gallery"
+          value={gallery}
+          onChange={setGallery}
+          helpText="Etkinlik/konferans fotoğrafları için çoklu resim ekleyin."
+        />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -329,56 +322,42 @@ export function PostForm({ mode, action, type, categories, defaultValues }: Post
           </label>
           <input
             id="seoTitle"
-        name="seoTitle"
-        value={seoTitle}
-        onChange={(e) => {
-          setSeoTitleDirty(true)
-          setSeoTitle(e.target.value)
-        }}
-        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-        placeholder="Meta title"
-      />
-    </div>
-    <div className="space-y-2 sm:col-span-2">
-      <label className="text-sm text-slate-300" htmlFor="seoDescription">
-        SEO Açıklama
-      </label>
-      <input
-        id="seoDescription"
-        name="seoDescription"
-        value={seoDescription}
-        onChange={(e) => {
-          setSeoDescriptionDirty(true)
-          setSeoDescription(e.target.value)
-        }}
-        className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-        placeholder="Meta description"
-      />
-    </div>
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm text-slate-300" htmlFor="ogImage">
-          Sosyal önizleme görseli (OG image URL)
-        </label>
-        <input
-          id="ogImage"
-          name="ogImage"
-          value={ogImage}
-          onChange={(e) => setOgImage(e.target.value)}
-          className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
-          placeholder="https://.../og-image.jpg"
-        />
-        <p className="text-xs text-slate-500">Sosyal paylaşım için kapak. Medyadan seçebilirsiniz.</p>
-        <div className="space-y-2">
-          <BlobUpload />
-          <MediaPicker
-            onSelect={(url) => setOgImage(url)}
-            filterKind="image"
-            filterLocale={defaultValues?.locale || 'tr'}
+            name="seoTitle"
+            value={seoTitle}
+            onChange={(e) => {
+              setSeoTitleDirty(true)
+              setSeoTitle(e.target.value)
+            }}
+            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+            placeholder="Meta title"
+          />
+        </div>
+        <div className="space-y-2 sm:col-span-2">
+          <label className="text-sm text-slate-300" htmlFor="seoDescription">
+            SEO Açıklama
+          </label>
+          <input
+            id="seoDescription"
+            name="seoDescription"
+            value={seoDescription}
+            onChange={(e) => {
+              setSeoDescriptionDirty(true)
+              setSeoDescription(e.target.value)
+            }}
+            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+            placeholder="Meta description"
           />
         </div>
       </div>
+
+      <ImageInput
+        label="Sosyal önizleme görseli (OG image)"
+        id="ogImage"
+        name="ogImage"
+        value={ogImage}
+        onChange={setOgImage}
+        helpText="Sosyal paylaşım için kapak görseli."
+      />
 
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="space-y-2">

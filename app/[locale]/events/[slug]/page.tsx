@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { normalizeLocale } from '@/lib/i18n'
 import { Animate, StaggerContainer, StaggerItem } from '@/components/ui/animate'
+import { PostEngagement } from '@/components/ui/post-engagement'
 import { buildPageMetadata } from '@/lib/seo'
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 import { cache } from 'react'
@@ -278,6 +279,30 @@ export default async function EventDetailPage({
                         )}
                       </div>
                     )}
+
+                    {/* Tags & Engagement */}
+                    <div className="mt-12 pt-8 border-t border-slate-200">
+                      <PostEngagement
+                        postId={event.id}
+                        initialLikes={(event as any).likes || 0}
+                        tags={(() => {
+                          const eventMeta = (event as any).meta
+                          if (eventMeta?.tags) {
+                            return String(eventMeta.tags)
+                              .split(/[,#]/)
+                              .map((t: string) => t.trim())
+                              .filter(Boolean)
+                          }
+                          // Fallback: kategori ve lokasyon
+                          const fallback: string[] = []
+                          if (event.category?.name) fallback.push(event.category.name)
+                          if (event.location) fallback.push(event.location)
+                          return fallback
+                        })()}
+                        locale={locale}
+                        shareTitle={event.title}
+                      />
+                    </div>
                   </Card>
                 </Animate>
 

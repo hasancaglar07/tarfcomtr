@@ -1,0 +1,48 @@
+[
+  {
+    "id": "hero-tr",
+    "locale": "tr",
+    "title": "Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz",
+    "subtitle": "Eğitim, üretim ve topluluk programlarıyla ekosistem kuruyoruz.",
+    "description": "Gençlere yönelik eğitim, atölye, etkinlik ve teknoloji takımları.",
+    "headlineSlides": [
+      {
+        "title": "Hikmetle Derinleşen, Teknolojiyle Yön Veren Düşünce",
+        "subtitle": "<p><strong>Düşünce Enstitüsü</strong>; kadim irfan geleneğinden beslenen insan merkezli yaklaşımları, çağdaş teknoloji ve bilimle birleştirerek geleceğe dair düşünceler üretir.</p>",
+        "titleSize": "42px"
+      },
+      {
+        "title": "Gençlerle birlikte yeni bir öğrenme kültürü kuruyoruz",
+        "subtitle": "<p><strong>Araştırma,</strong> atölye ve teknoloji takımlarıyla sahadayız.</p>",
+        "titleSize": "58px"
+      },
+      {
+        "title": "Akademi ve Eğitimle Derinleşen Bilgi",
+        "subtitle": "<p>Eğitim programları, seminerler ve akademik çalışmalar yoluyla nitelikli bilgi üretimini hedefler. İnsan merkezli ve değer odaklı yaklaşımıyla, akademik disiplini çağdaş bilim ve teknolojik imkânlarla birleştirerek sürdürülebilir bir öğrenme ortamı sunar.</p>",
+        "titleSize": "48px"
+      },
+      {
+        "title": "Güçlü Mimari, Sürdürülebilir Yazılım",
+        "subtitle": "<p><strong>Modern yazılım </strong>mimarileri ve güncel teknolojilerle, güvenli, performanslı ve uzun ömürlü yazılım çözümleri sunuyoruz.</p><p>Uzun vadede yönetilebilir ve performanslı yazılım sistemleri.</p>",
+        "titleSize": "52px"
+      },
+      {
+        "title": "KYP   \n                                                                                       (Kurumsal Yönetim Platformu)",
+        "subtitle": "<p><strong>KYP (Kurumsal Yönetim Platformu)</strong>, kurumların tüm iş süreçlerini tek bir merkezden yönetmelerini sağlayan entegre bir yazılım platformudur. Operasyonel verimliliği artırmak, süreçleri standartlaştırmak ve dijital yönetim kültürünü güçlendirmek amacıyla geliştirilmiştir.</p>",
+        "titleSize": "42px"
+      }
+    ],
+    "buttonText": "Başvuru Yap",
+    "buttonUrl": "/tr/contact",
+    "backgroundImage": "",
+    "videoUrl": "https://www.youtube.com/watch?v=1Q7_ZfecC7o",
+    "videoCover": "",
+    "videoUrl2": "https://www.youtube.com/watch?v=Dn0_mblycJw&t=812s",
+    "videoCover2": "",
+    "videoUrl3": "",
+    "videoUrl4": "",
+    "videoUrl5": "",
+    "createdAt": "2025-11-25T11:41:33.087Z",
+    "updatedAt": "2026-01-15T12:15:15.701Z"
+  }
+]
