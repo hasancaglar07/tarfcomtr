@@ -139,7 +139,7 @@
   color: #fb923c !important;
 }
 
-/* Headers and paragraph text */
+/* Headers and paragraph text - force light color */
 .ql-editor h1,
 .ql-editor h2,
 .ql-editor h3,
@@ -148,8 +148,52 @@
 .ql-editor h6,
 .ql-editor p,
 .ql-editor li,
-.ql-editor blockquote {
+.ql-editor ol,
+.ql-editor ul,
+.ql-editor blockquote,
+.ql-editor span,
+.ql-editor div,
+.ql-editor strong,
+.ql-editor em,
+.ql-editor u,
+.ql-editor s,
+.ql-editor sub,
+.ql-editor sup {
   color: #f1f5f9 !important;
+}
+
+/* Override any inline color styles */
+.ql-editor *[style*="color"] {
+  color: #f1f5f9 !important;
+}
+
+/* Except for explicitly colored text from color picker */
+.ql-editor .ql-color-white {
+  color: #ffffff !important;
+}
+
+.ql-editor .ql-color-red {
+  color: #ef4444 !important;
+}
+
+.ql-editor .ql-color-orange {
+  color: #f97316 !important;
+}
+
+.ql-editor .ql-color-yellow {
+  color: #eab308 !important;
+}
+
+.ql-editor .ql-color-green {
+  color: #22c55e !important;
+}
+
+.ql-editor .ql-color-blue {
+  color: #3b82f6 !important;
+}
+
+.ql-editor .ql-color-purple {
+  color: #a855f7 !important;
 }
 
 /* Code blocks */
