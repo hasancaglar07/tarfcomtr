@@ -1,0 +1,110 @@
+[
+  {
+    "id": "f7243357-c0fd-4380-8444-c0b5576d1593",
+    "slug": "teknoloji",
+    "name": "Teknoloji",
+    "type": "blog",
+    "locale": "tr",
+    "createdAt": "2026-01-13T16:22:45.108Z",
+    "updatedAt": "2026-01-13T16:22:45.108Z"
+  },
+  {
+    "id": "a2f1d9f1-7e67-4ac2-b765-9d445d4190c3",
+    "slug": "gelecek",
+    "name": "Gelecek",
+    "type": "blog",
+    "locale": "tr",
+    "createdAt": "2026-01-13T16:22:46.226Z",
+    "updatedAt": "2026-01-13T16:22:46.226Z"
+  },
+  {
+    "id": "c594b1a9-db5e-4697-8fd0-3aaecb00b9cf",
+    "slug": "i̇s-dunyasi",
+    "name": "İş Dünyası",
+    "type": "blog",
+    "locale": "tr",
+    "createdAt": "2026-01-13T16:22:46.612Z",
+    "updatedAt": "2026-01-13T16:22:46.612Z"
+  },
+  {
+    "id": "f0251ef7-b9bd-4879-ab9f-3994da9a2e06",
+    "slug": "genel",
+    "name": "Genel",
+    "type": "blog",
+    "locale": "tr",
+    "createdAt": "2025-11-25T11:41:31.540Z",
+    "updatedAt": "2026-01-13T20:36:03.111Z"
+  },
+  {
+    "id": "180ef22d-e87e-4f37-9f4e-ddac292f7867",
+    "slug": "egitim",
+    "name": "Eğitim Programları",
+    "type": "service",
+    "locale": "tr",
+    "createdAt": "2025-11-25T11:41:31.671Z",
+    "updatedAt": "2026-01-13T20:36:03.233Z"
+  },
+  {
+    "id": "61064518-a426-4c5f-8aa1-95f4dbe96001",
+    "slug": "etkinlik",
+    "name": "Etkinlikler",
+    "type": "event",
+    "locale": "tr",
+    "createdAt": "2025-11-25T11:41:31.732Z",
+    "updatedAt": "2026-01-13T20:36:03.291Z"
+  },
+  {
+    "id": "20d3eb8d-5c8d-484d-bbc7-594681586f19",
+    "slug": "video-kutuphanesi",
+    "name": "Video Kütüphanesi",
+    "type": "video",
+    "locale": "tr",
+    "createdAt": "2025-11-25T11:41:31.797Z",
+    "updatedAt": "2026-01-13T20:36:03.349Z"
+  },
+  {
+    "id": "1c2789a5-7e26-4314-85c2-2a5159c590d1",
+    "slug": "podcast",
+    "name": "Podcastler",
+    "type": "podcast",
+    "locale": "tr",
+    "createdAt": "2025-11-25T11:41:31.858Z",
+    "updatedAt": "2026-01-13T20:36:03.408Z"
+  },
+  {
+    "id": "09fd838f-4c74-4140-83c9-32520ec76495",
+    "slug": "gençlik",
+    "name": "Gençlik",
+    "type": "blog",
+    "locale": "tr",
+    "createdAt": "2026-01-14T19:15:39.689Z",
+    "updatedAt": "2026-01-14T19:15:39.689Z"
+  },
+  {
+    "id": "833bd57e-02d4-4cd6-8b1c-e6f060654676",
+    "slug": "Bilim ve Teknoloji",
+    "name": " Bilim ve Teknoloji ",
+    "type": "blog",
+    "locale": "tr",
+    "createdAt": "2026-01-17T20:54:46.869Z",
+    "updatedAt": "2026-01-17T20:54:46.869Z"
+  },
+  {
+    "id": "02c1c5b2-7b0c-41c2-aa68-73af41aa49f5",
+    "slug": "Tarih – Kültür – Medeniyet",
+    "name": "Tarih – Kültür – Medeniyet",
+    "type": "blog",
+    "locale": "tr",
+    "createdAt": "2026-01-17T21:19:12.975Z",
+    "updatedAt": "2026-01-17T21:19:12.975Z"
+  },
+  {
+    "id": "366f5e46-b139-430e-965c-f85189142804",
+    "slug": "Aile",
+    "name": "Aile",
+    "type": "blog",
+    "locale": "tr",
+    "createdAt": "2026-01-18T10:28:29.074Z",
+    "updatedAt": "2026-01-18T10:28:29.074Z"
+  }
+]

@@ -223,12 +223,12 @@ const mergeCopy = (base: ContactCopy, override?: unknown): ContactCopy => {
 
 const fallbackContact = {
   addressLine1: 'Aşağı Öveçler MH 1324. CD No:63',
-  addressLine2: 'Dikmen, 06460 Çankaya/Ankara',
+  addressLine2: 'Çankaya / Ankara',
   plusCode: 'VRVG+G2 Çankaya, Ankara',
-  phone: '+90 312 283 00 00',
-  email: 'bilgi@verenel.org.tr',
+  phone: '+90 501 427 83 65',
+  email: 'info@tarf.com.tr',
   mapUrl:
-    'https://www.google.com/maps/place/VERENEL+DERNE%C4%9E%C4%B0/@39.8937501,32.7488323,13z/data=!4m22!1m15!4m14!1m6!1m2!1s0x14d345001edf907f:0x11169b63277c4f7!2zVkVSRU5FTCBERVJORcSexLA!2m2!1d32.82505!2d39.8937501!1m6!1m2!1s0x14d345001edf907f:0x11169b63277c4f7!2zQcWfYcSfxLEgw5Z2ZcOnbGVyLCAxMzI0LiBDZC4gTm86NjMsIDA2NDYwIMOHYW5rYXlhL0Fua2FyYQ!2m2!1d32.82505!2d39.8937501!3m5!1s0x14d345001edf907f:0x11169b63277c4f7!8m2!3d39.8937501!4d32.82505!16s%2Fg%2F11y74p7_vw?hl=tr&entry=ttu&g_ep=EgoyMDI1MTExMi4wIKXMDSoASAFQAw%3D%3D',
+    'https://www.google.com/maps?sca_esv=24e12ee2c444327b&rlz=1C1FKPE_trTR1147TR1147&sxsrf=ANbL-n6V0TnEFiob-bJQTIS0XENffxzXiA:1772788826732&kgmid=/g/11mysfqrw_&shem=dlvs1,epsd1,shrtsdl&shndl=30&kgs=9cd0996e09c479ed&um=1&ie=UTF-8&fb=1&gl=tr&sa=X&geocode=KeWQVDC0RdMUMW-1fl-gK27t&daddr=A%C5%9Fa%C4%9F%C4%B1+%C3%96ve%C3%A7ler,+1324.+Cd.+No:63,+06460+%C3%87ankaya/Ankara',
 
 } as const
 
