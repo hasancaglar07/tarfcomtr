@@ -18,6 +18,7 @@ const quickLinks: Parameters<typeof AdminDashboard>[0]['quickLinks'] = [
   { href: '/admin/popup', label: 'Popup Yönetimi', icon: 'ImageIcon' },
   { href: '/admin/settings', label: 'Site ayarları', icon: 'Settings' },
   { href: '/admin/applications', label: 'Başvurular', icon: 'FileText' },
+  { href: '/admin/ozel-basvurular', label: 'Özel Başvurular', icon: 'FileText' },
 ]
 
 export default async function AdminHomePage() {
