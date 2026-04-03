@@ -15,6 +15,7 @@ const quickLinks: Parameters<typeof AdminDashboard>[0]['quickLinks'] = [
   { href: '/admin/faq', label: 'SSS (FAQ)', icon: 'Layers' },
   { href: '/admin/hero', label: 'Hero içerikleri', icon: 'Video' },
   { href: '/admin/media', label: 'Medya kütüphanesi', icon: 'ImageIcon' },
+  { href: '/admin/popup', label: 'Popup Yönetimi', icon: 'ImageIcon' },
   { href: '/admin/settings', label: 'Site ayarları', icon: 'Settings' },
   { href: '/admin/applications', label: 'Başvurular', icon: 'FileText' },
 ]

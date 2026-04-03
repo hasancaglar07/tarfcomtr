@@ -116,6 +116,7 @@ CREATE TABLE "Setting" (
     "contactAddress" TEXT,
     "social" JSONB,
     "contactContent" JSONB,
+    "popupContent" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

@@ -10,8 +10,8 @@ export default function AdminLoginPage() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const callbackUrl = searchParams.get('callbackUrl') ?? '/admin'
-  const authError = searchParams.get('error')
+  const callbackUrl = searchParams?.get('callbackUrl') ?? '/admin'
+  const authError = searchParams?.get('error')
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()

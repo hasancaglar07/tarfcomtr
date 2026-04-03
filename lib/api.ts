@@ -4,6 +4,8 @@ import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { getEventsTodayStart } from '@/lib/events'
 import { cacheTags } from '@/lib/cache-tags'
+import type { PopupContent } from '@/lib/popup-content'
+import { normalizePopupContent } from '@/lib/popup-content'
 
 export interface Category {
   id: string
@@ -84,6 +86,7 @@ export interface Settings {
   contact_address: string | null
   contact_map_url?: string | null
   contact_content?: unknown | null
+  popup_content?: PopupContent | null
 }
 
 export interface HomeData {
@@ -148,6 +151,7 @@ const defaultSettings: Settings = {
   contact_phone: '+90 212 000 00 00',
   contact_address: 'İstanbul, Türkiye',
   contact_content: null,
+  popup_content: null,
 }
 
 const mapPostType = (type: PostType): PostTypeRef => {
@@ -379,6 +383,7 @@ async function getSettings(locale: string = 'tr'): Promise<Settings> {
           contact_address: setting.contactAddress,
           contact_map_url: null,
           contact_content: setting.contactContent,
+          popup_content: normalizePopupContent(setting.popupContent),
         }
       } catch (error) {
         console.error('Settings fetch failed, using defaults:', error)
@@ -393,16 +398,21 @@ async function getFaqs(locale: string = 'tr') {
     ['faqs', locale],
     [cacheTags.faqs(locale)],
     async () => {
-      const faqs = await prisma.fAQ.findMany({
-        where: { locale },
-        orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
-      })
-      return faqs.map((f) => ({
-        id: f.id,
-        question: f.question,
-        answer: f.answer,
-        order: f.order,
-      }))
+      try {
+        const faqs = await prisma.fAQ.findMany({
+          where: { locale },
+          orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+        })
+        return faqs.map((f) => ({
+          id: f.id,
+          question: f.question,
+          answer: f.answer,
+          order: f.order,
+        }))
+      } catch (error) {
+        console.error('FAQ fetch failed, using empty list:', error)
+        return []
+      }
     },
   )
 }

@@ -147,6 +147,7 @@ model Setting {
   contactAddress  String?
   social          Json?
   contactContent  Json?
+  popupContent    Json?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

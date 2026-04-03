@@ -20,7 +20,12 @@ type ContactPageContent = {
 }
 
 export default async function SettingsPage() {
-  const settings = await prisma.setting.findUnique({ where: { locale: 'tr' } })
+  let settings: Awaited<ReturnType<typeof prisma.setting.findUnique>> = null
+  try {
+    settings = await prisma.setting.findUnique({ where: { locale: 'tr' } })
+  } catch (error) {
+    console.error('[admin/settings] Failed to load settings, using defaults:', error)
+  }
   const defaultContactCopy = {
     heroEyebrow: 'TARF Akademi',
     heroTitle: 'Bilim, teknoloji ve etik ekseninde ortaklık kurun',

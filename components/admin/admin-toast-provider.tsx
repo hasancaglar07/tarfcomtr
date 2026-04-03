@@ -56,8 +56,8 @@ export function AdminToastProvider({ children }: { children: React.ReactNode }) 
   }, [toast])
 
   // Read toast from query string (redirect sonrası kullanıcıya görünür feedback).
-  const queryToast = searchParams.get('toast')
-  const queryToastType = searchParams.get('toastType')
+  const queryToast = searchParams?.get('toast')
+  const queryToastType = searchParams?.get('toastType')
   const queryKey = useMemo(() => {
     if (!queryToast) return null
     const kind: AdminToastKind =
@@ -117,4 +117,3 @@ export function useAdminToast() {
   }
   return ctx
 }
-

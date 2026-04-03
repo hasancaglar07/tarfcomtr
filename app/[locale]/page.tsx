@@ -6,7 +6,7 @@ import { BlogShowcase } from '@/components/sections/blog-showcase'
 import { EventsCarousel } from '@/components/sections/events-carousel'
 import { FutureContribution } from '@/components/sections/future-contribution'
 import { ScrollReveal } from '@/components/ui/scroll-reveal'
-import { EventPosterPopup } from '@/components/sections/event-poster-popup'
+import { HomePopup } from '@/components/sections/home-popup'
 
 type StaticHeroContent = {
   eyebrow?: string
@@ -153,7 +153,7 @@ export default async function Home({
         />
 
         <div className="relative z-10 flex flex-col gap-0">
-          <EventPosterPopup locale={locale} events={data.events} />
+          <HomePopup locale={locale} popup={data.settings.popup_content} />
           {/* Hero Section - Bilim, teknoloji ve irfan ile geleceği inşa ediyoruz */}
           <Hero locale={locale} data={heroContent} events={data.events} />
 
