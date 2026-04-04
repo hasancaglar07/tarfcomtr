@@ -6,6 +6,16 @@ import {
     chairAssistantRequestedDocuments,
 } from "@/lib/chair-assistant";
 
+const chairAssistantResponsibilities = [
+    "Uzmanlık alanındaki ulusal ve uluslararası sempozyum, kongre, çalıştay ve benzeri organizasyonları takip etmek; güncel ilmî ve düşünsel gelişmeleri izlemek.",
+    "Kürsü Başkanı ve araştırmacılarla koordineli çalışmak; gerektiğinde ortak süreçlere destek vermek.",
+    "Verilen araştırma, içerik üretimi, organizasyon ve raporlama görevlerini zamanında yerine getirmek.",
+    "Kitap, rapor, broşür, makale ve analiz çalışmalarına katkı sunmak; gerektiğinde hazırlık ve takip süreçlerini yürütmek.",
+    "Çevrim içi ve yüz yüze eğitim, seminer, atölye ve konferansların planlanması ve yürütülmesine katkı sağlamak.",
+    "Enstitünün diğer birimleriyle uyum içinde çalışmak; ortak proje ve faaliyetlerde aktif rol almak.",
+    "Sosyal medya ve dijital platformlar için nitelikli içerik üretmek; planlama, hazırlık ve yayımlama süreçlerini takip etmek.",
+];
+
 export function ChairAssistantApplicationPage() {
     return (
         <main className="bg-white text-slate-900">
@@ -37,6 +47,28 @@ export function ChairAssistantApplicationPage() {
                                 </p>
                             </div>
                         </div>
+
+                        <article className="max-w-4xl space-y-4 rounded-[28px] border border-slate-200 bg-slate-50 p-6 sm:p-8">
+                            <div className="space-y-2">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-sky-700">
+                                    Pozisyon Çerçevesi
+                                </p>
+                                <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-[2rem]">
+                                    Asistanlardan Beklenen Görev ve
+                                    Sorumluluklar
+                                </h2>
+                            </div>
+
+                            <ul className="space-y-3 pl-5 text-sm leading-7 text-slate-700 sm:text-base marker:text-sky-600 list-disc">
+                                {chairAssistantResponsibilities.map(
+                                    (responsibility) => (
+                                        <li key={responsibility}>
+                                            {responsibility}
+                                        </li>
+                                    ),
+                                )}
+                            </ul>
+                        </article>
 
                         <div className="grid gap-4 sm:grid-cols-2">
                             <article className="rounded-[28px] border border-slate-200 bg-slate-50 p-6">
@@ -89,9 +121,7 @@ export function ChairAssistantApplicationPage() {
                             Kürsü Asistan Başvuru Formu
                         </h2>
                         <p className="text-sm leading-7 text-slate-600 sm:text-base">
-                            Zorunlu alanları doldurunuz. Evrak yükleme alanları
-                            opsiyoneldir; isterseniz başvurunuzu evrak eklemeden
-                            de tamamlayabilirsiniz.
+                            Zorunlu alanları doldurunuz.
                         </p>
                     </div>
 
