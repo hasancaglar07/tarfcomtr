@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "predev": "prisma generate",
-    "dev": "next dev",
+    "dev": "node scripts/dev-reset.mjs && next dev",
+    "dev:clean": "node scripts/dev-reset.mjs && prisma generate && next dev",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",

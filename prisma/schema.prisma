@@ -55,6 +55,11 @@ enum ChairAssistantDocumentType {
   criminal_record
 }
 
+enum ChairAssistantGraduateLevel {
+  yuksek_lisans
+  doktora
+}
+
 model ContentPage {
   id              String           @id @default(uuid())
   slug            String           @unique
@@ -209,15 +214,24 @@ model ChairAssistantApplication {
   city                        String
   chair                       ChairAssistantChair
   undergraduateInfo           String
-  graduateProgramInfo         String
+  graduateLevel               ChairAssistantGraduateLevel?
+  mastersProgram              String?
+  doctorateProgram            String?
+  graduateProgramInfo         String?
   academicFields              String
   thesisTopic                 String?
-  languageScore               String
+  languageScore               String?
   previousWork                String?
   motivation                  String
-  contribution                String
+  contribution                String?
   weeklyAvailability          String
-  attendanceCommitment        String
+  attendanceCommitment        String?
+  referenceOneFirstName       String?
+  referenceOneLastName        String?
+  referenceOnePhone           String?
+  referenceTwoFirstName       String?
+  referenceTwoLastName        String?
+  referenceTwoPhone           String?
   additionalNotes             String?
   accuracyDeclarationAccepted Boolean                            @default(false)
   kvkkAccepted                Boolean                            @default(false)
