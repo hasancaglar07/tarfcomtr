@@ -28,6 +28,7 @@ const schema = z
         phone: z.string().min(1).max(40),
         email: z.string().email().max(120),
         city: z.string().min(1).max(120),
+        profession: z.string().min(1).max(120),
         chair: z.nativeEnum(ChairAssistantChair),
         undergraduateInfo: z.string().min(1).max(240),
         graduateLevel: z.nativeEnum(ChairAssistantGraduateLevel),
@@ -41,9 +42,11 @@ const schema = z
         referenceOneFirstName: z.string().min(1).max(120),
         referenceOneLastName: z.string().min(1).max(120),
         referenceOnePhone: z.string().min(1).max(40),
+        referenceOneProfession: z.string().min(1).max(120),
         referenceTwoFirstName: z.string().min(1).max(120),
         referenceTwoLastName: z.string().min(1).max(120),
         referenceTwoPhone: z.string().min(1).max(40),
+        referenceTwoProfession: z.string().min(1).max(120),
         accuracyDeclarationAccepted: z.literal(true),
         kvkkAccepted: z.literal(true),
     })
@@ -147,8 +150,9 @@ function formatReferenceLine(
     firstName: string,
     lastName: string,
     phone: string,
+    profession?: string,
 ) {
-    return `${firstName} ${lastName} - ${phone}`;
+    return `${firstName} ${lastName} - ${phone}${profession ? ` (${profession})` : ""}`;
 }
 
 export async function POST(request: Request) {
@@ -161,6 +165,7 @@ export async function POST(request: Request) {
             phone: readText(formData, "phone"),
             email: readText(formData, "email"),
             city: readText(formData, "city"),
+            profession: readText(formData, "profession"),
             chair: readText(formData, "chair"),
             undergraduateInfo: readText(formData, "undergraduateInfo"),
             graduateLevel: readText(formData, "graduateLevel"),
@@ -174,9 +179,11 @@ export async function POST(request: Request) {
             referenceOneFirstName: readText(formData, "referenceOneFirstName"),
             referenceOneLastName: readText(formData, "referenceOneLastName"),
             referenceOnePhone: readText(formData, "referenceOnePhone"),
+            referenceOneProfession: readText(formData, "referenceOneProfession"),
             referenceTwoFirstName: readText(formData, "referenceTwoFirstName"),
             referenceTwoLastName: readText(formData, "referenceTwoLastName"),
             referenceTwoPhone: readText(formData, "referenceTwoPhone"),
+            referenceTwoProfession: readText(formData, "referenceTwoProfession"),
             accuracyDeclarationAccepted:
                 formData.get("accuracyDeclarationAccepted")?.toString() ===
                 "on",
@@ -236,6 +243,7 @@ export async function POST(request: Request) {
                 phone: data.phone,
                 email: data.email,
                 city: data.city,
+                profession: data.profession,
                 chair: data.chair,
                 undergraduateInfo: data.undergraduateInfo,
                 graduateLevel: data.graduateLevel,
@@ -254,9 +262,11 @@ export async function POST(request: Request) {
                 referenceOneFirstName: data.referenceOneFirstName,
                 referenceOneLastName: data.referenceOneLastName,
                 referenceOnePhone: data.referenceOnePhone,
+                referenceOneProfession: data.referenceOneProfession,
                 referenceTwoFirstName: data.referenceTwoFirstName,
                 referenceTwoLastName: data.referenceTwoLastName,
                 referenceTwoPhone: data.referenceTwoPhone,
+                referenceTwoProfession: data.referenceTwoProfession,
                 accuracyDeclarationAccepted: data.accuracyDeclarationAccepted,
                 kvkkAccepted: data.kvkkAccepted,
             },
@@ -318,6 +328,7 @@ export async function POST(request: Request) {
                     `Telefon: ${data.phone}`,
                     `E-posta: ${data.email}`,
                     `Şehir: ${data.city}`,
+                    `Meslek: ${data.profession}`,
                     `Kürsü: ${formatChairAssistantChair(data.chair)}`,
                     `Lisans Bilgisi: ${data.undergraduateInfo}`,
                     `Aktif Lisansüstü Seviye: ${formatChairAssistantGraduateLevel(data.graduateLevel)}`,
@@ -332,11 +343,13 @@ export async function POST(request: Request) {
                         data.referenceOneFirstName,
                         data.referenceOneLastName,
                         data.referenceOnePhone,
+                        data.referenceOneProfession,
                     )}`,
                     `Referans 2: ${formatReferenceLine(
                         data.referenceTwoFirstName,
                         data.referenceTwoLastName,
                         data.referenceTwoPhone,
+                        data.referenceTwoProfession,
                     )}`,
                     "",
                     "Yüklenen Evraklar:",

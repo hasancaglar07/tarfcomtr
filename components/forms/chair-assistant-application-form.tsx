@@ -247,6 +247,16 @@ export function ChairAssistantApplicationForm() {
                             ))}
                         </select>
                     </FieldGroup>
+
+                    <FieldGroup htmlFor="profession" label="MESLEĞİ">
+                        <Input
+                            id="profession"
+                            name="profession"
+                            required
+                            placeholder="Mesleğiniz"
+                            className={inputClassName}
+                        />
+                    </FieldGroup>
                 </div>
             </SectionShell>
 
@@ -470,6 +480,17 @@ export function ChairAssistantApplicationForm() {
                                         className={inputClassName}
                                     />
                                 </FieldGroup>
+                                <FieldGroup
+                                    htmlFor="referenceOneProfession"
+                                    label="MESLEĞİ"
+                                >
+                                    <Input
+                                        id="referenceOneProfession"
+                                        name="referenceOneProfession"
+                                        required
+                                        className={inputClassName}
+                                    />
+                                </FieldGroup>
                             </div>
                         </div>
 
@@ -511,6 +532,17 @@ export function ChairAssistantApplicationForm() {
                                         className={inputClassName}
                                     />
                                 </FieldGroup>
+                                <FieldGroup
+                                    htmlFor="referenceTwoProfession"
+                                    label="MESLEĞİ"
+                                >
+                                    <Input
+                                        id="referenceTwoProfession"
+                                        name="referenceTwoProfession"
+                                        required
+                                        className={inputClassName}
+                                    />
+                                </FieldGroup>
                             </div>
                         </div>
                     </div>
@@ -544,7 +576,7 @@ export function ChairAssistantApplicationForm() {
                                     <p className="mt-1 text-xs leading-6 text-slate-400">
                                         {fileNames[document.type]
                                             ? `Seçilen dosya: ${fileNames[document.type]}`
-                                            : "Belge eklemek zorunlu değildir."}
+                                            : ""}
                                     </p>
                                 </div>
 

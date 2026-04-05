@@ -1,4 +1,4 @@
-import { ArrowRight, BriefcaseBusiness } from "lucide-react";
+import { AlertCircle, ArrowRight, BriefcaseBusiness } from "lucide-react";
 
 import { ChairAssistantApplicationForm } from "@/components/forms/chair-assistant-application-form";
 import {
@@ -19,6 +19,7 @@ const chairAssistantResponsibilities = [
 export function ChairAssistantApplicationPage() {
     return (
         <main className="bg-white text-slate-900">
+
             <section className="border-b border-slate-200 bg-white">
                 <div className="mx-auto max-w-5xl px-6 pb-16 pt-28 sm:pb-20 sm:pt-32 lg:px-8 lg:pb-24 lg:pt-36">
                     <div className="space-y-10">
@@ -70,7 +71,22 @@ export function ChairAssistantApplicationPage() {
                             </ul>
                         </article>
 
-                        <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="grid gap-4 sm:grid-cols-3">
+                            <article className="rounded-[28px] border border-amber-200 bg-amber-50 p-6">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <AlertCircle className="h-4 w-4 text-amber-600" />
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-amber-700">
+                                        Önemli Bilgi
+                                    </p>
+                                </div>
+                                <p className="text-sm font-semibold text-amber-900">
+                                    Son Başvuru Tarihi: 12.04.2026
+                                </p>
+                                <p className="mt-2 text-sm text-amber-800">
+                                    Her kürsü için 1 asistan alımı yapılacaktır.
+                                </p>
+                            </article>
+
                             <article className="rounded-[28px] border border-slate-200 bg-slate-50 p-6">
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
                                     Kürsü

@@ -147,6 +147,7 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
         { label: locale === 'tr' ? 'Hakkımızda' : 'About', href: `/${locale}/hakkimizda`, description: locale === 'tr' ? 'Kuruluş hikayemiz' : 'Our story' },
         { label: locale === 'tr' ? 'Vizyon & Değerler' : 'Vision & Values', href: `/${locale}/vizyon-degerler`, description: locale === 'tr' ? 'Gelecek perspektifimiz' : 'Our long term vision' },
         { label: locale === 'tr' ? 'Yönetim İlkeleri' : 'Governance', href: `/${locale}/yonetim-ilkeleri`, description: locale === 'tr' ? 'Şeffaf yönetişim' : 'Transparent governance' },
+        { label: locale === 'tr' ? 'İnsan Kaynakları' : 'Human Resources', href: `/${locale}/kursu-asistani-basvuru`, description: locale === 'tr' ? 'Kürsü asistan başvurusu' : 'Chair assistant application' },
       ],
     },
     {

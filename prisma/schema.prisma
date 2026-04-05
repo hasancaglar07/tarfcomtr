@@ -212,6 +212,7 @@ model ChairAssistantApplication {
   phone                       String
   email                       String
   city                        String
+  profession                  String?
   chair                       ChairAssistantChair
   undergraduateInfo           String
   graduateLevel               ChairAssistantGraduateLevel?
@@ -229,9 +230,11 @@ model ChairAssistantApplication {
   referenceOneFirstName       String?
   referenceOneLastName        String?
   referenceOnePhone           String?
+  referenceOneProfession      String?
   referenceTwoFirstName       String?
   referenceTwoLastName        String?
   referenceTwoPhone           String?
+  referenceTwoProfession      String?
   additionalNotes             String?
   accuracyDeclarationAccepted Boolean                            @default(false)
   kvkkAccepted                Boolean                            @default(false)
