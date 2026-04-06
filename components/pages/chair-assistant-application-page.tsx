@@ -80,7 +80,7 @@ export function ChairAssistantApplicationPage() {
                                     </p>
                                 </div>
                                 <p className="text-sm font-semibold text-amber-900">
-                                    Son Başvuru için 13 Nisan Saat 00.00
+                                    Son Başvuru için 13 Nisan Saat 23.59
                                 </p>
                                 <p className="mt-2 text-sm text-amber-800">
                                     Her kürsü için 1 asistan alımı yapılacaktır.
