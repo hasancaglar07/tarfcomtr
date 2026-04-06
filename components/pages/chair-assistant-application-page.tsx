@@ -35,7 +35,7 @@ export function ChairAssistantApplicationPage() {
                                         TARF DÜŞÜNCE ENSTİTÜSÜ
                                     </span>
                                     <span className="mt-1 block">
-                                        Kürsü Asistan Alımı
+                                        Kürsü Asistanı Alımı
                                     </span>
                                 </h1>
                                 <p className="max-w-3xl text-base leading-8 text-slate-600 sm:text-lg">
