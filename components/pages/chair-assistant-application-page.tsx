@@ -134,7 +134,7 @@ export function ChairAssistantApplicationPage() {
                             TARF Düşünce Enstitüsü
                         </p>
                         <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-[2rem]">
-                            Kürsü Asistan Başvuru Formu
+                            Kürsü Asistanı Başvuru Formu
                         </h2>
                         <p className="text-sm leading-7 text-slate-600 sm:text-base">
                             Zorunlu alanları doldurunuz.
