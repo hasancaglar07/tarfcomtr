@@ -640,7 +640,7 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
                 </div>
               </div>
 
-              <Link href={`/${locale}/contact`} onClick={closeMobileMenu} className="block">
+              <Link href={`/${locale}/kursu-asistani-basvuru`} onClick={closeMobileMenu} className="block">
                 <Button className="w-full h-14 rounded-2xl text-base font-bold text-white shadow-md bg-slate-950 hover:bg-slate-900 transition-all border-0">
                   <span className="flex items-center justify-center gap-2">
                     {locale === 'tr' ? 'Başvuru Yap' : locale === 'ar' ? 'قدّم الآن' : 'Send Application'}
@@ -686,7 +686,7 @@ export function Header({ locale, settings, contentPageSlugs, publishedPageSlugs 
             {renderNavLinks('desktop')}
 
             <motion.div className="flex items-center gap-3" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}>
-              <Link href={`/${locale}/contact`} className="hidden lg:inline-flex">
+              <Link href={`/${locale}/kursu-asistani-basvuru`} className="hidden lg:inline-flex">
                 <Button
                   className="rounded-full px-8 py-6 text-sm font-bold text-white shadow-md transition-all hover:bg-slate-900 hover:shadow-lg hover:-translate-y-0.5 bg-slate-950 border-0"
                 >

@@ -546,6 +546,9 @@ export function ChairAssistantApplicationForm() {
                             </div>
                         </div>
                     </div>
+                    <p className="px-1 text-sm font-medium text-slate-500">
+                        * Farklı iki referans girilmelidir.
+                    </p>
                 </div>
             </SectionShell>
 

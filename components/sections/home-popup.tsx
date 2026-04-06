@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { X } from 'lucide-react'
+import { ArrowRight, X } from 'lucide-react'
 
 import { getDefaultImage, resolveImageSrc } from '@/lib/images'
 import type { PopupContent } from '@/lib/popup-content'
@@ -102,15 +102,35 @@ export function HomePopup({ locale, popup }: HomePopupProps) {
           <X className="h-4 w-4" />
         </button>
 
-        {isPopupExternalHref(href) ? (
-          <a href={href} className="block" aria-label="Popup bağlantısını aç">
-            {image}
-          </a>
-        ) : (
-          <Link href={href} className="block" aria-label="Popup bağlantısını aç">
-            {image}
-          </Link>
-        )}
+        {image}
+
+        <div className="space-y-4 bg-white px-5 pb-5 pt-4 text-slate-900 sm:px-6 sm:pb-6">
+          {config.ctaText ? (
+            <p className="text-sm font-medium leading-6 text-slate-600">
+              {config.ctaText}
+            </p>
+          ) : null}
+
+          {isPopupExternalHref(href) ? (
+            <a
+              href={href}
+              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-6 text-sm font-semibold text-white transition hover:bg-slate-800"
+              aria-label="Popup bağlantısını aç"
+            >
+              {config.buttonLabel}
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          ) : (
+            <Link
+              href={href}
+              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-6 text-sm font-semibold text-white transition hover:bg-slate-800"
+              aria-label="Popup bağlantısını aç"
+            >
+              {config.buttonLabel}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   )

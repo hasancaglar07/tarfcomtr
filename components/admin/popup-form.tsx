@@ -45,6 +45,8 @@ export function PopupForm({
   const [manualUrl, setManualUrl] = useState(
     defaultValues.targetMode === 'url' ? defaultValues.targetValue : '',
   )
+  const [ctaText, setCtaText] = useState(defaultValues.ctaText)
+  const [buttonLabel, setButtonLabel] = useState(defaultValues.buttonLabel)
 
   useEffect(() => {
     if (state?.status === 'success') {
@@ -96,6 +98,40 @@ export function PopupForm({
         onChange={setImageUrl}
         helpText="Medya kütüphanesinden seçebilir veya yeni bir görsel yükleyebilirsiniz."
       />
+
+      <div className="grid gap-4">
+        <div className="space-y-2">
+          <label className="text-sm text-slate-300" htmlFor="ctaText">
+            Buton üstü metin
+          </label>
+          <textarea
+            id="ctaText"
+            name="ctaText"
+            value={ctaText}
+            onChange={(event) => setCtaText(event.target.value)}
+            rows={3}
+            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+            placeholder="Kürsü Asistan Alımı Formu için aşağıdaki butona tıklayınız."
+          />
+          <p className="text-xs text-slate-500">
+            Popup görselinin altında gösterilecek açıklama metni.
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm text-slate-300" htmlFor="buttonLabel">
+            Buton metni
+          </label>
+          <input
+            id="buttonLabel"
+            name="buttonLabel"
+            value={buttonLabel}
+            onChange={(event) => setButtonLabel(event.target.value)}
+            className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none ring-2 ring-transparent transition focus:border-orange-400 focus:ring-orange-500/40"
+            placeholder="Başvuru Formuna Git"
+          />
+        </div>
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
@@ -165,8 +201,8 @@ export function PopupForm({
       )}
 
       <div className="rounded-2xl border border-slate-800 bg-slate-950/50 p-4 text-xs text-slate-400">
-        Popup sadece anasayfada açılır, görsel tıklanabilir yapıdadır ve kullanıcı anasayfayı her
-        yeniden açtığında tekrar gösterilir.
+        Popup sadece anasayfada açılır. Görsel, açıklama metni ve buton birlikte gösterilir;
+        kullanıcı anasayfayı yeniden açtığında popup tekrar görünür.
       </div>
 
       <div className="flex items-center justify-between">

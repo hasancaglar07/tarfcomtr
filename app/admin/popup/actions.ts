@@ -26,6 +26,8 @@ const popupSchema = z.object({
   targetMode: z.enum(popupTargetModes).default('internal'),
   internalTarget: z.string().optional(),
   manualUrl: z.string().optional(),
+  ctaText: z.string().optional(),
+  buttonLabel: z.string().optional(),
 })
 
 async function requireAdmin() {
@@ -49,6 +51,8 @@ export async function upsertPopupAction(
       targetMode: formData.get('targetMode')?.toString() || 'internal',
       internalTarget: formData.get('internalTarget')?.toString() || '',
       manualUrl: formData.get('manualUrl')?.toString() || '',
+      ctaText: formData.get('ctaText')?.toString() || '',
+      buttonLabel: formData.get('buttonLabel')?.toString() || '',
     })
 
     if (!parsed.success) {
@@ -57,6 +61,8 @@ export async function upsertPopupAction(
 
     const locale = normalizeLocale(parsed.data.locale)
     const imageUrl = parsed.data.imageUrl?.trim() || ''
+    const ctaText = parsed.data.ctaText?.trim() || ''
+    const buttonLabel = parsed.data.buttonLabel?.trim() || ''
     const targetValue =
       parsed.data.targetMode === 'internal'
         ? parsed.data.internalTarget?.trim() || ''
@@ -92,11 +98,15 @@ export async function upsertPopupAction(
       imageUrl,
       targetMode: parsed.data.targetMode,
       targetValue,
+      ctaText,
+      buttonLabel,
     } satisfies {
       enabled: boolean
       imageUrl: string
       targetMode: 'internal' | 'url'
       targetValue: string
+      ctaText: string
+      buttonLabel: string
     }
 
     await prisma.setting.upsert({

@@ -11,6 +11,7 @@ const systemTargetGroup: PopupTargetGroup = {
   label: 'Sistem sayfaları',
   options: [
     { value: '/', label: 'Anasayfa (/)' },
+    { value: '/kursu-asistani-basvuru', label: 'Kürsü Asistan Başvuru Formu (/kursu-asistani-basvuru)' },
     { value: '/contact', label: 'İletişim (/contact)' },
     { value: '/blog', label: 'Blog (/blog)' },
     { value: '/events', label: 'Etkinlikler (/events)' },

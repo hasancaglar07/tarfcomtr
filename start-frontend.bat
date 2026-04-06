@@ -55,12 +55,15 @@ echo.
 
 REM Next.js dev server
 echo ====================================
-echo Frontend: http://localhost:3000
+echo Frontend varsayilan: http://localhost:3000
 echo ====================================
 echo.
-echo Turkce:  http://localhost:3000/tr
-echo English: http://localhost:3000/en
-echo Arabic:  http://localhost:3000/ar
+echo Not: 3000 doluysa Next.js otomatik 3001, 3002... porta gecer.
+echo Not: Gercek adresi terminaldeki "Local:" satirindan kontrol edin.
+echo.
+echo Turkce:  /tr
+echo English: /en
+echo Arabic:  /ar
 echo.
 echo CTRL+C ile durdurun
 echo.
