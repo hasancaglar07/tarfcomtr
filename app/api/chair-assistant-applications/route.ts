@@ -319,48 +319,55 @@ export async function POST(request: Request) {
         }
 
         if (process.env.INFO_EMAIL) {
-            await sendMail({
-                to: process.env.INFO_EMAIL,
-                subject: `Yeni Kürsü Asistan Başvurusu: ${data.fullName}`,
-                text: [
-                    `Başvuru No: ${created.id}`,
-                    `Ad Soyad: ${data.fullName}`,
-                    `Telefon: ${data.phone}`,
-                    `E-posta: ${data.email}`,
-                    `Şehir: ${data.city}`,
-                    `Meslek: ${data.profession}`,
-                    `Kürsü: ${formatChairAssistantChair(data.chair)}`,
-                    `Lisans Bilgisi: ${data.undergraduateInfo}`,
-                    `Aktif Lisansüstü Seviye: ${formatChairAssistantGraduateLevel(data.graduateLevel)}`,
-                    `Yüksek Lisans: ${data.mastersProgram || "-"}`,
-                    `Doktora: ${data.doctorateProgram || "-"}`,
-                    `Akademik Alanlar: ${data.academicFields}`,
-                    `Tez / Araştırma Başlığı: ${data.thesisTopic}`,
-                    `Önceki Çalışmalar: ${data.previousWork}`,
-                    `Katılma Nedeni: ${data.motivation}`,
-                    `Haftalık Zaman: ${data.weeklyAvailability}`,
-                    `Referans 1: ${formatReferenceLine(
-                        data.referenceOneFirstName,
-                        data.referenceOneLastName,
-                        data.referenceOnePhone,
-                        data.referenceOneProfession,
-                    )}`,
-                    `Referans 2: ${formatReferenceLine(
-                        data.referenceTwoFirstName,
-                        data.referenceTwoLastName,
-                        data.referenceTwoPhone,
-                        data.referenceTwoProfession,
-                    )}`,
-                    "",
-                    "Yüklenen Evraklar:",
-                    ...(uploadedDocuments.length > 0
-                        ? uploadedDocuments.map(
-                              (document) =>
-                                  `- ${formatChairAssistantDocumentType(document.type)}: ${document.fileName}`,
-                          )
-                        : ["- Evrak eklenmedi"]),
-                ].join("\n"),
-            });
+            try {
+                await sendMail({
+                    to: process.env.INFO_EMAIL,
+                    subject: `Yeni Kürsü Asistan Başvurusu: ${data.fullName}`,
+                    text: [
+                        `Başvuru No: ${created.id}`,
+                        `Ad Soyad: ${data.fullName}`,
+                        `Telefon: ${data.phone}`,
+                        `E-posta: ${data.email}`,
+                        `Şehir: ${data.city}`,
+                        `Meslek: ${data.profession}`,
+                        `Kürsü: ${formatChairAssistantChair(data.chair)}`,
+                        `Lisans Bilgisi: ${data.undergraduateInfo}`,
+                        `Aktif Lisansüstü Seviye: ${formatChairAssistantGraduateLevel(data.graduateLevel)}`,
+                        `Yüksek Lisans: ${data.mastersProgram || "-"}`,
+                        `Doktora: ${data.doctorateProgram || "-"}`,
+                        `Akademik Alanlar: ${data.academicFields}`,
+                        `Tez / Araştırma Başlığı: ${data.thesisTopic}`,
+                        `Önceki Çalışmalar: ${data.previousWork}`,
+                        `Katılma Nedeni: ${data.motivation}`,
+                        `Haftalık Zaman: ${data.weeklyAvailability}`,
+                        `Referans 1: ${formatReferenceLine(
+                            data.referenceOneFirstName,
+                            data.referenceOneLastName,
+                            data.referenceOnePhone,
+                            data.referenceOneProfession,
+                        )}`,
+                        `Referans 2: ${formatReferenceLine(
+                            data.referenceTwoFirstName,
+                            data.referenceTwoLastName,
+                            data.referenceTwoPhone,
+                            data.referenceTwoProfession,
+                        )}`,
+                        "",
+                        "Yüklenen Evraklar:",
+                        ...(uploadedDocuments.length > 0
+                            ? uploadedDocuments.map(
+                                  (document) =>
+                                      `- ${formatChairAssistantDocumentType(document.type)}: ${document.fileName}`,
+                              )
+                            : ["- Evrak eklenmedi"]),
+                    ].join("\n"),
+                });
+            } catch (mailError) {
+                console.error(
+                    "[chair-assistant-application] mail error",
+                    mailError,
+                );
+            }
         }
 
         return NextResponse.json({ success: true, id: created.id });
