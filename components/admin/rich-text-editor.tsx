@@ -20,12 +20,9 @@ import { MediaPickerModal } from './media-picker'
 // Import ReactQuill type for ref
 import type ReactQuillType from 'react-quill'
 
-let QuillNamespace: any = null
-
 const ReactQuill = dynamic(
   async () => {
-    const { default: RQ, Quill } = await import('react-quill')
-    QuillNamespace = Quill
+    const { default: RQ } = await import('react-quill')
     return RQ
   },
   {
@@ -80,7 +77,6 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   const [uploading, setUploading] = useState(false)
   const [uploadType, setUploadType] = useState<'image' | 'video'>('image')
   const [mounted, setMounted] = useState(false)
-  const [editorReady, setEditorReady] = useState(false)
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false)
   const [mediaPickerFilter, setMediaPickerFilter] = useState<'image' | 'video'>('image')
   const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null)
@@ -437,10 +433,9 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
         >
           <ReactQuill
             // @ts-expect-error - ReactQuill has ref support but types are incomplete
-            ref={(el: ReactQuillType | null) => {
-              quillRef.current = el
-              setEditorReady(Boolean(el))
-            }}
+          ref={(el: ReactQuillType | null) => {
+            quillRef.current = el
+          }}
             theme="snow"
             value={value}
             onChange={onChange}
