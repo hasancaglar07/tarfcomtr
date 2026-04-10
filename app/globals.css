@@ -156,6 +156,14 @@
   .prose :where(strong) {
     color: inherit;
   }
+
+  .prose :where(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
 }
 
 @layer base {

@@ -4,15 +4,28 @@ import React, { useRef, useMemo, useCallback, useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
 import '@/styles/react-quill.css'
-import { ImageIcon, Video, Loader2, FolderOpen, Upload } from 'lucide-react'
+import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
+  FolderOpen,
+  ImageIcon,
+  Loader2,
+  StretchHorizontal,
+  Upload,
+  Video,
+} from 'lucide-react'
 import { MediaPickerModal } from './media-picker'
 
 // Import ReactQuill type for ref
 import type ReactQuillType from 'react-quill'
 
+let QuillNamespace: any = null
+
 const ReactQuill = dynamic(
   async () => {
-    const { default: RQ } = await import('react-quill')
+    const { default: RQ, Quill } = await import('react-quill')
+    QuillNamespace = Quill
     return RQ
   },
   {
@@ -25,6 +38,23 @@ interface RichTextEditorProps {
   value: string
   onChange: (content: string) => void
   placeholder?: string
+}
+
+type ImageWidthPreset = 'small' | 'medium' | 'large' | 'full'
+type ImageAlignPreset = 'left' | 'center' | 'right'
+
+const imageWidthMap: Record<ImageWidthPreset, string> = {
+  small: '40%',
+  medium: '60%',
+  large: '80%',
+  full: '100%',
+}
+
+const imageWidthLabels: Record<ImageWidthPreset, string> = {
+  small: 'Dar',
+  medium: 'Orta',
+  large: 'Geniş',
+  full: 'Tam',
 }
 
 const formats = [
@@ -41,6 +71,7 @@ const formats = [
   'image',
   'video',
   'align',
+  'width',
 ]
 
 export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
@@ -49,8 +80,12 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   const [uploading, setUploading] = useState(false)
   const [uploadType, setUploadType] = useState<'image' | 'video'>('image')
   const [mounted, setMounted] = useState(false)
+  const [editorReady, setEditorReady] = useState(false)
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false)
   const [mediaPickerFilter, setMediaPickerFilter] = useState<'image' | 'video'>('image')
+  const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null)
+  const [selectedImageWidth, setSelectedImageWidth] = useState<ImageWidthPreset>('full')
+  const [selectedImageAlign, setSelectedImageAlign] = useState<ImageAlignPreset>('center')
 
   useEffect(() => {
     setMounted(true)
@@ -91,22 +126,130 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     return (quillRef.current as any)?.editor || null
   }, [])
 
+  const clearImageSelection = useCallback(() => {
+    const editor = getQuillEditor()
+    const root = editor?.root as HTMLElement | undefined
+    root?.querySelectorAll('img.ql-selected-image').forEach((image) => {
+      image.classList.remove('ql-selected-image')
+    })
+    setSelectedImage(null)
+  }, [getQuillEditor])
+
+  const syncSelectedImageState = useCallback((image: HTMLImageElement | null) => {
+    if (!image) {
+      setSelectedImage(null)
+      return
+    }
+
+    const width = image.style.width || image.getAttribute('width') || '100%'
+    const widthPreset =
+      width === '40%' ? 'small' : width === '60%' ? 'medium' : width === '80%' ? 'large' : 'full'
+
+    const parentAlign = image.parentElement instanceof HTMLElement
+      ? image.parentElement.style.textAlign || image.parentElement.getAttribute('align') || ''
+      : ''
+    const align = parentAlign === 'right' ? 'right' : parentAlign === 'center' ? 'center' : 'left'
+
+    setSelectedImage(image)
+    setSelectedImageWidth(widthPreset)
+    setSelectedImageAlign(align)
+  }, [])
+
+  const highlightSelectedImage = useCallback((image: HTMLImageElement | null) => {
+    const editor = getQuillEditor()
+    const root = editor?.root as HTMLElement | undefined
+    root?.querySelectorAll('img.ql-selected-image').forEach((node) => {
+      node.classList.remove('ql-selected-image')
+    })
+
+    if (image) {
+      image.classList.add('ql-selected-image')
+    }
+  }, [getQuillEditor])
+
+  const persistEditorHtml = useCallback(() => {
+    const editor = getQuillEditor()
+    if (!editor) return
+    onChange(editor.root.innerHTML)
+  }, [getQuillEditor, onChange])
+
   const insertMediaUrl = useCallback((url: string, type: 'image' | 'video') => {
     const editor = getQuillEditor()
     if (editor) {
       const range = editor.getSelection(true) || { index: editor.getLength() - 1 }
       editor.insertEmbed(range.index, type, url)
       editor.setSelection(range.index + 1)
+      if (type === 'image') {
+        window.setTimeout(() => {
+          const root = editor.root as HTMLElement
+          const images = root.querySelectorAll('img')
+          const image = images.item(images.length - 1) as HTMLImageElement | null
+          if (!image) return
+          image.style.width = '100%'
+          image.style.maxWidth = '100%'
+          image.style.height = 'auto'
+          if (image.parentElement instanceof HTMLElement) {
+            image.parentElement.style.textAlign = 'center'
+          }
+          highlightSelectedImage(image)
+          syncSelectedImageState(image)
+          onChange(editor.root.innerHTML)
+        }, 0)
+      }
     } else {
       // Fallback
       if (type === 'image') {
-        onChange(value + `<p><img src="${url}" /></p>`)
+        onChange(
+          value +
+            `<p style="text-align:center;"><img src="${url}" width="100%" style="max-width:100%;height:auto;" /></p>`,
+        )
       } else {
         const embedUrl = convertToEmbedUrl(url)
         onChange(value + `<p><iframe src="${embedUrl}" frameborder="0" allowfullscreen></iframe></p>`)
       }
     }
-  }, [getQuillEditor, onChange, value])
+  }, [getQuillEditor, highlightSelectedImage, onChange, syncSelectedImageState, value])
+
+  const setImageWidth = useCallback((width: ImageWidthPreset) => {
+    if (!selectedImage) return
+    selectedImage.style.width = imageWidthMap[width]
+    selectedImage.setAttribute('width', imageWidthMap[width])
+    selectedImage.style.maxWidth = '100%'
+    selectedImage.style.height = 'auto'
+    setSelectedImageWidth(width)
+    persistEditorHtml()
+    window.setTimeout(() => {
+      highlightSelectedImage(selectedImage)
+      syncSelectedImageState(selectedImage)
+    }, 0)
+  }, [highlightSelectedImage, persistEditorHtml, selectedImage, syncSelectedImageState])
+
+  const setImageAlign = useCallback((align: ImageAlignPreset) => {
+    if (!selectedImage) return
+    if (selectedImage.parentElement instanceof HTMLElement) {
+      selectedImage.parentElement.style.textAlign = align
+      selectedImage.parentElement.setAttribute('align', align)
+    }
+    setSelectedImageAlign(align)
+    persistEditorHtml()
+    window.setTimeout(() => {
+      highlightSelectedImage(selectedImage)
+      syncSelectedImageState(selectedImage)
+    }, 0)
+  }, [highlightSelectedImage, persistEditorHtml, selectedImage, syncSelectedImageState])
+
+  const handleEditorImageSelection = useCallback((target: EventTarget | null) => {
+    const element = target instanceof HTMLElement ? target : null
+    const image = element?.closest('img') as HTMLImageElement | null
+
+    if (image) {
+      highlightSelectedImage(image)
+      syncSelectedImageState(image)
+      return
+    }
+
+    clearImageSelection()
+  }, [clearImageSelection, highlightSelectedImage, syncSelectedImageState])
 
   const openMediaPicker = (type: 'image' | 'video') => {
     setMediaPickerFilter(type)
@@ -229,20 +372,84 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
         )}
       </div>
 
+      <div className="flex flex-wrap items-center gap-3 border-b border-slate-700 bg-slate-900/80 px-3 py-2">
+        <div className="text-xs text-slate-400">
+          Görsele tıklayın, ardından boyut ve hizalama seçin.
+        </div>
+        {selectedImage ? (
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-1 rounded-full border border-slate-700 bg-slate-800 p-1">
+              <span className="px-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+                <StretchHorizontal className="mr-1 inline h-3 w-3" />
+                Boyut
+              </span>
+              {(Object.keys(imageWidthMap) as ImageWidthPreset[]).map((preset) => (
+                <button
+                  key={preset}
+                  type="button"
+                  onClick={() => setImageWidth(preset)}
+                  className={`rounded-full px-2.5 py-1 text-[11px] font-semibold transition ${
+                    selectedImageWidth === preset
+                      ? 'bg-orange-500 text-slate-950'
+                      : 'text-slate-300 hover:bg-slate-700'
+                  }`}
+                >
+                  {imageWidthLabels[preset]}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-1 rounded-full border border-slate-700 bg-slate-800 p-1">
+              <span className="px-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+                Hizalama
+              </span>
+              {[
+                { value: 'left' as const, icon: AlignLeft, label: 'Sol' },
+                { value: 'center' as const, icon: AlignCenter, label: 'Orta' },
+                { value: 'right' as const, icon: AlignRight, label: 'Sağ' },
+              ].map((option) => {
+                const Icon = option.icon
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setImageAlign(option.value)}
+                    className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold transition ${
+                      selectedImageAlign === option.value
+                        ? 'bg-orange-500 text-slate-950'
+                        : 'text-slate-300 hover:bg-slate-700'
+                    }`}
+                  >
+                    <Icon className="h-3 w-3" />
+                    {option.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        ) : null}
+      </div>
+
       {mounted && (
-        <ReactQuill
-          // @ts-expect-error - ReactQuill has ref support but types are incomplete
-          ref={(el: ReactQuillType | null) => {
-            quillRef.current = el
-          }}
-          theme="snow"
-          value={value}
-          onChange={onChange}
-          modules={modules}
-          formats={formats}
-          placeholder={placeholder}
-          className="min-h-[250px]"
-        />
+        <div
+          onClickCapture={(event) => handleEditorImageSelection(event.target)}
+          onMouseUpCapture={(event) => handleEditorImageSelection(event.target)}
+        >
+          <ReactQuill
+            // @ts-expect-error - ReactQuill has ref support but types are incomplete
+            ref={(el: ReactQuillType | null) => {
+              quillRef.current = el
+              setEditorReady(Boolean(el))
+            }}
+            theme="snow"
+            value={value}
+            onChange={onChange}
+            modules={modules}
+            formats={formats}
+            placeholder={placeholder}
+            className="min-h-[250px]"
+          />
+        </div>
       )}
 
       {/* Hidden file input */}
@@ -300,6 +507,10 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
           height: auto !important;
           border-radius: 8px !important;
           margin: 8px 0 !important;
+        }
+        .rich-text-editor .ql-editor img.ql-selected-image {
+          outline: 3px solid rgba(249, 115, 22, 0.9) !important;
+          outline-offset: 3px !important;
         }
         .rich-text-editor .ql-editor iframe,
         .rich-text-editor .ql-editor video {
