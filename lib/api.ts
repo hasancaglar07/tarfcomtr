@@ -399,27 +399,30 @@ async function getSettings(locale: string = 'tr'): Promise<Settings> {
 }
 
 async function getFaqs(locale: string = 'tr') {
-  return cached(
+  const getFaqsCached = cached(
     ['faqs', locale],
     [cacheTags.faqs(locale)],
     async () => {
-      try {
-        const faqs = await prisma.fAQ.findMany({
-          where: { locale },
-          orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
-        })
-        return faqs.map((f) => ({
-          id: f.id,
-          question: f.question,
-          answer: f.answer,
-          order: f.order,
-        }))
-      } catch (error) {
-        console.error('FAQ fetch failed, using empty list:', error)
-        return []
-      }
+      const faqs = await prisma.fAQ.findMany({
+        where: { locale },
+        orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+      })
+      return faqs.map((f) => ({
+        id: f.id,
+        question: f.question,
+        answer: f.answer,
+        order: f.order,
+      }))
     },
   )
+
+  try {
+    return await getFaqsCached()
+  } catch (error) {
+    // Important: avoid caching a transient DB failure as empty FAQ data.
+    console.error('FAQ fetch failed (uncached fallback):', error)
+    return []
+  }
 }
 
 async function getHeroes(locale: string = 'tr') {
