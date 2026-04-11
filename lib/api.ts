@@ -370,7 +370,7 @@ async function getPostDetail(type: PostType, slug: string, locale: string) {
 }
 
 async function getSettings(locale: string = 'tr'): Promise<Settings> {
-  const getSettingsCached = cached(
+  const settingsPromise = cached(
     ['settings', locale],
     [cacheTags.settings(locale)],
     async () => {
@@ -390,7 +390,7 @@ async function getSettings(locale: string = 'tr'): Promise<Settings> {
   )
 
   try {
-    return await getSettingsCached()
+    return await settingsPromise
   } catch (error) {
     // Important: avoid caching a transient DB failure as stale legacy contact data.
     console.error('Settings fetch failed (uncached fallback):', error)
@@ -398,8 +398,8 @@ async function getSettings(locale: string = 'tr'): Promise<Settings> {
   }
 }
 
-async function getFaqs(locale: string = 'tr') {
-  const getFaqsCached = cached(
+async function getFaqs(locale: string = 'tr'): Promise<Faq[]> {
+  const faqsPromise = cached(
     ['faqs', locale],
     [cacheTags.faqs(locale)],
     async () => {
@@ -417,7 +417,7 @@ async function getFaqs(locale: string = 'tr') {
   )
 
   try {
-    return await getFaqsCached()
+    return await faqsPromise
   } catch (error) {
     // Important: avoid caching a transient DB failure as empty FAQ data.
     console.error('FAQ fetch failed (uncached fallback):', error)
