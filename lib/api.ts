@@ -147,9 +147,11 @@ const defaultSettings: Settings = {
   site_name: 'TARF Akademi',
   site_description:
     'Bilim, teknoloji ve irfanı bir araya getiren çok katmanlı eğitim ve üretim ekosistemi.',
-  contact_email: 'iletisim@tarf.org',
-  contact_phone: '+90 212 000 00 00',
-  contact_address: 'İstanbul, Türkiye',
+  // Keep contact fields empty by default.
+  // Contact page has its own explicit fallback values and should not show legacy placeholders.
+  contact_email: null,
+  contact_phone: null,
+  contact_address: null,
   contact_content: null,
   popup_content: null,
 }
@@ -368,29 +370,32 @@ async function getPostDetail(type: PostType, slug: string, locale: string) {
 }
 
 async function getSettings(locale: string = 'tr'): Promise<Settings> {
-  return cached(
+  const getSettingsCached = cached(
     ['settings', locale],
     [cacheTags.settings(locale)],
     async () => {
-      try {
-        const setting = await prisma.setting.findUnique({ where: { locale } })
-        if (!setting) return defaultSettings
-        return {
-          site_name: setting.siteName,
-          site_description: setting.siteDescription,
-          contact_email: setting.contactEmail,
-          contact_phone: setting.contactPhone,
-          contact_address: setting.contactAddress,
-          contact_map_url: null,
-          contact_content: setting.contactContent,
-          popup_content: normalizePopupContent(setting.popupContent),
-        }
-      } catch (error) {
-        console.error('Settings fetch failed, using defaults:', error)
-        return defaultSettings
+      const setting = await prisma.setting.findUnique({ where: { locale } })
+      if (!setting) return defaultSettings
+      return {
+        site_name: setting.siteName,
+        site_description: setting.siteDescription,
+        contact_email: setting.contactEmail,
+        contact_phone: setting.contactPhone,
+        contact_address: setting.contactAddress,
+        contact_map_url: null,
+        contact_content: setting.contactContent,
+        popup_content: normalizePopupContent(setting.popupContent),
       }
     },
   )
+
+  try {
+    return await getSettingsCached()
+  } catch (error) {
+    // Important: avoid caching a transient DB failure as stale legacy contact data.
+    console.error('Settings fetch failed (uncached fallback):', error)
+    return defaultSettings
+  }
 }
 
 async function getFaqs(locale: string = 'tr') {
