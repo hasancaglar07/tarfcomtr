@@ -1,7 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent, type ReactNode } from "react";
+import {
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+    type FormEvent,
+    type ReactNode,
+} from "react";
+import { createPortal } from "react-dom";
 import {
     AlertTriangle,
     ArrowRight,
@@ -26,6 +34,11 @@ import {
 } from "@/lib/chair-assistant";
 
 type FileNamesState = Partial<Record<ChairAssistantDocumentType, string>>;
+type ValidationErrorItem = {
+    field: string;
+    label: string;
+    message: string;
+};
 
 const inputClassName =
     "h-12 rounded-2xl border-slate-200 bg-white px-4 text-base text-slate-900 shadow-none transition-colors duration-200 placeholder:text-slate-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-200";
@@ -103,23 +116,235 @@ function FieldGroup({
     );
 }
 
+function labelForInvalidTarget(target: HTMLElement) {
+    if (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement
+    ) {
+        if (target.id) {
+            const label = document.querySelector(
+                `label[for="${CSS.escape(target.id)}"]`,
+            );
+            const text = label?.textContent?.trim();
+            if (text) return text;
+        }
+
+        if (target.name === "graduateLevel") {
+            return "Aktif Lisansüstü Program";
+        }
+        if (target.name === "accuracyDeclarationAccepted") {
+            return "Bilgi Doğruluğu Beyanı";
+        }
+        if (target.name === "kvkkAccepted") {
+            return "KVKK Onayı";
+        }
+    }
+
+    return null;
+}
+
 export function ChairAssistantApplicationForm() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [validationErrors, setValidationErrors] = useState<
+        ValidationErrorItem[]
+    >([]);
     const [graduateLevel, setGraduateLevel] = useState<
         ChairAssistantGraduateLevel | ""
     >("");
     const [fileNames, setFileNames] = useState<FileNamesState>({});
+    const [quickToastMessage, setQuickToastMessage] = useState<string | null>(
+        null,
+    );
+    const [isClient, setIsClient] = useState(false);
+    const [invalidFieldNames, setInvalidFieldNames] = useState<string[]>([]);
+    const formRef = useRef<HTMLFormElement | null>(null);
+    const quickToastTimeoutRef = useRef<number | null>(null);
+
+    const showQuickToast = useCallback((message: string) => {
+        setQuickToastMessage(message);
+        if (quickToastTimeoutRef.current) {
+            window.clearTimeout(quickToastTimeoutRef.current);
+        }
+        quickToastTimeoutRef.current = window.setTimeout(() => {
+            setQuickToastMessage(null);
+            quickToastTimeoutRef.current = null;
+        }, 2800);
+    }, []);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            if (quickToastTimeoutRef.current) {
+                window.clearTimeout(quickToastTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        const form = formRef.current;
+        if (!form) return;
+
+        const highlighted = form.querySelectorAll<HTMLElement>(
+            '[data-invalid-highlighted="true"]',
+        );
+        highlighted.forEach((element) => {
+            element.style.borderColor = "";
+            element.style.boxShadow = "";
+            element.removeAttribute("data-invalid-highlighted");
+        });
+
+        invalidFieldNames.forEach((fieldName) => {
+            const fields = form.querySelectorAll<
+                HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+            >(`[name="${CSS.escape(fieldName)}"]`);
+
+            fields.forEach((field) => {
+                if (field.type === "radio" && fieldName === "graduateLevel") {
+                    return;
+                }
+                field.style.borderColor = "#ef4444";
+                field.style.boxShadow = "0 0 0 2px rgba(239, 68, 68, 0.16)";
+                field.setAttribute("data-invalid-highlighted", "true");
+            });
+
+            if (fieldName === "graduateLevel") {
+                const group = form.querySelector<HTMLElement>(
+                    '[data-field-group="graduateLevel"]',
+                );
+                if (group) {
+                    group.style.borderColor = "#ef4444";
+                    group.style.boxShadow = "0 0 0 2px rgba(239, 68, 68, 0.16)";
+                    group.setAttribute("data-invalid-highlighted", "true");
+                }
+            }
+        });
+    }, [invalidFieldNames]);
+
+    const handleInvalid = useCallback((event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) {
+            showQuickToast("Lütfen zorunlu alanları kontrol edin.");
+            return;
+        }
+
+        const label = labelForInvalidTarget(target);
+        const hasValidity =
+            target instanceof HTMLInputElement ||
+            target instanceof HTMLTextAreaElement ||
+            target instanceof HTMLSelectElement;
+
+        if (hasValidity && target.validity.valueMissing) {
+            showQuickToast(
+                label
+                    ? `"${label}" alanını doldurunuz.`
+                    : "Lütfen zorunlu alanları doldurunuz.",
+            );
+            return;
+        }
+
+        if (hasValidity && target.validationMessage) {
+            showQuickToast(
+                label
+                    ? `"${label}" alanını kontrol ediniz.`
+                    : target.validationMessage,
+            );
+            return;
+        }
+
+        showQuickToast("Lütfen alan bilgilerini kontrol edin.");
+    }, [showQuickToast]);
+
+    const handleFieldInteraction = useCallback(
+        (event: FormEvent<HTMLFormElement>) => {
+            const target = event.target;
+            if (
+                !(
+                    target instanceof HTMLInputElement ||
+                    target instanceof HTMLTextAreaElement ||
+                    target instanceof HTMLSelectElement
+                )
+            ) {
+                return;
+            }
+
+            if (!target.name) return;
+            if (!target.checkValidity()) return;
+
+            setInvalidFieldNames((prev) =>
+                prev.filter((fieldName) => fieldName !== target.name),
+            );
+        },
+        [],
+    );
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const form = event.currentTarget;
+        const firstInvalidField = form.querySelector<
+            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+        >("input:invalid, textarea:invalid, select:invalid");
+        const invalidNames = Array.from(
+            form.querySelectorAll<
+                HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+            >("input:invalid, textarea:invalid, select:invalid"),
+        )
+            .map((field) => field.name)
+            .filter(
+                (name, index, array) =>
+                    !!name && array.indexOf(name) === index,
+            );
+
+        setInvalidFieldNames(invalidNames);
+
+        if (firstInvalidField) {
+            const invalidName = firstInvalidField.name;
+            const label =
+                labelForInvalidTarget(firstInvalidField) ||
+                firstInvalidField.validationMessage;
+
+            showQuickToast(
+                firstInvalidField.validity.valueMissing
+                    ? label
+                        ? `"${label}" alanını doldurunuz.`
+                        : "Lütfen zorunlu alanları doldurunuz."
+                    : label
+                      ? `"${label}" alanını kontrol ediniz.`
+                      : "Lütfen alan bilgilerini kontrol edin.",
+            );
+
+            if (invalidName === "graduateLevel") {
+                const graduateSection = form.querySelector(
+                    'input[name="graduateLevel"]',
+                );
+                graduateSection?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+            } else {
+                firstInvalidField.focus();
+                firstInvalidField.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+            }
+            return;
+        }
+
         const formData = new FormData(form);
 
         setLoading(true);
         setError(null);
+        setValidationErrors([]);
+        setInvalidFieldNames([]);
 
         try {
             const response = await fetch("/api/chair-assistant-applications", {
@@ -130,15 +355,46 @@ export function ChairAssistantApplicationForm() {
             const payload = await response.json().catch(() => null);
 
             if (!response.ok) {
+                const detailedErrors = Array.isArray(payload?.validationErrors)
+                    ? payload.validationErrors
+                          .filter(
+                              (item: unknown): item is ValidationErrorItem =>
+                                  typeof item === "object" &&
+                                  item !== null &&
+                                  "field" in item &&
+                                  "label" in item &&
+                                  "message" in item,
+                          )
+                          .map((item) => ({
+                              field: item.field,
+                              label: item.label,
+                              message: item.message,
+                          }))
+                    : [];
+
+                if (detailedErrors.length > 0) {
+                    setValidationErrors(detailedErrors);
+                    setInvalidFieldNames(
+                        detailedErrors
+                            .map((item) => item.field)
+                            .filter(
+                                (name, index, array) =>
+                                    !!name && array.indexOf(name) === index,
+                            ),
+                    );
+                }
+
                 throw new Error(
                     payload?.error ||
-                        "Başvuru gönderilemedi. Lütfen tekrar deneyin.",
+                        "Başvuru alınamadı. Lütfen eksik/hatalı alanları kontrol edin.",
                 );
             }
 
             setSuccess(true);
             setGraduateLevel("");
             setFileNames({});
+            setValidationErrors([]);
+            setInvalidFieldNames([]);
             form.reset();
         } catch (submitError) {
             setError(
@@ -191,7 +447,23 @@ export function ChairAssistantApplicationForm() {
     }
 
     return (
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form
+            ref={formRef}
+            noValidate
+            className="space-y-6"
+            onSubmit={handleSubmit}
+            onInvalid={handleInvalid}
+            onInputCapture={handleFieldInteraction}
+            onChangeCapture={handleFieldInteraction}
+        >
+            {isClient && quickToastMessage
+                ? createPortal(
+                      <div className="fixed bottom-4 right-4 z-[2147483647] max-w-sm rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900 shadow-2xl sm:bottom-6 sm:right-6">
+                          {quickToastMessage}
+                      </div>,
+                      document.body,
+                  )
+                : null}
             <SectionShell
                 step="Bölüm 1"
                 title="Kişisel Bilgiler"
@@ -308,7 +580,10 @@ export function ChairAssistantApplicationForm() {
                         <p className="text-sm font-semibold uppercase tracking-[0.08em] text-slate-700">
                             AKTİF LİSANSÜSTÜ PROGRAM
                         </p>
-                        <div className="grid gap-3 sm:grid-cols-2">
+                        <div
+                            data-field-group="graduateLevel"
+                            className="grid gap-3 rounded-2xl border border-transparent p-2 sm:grid-cols-2"
+                        >
                             {chairAssistantGraduateLevelOptions.map(
                                 (option) => {
                                     const isSelected =
@@ -648,7 +923,21 @@ export function ChairAssistantApplicationForm() {
                     {error ? (
                         <div className="flex items-start gap-3 rounded-[24px] border border-red-200 bg-red-50 p-4 text-sm text-red-700">
                             <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
-                            <p>{error}</p>
+                            <div className="space-y-2">
+                                <p>{error}</p>
+                                {validationErrors.length > 0 ? (
+                                    <ul className="list-disc space-y-1 pl-5">
+                                        {validationErrors.map((item) => (
+                                            <li key={`${item.field}-${item.message}`}>
+                                                <span className="font-semibold">
+                                                    {item.label}:
+                                                </span>{" "}
+                                                {item.message}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : null}
+                            </div>
                         </div>
                     ) : null}
 

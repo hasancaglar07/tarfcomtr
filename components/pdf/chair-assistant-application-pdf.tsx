@@ -1,49 +1,16 @@
-import path from "path";
 import {
     Document,
-    Font,
     Page,
     StyleSheet,
     Text,
     View,
 } from "@react-pdf/renderer";
 
-let fontsRegistered = false;
-
-function ensureFontsRegistered() {
-    if (fontsRegistered) {
-        return;
-    }
-
-    Font.register({
-        family: "Noto Sans PDF",
-        fonts: [
-            {
-                src: path.join(
-                    process.cwd(),
-                    "node_modules/@fontsource/noto-sans/files/noto-sans-latin-ext-400-normal.woff",
-                ),
-                fontWeight: 400,
-            },
-            {
-                src: path.join(
-                    process.cwd(),
-                    "node_modules/@fontsource/noto-sans/files/noto-sans-latin-ext-700-normal.woff",
-                ),
-                fontWeight: 700,
-            },
-        ],
-    });
-
-    fontsRegistered = true;
-}
-
 const styles = StyleSheet.create({
     page: {
         paddingTop: 36,
         paddingBottom: 40,
         paddingHorizontal: 34,
-        fontFamily: "Noto Sans PDF",
         fontSize: 10.5,
         color: "#0f172a",
         backgroundColor: "#ffffff",
@@ -172,8 +139,6 @@ export function ChairAssistantApplicationPdf({
     questions,
     documents,
 }: ChairAssistantApplicationPdfProps) {
-    ensureFontsRegistered();
-
     return (
         <Document title={`Kürsü Asistan Başvurusu - ${candidateName}`}>
             <Page size="A4" style={styles.page}>

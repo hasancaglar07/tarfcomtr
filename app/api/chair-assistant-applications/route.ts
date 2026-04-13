@@ -22,6 +22,34 @@ import {
 
 export const runtime = "nodejs";
 
+const fieldLabels: Record<string, string> = {
+    fullName: "Ad Soyad",
+    phone: "Telefon No",
+    email: "E-posta",
+    city: "İkamet Ettiğiniz Şehir",
+    profession: "Mesleği",
+    chair: "Kürsü Seçimi",
+    undergraduateInfo: "Lisans Mezuniyeti",
+    graduateLevel: "Aktif Lisansüstü Program",
+    mastersProgram: "Yüksek Lisans Programı",
+    doctorateProgram: "Doktora Programı",
+    academicFields: "Akademik Çalışma Alanları",
+    thesisTopic: "Araştırma Başlığı / Alanı",
+    previousWork: "Önceki Çalışmalar",
+    motivation: "Katılım Motivasyonu",
+    weeklyAvailability: "Haftalık Zaman",
+    referenceOneFirstName: "Referans 1 Adı",
+    referenceOneLastName: "Referans 1 Soyadı",
+    referenceOnePhone: "Referans 1 Telefon",
+    referenceOneProfession: "Referans 1 Mesleği",
+    referenceTwoFirstName: "Referans 2 Adı",
+    referenceTwoLastName: "Referans 2 Soyadı",
+    referenceTwoPhone: "Referans 2 Telefon",
+    referenceTwoProfession: "Referans 2 Mesleği",
+    accuracyDeclarationAccepted: "Bilgilerin Doğruluğu Beyanı",
+    kvkkAccepted: "KVKK Onayı",
+};
+
 const schema = z
     .object({
         fullName: z.string().min(1).max(120),
@@ -155,6 +183,73 @@ function formatReferenceLine(
     return `${firstName} ${lastName} - ${phone}${profession ? ` (${profession})` : ""}`;
 }
 
+function getFieldLabel(field: string) {
+    const documentLabel = chairAssistantDocumentDefinitions.find(
+        (document) => document.type === field,
+    )?.label;
+    return documentLabel ?? fieldLabels[field] ?? field;
+}
+
+function buildIssueMessage(
+    issue: z.ZodIssue,
+    label: string,
+) {
+    if (issue.code === z.ZodIssueCode.too_small && issue.type === "string") {
+        return `${label} alanı zorunludur.`;
+    }
+
+    if (
+        issue.code === z.ZodIssueCode.invalid_string &&
+        issue.validation === "email"
+    ) {
+        return "Geçerli bir e-posta adresi giriniz.";
+    }
+
+    if (issue.code === z.ZodIssueCode.invalid_enum_value) {
+        return `${label} alanında geçerli bir seçim yapınız.`;
+    }
+
+    if (issue.code === z.ZodIssueCode.invalid_literal) {
+        return `${label} onayı zorunludur.`;
+    }
+
+    if (issue.code === z.ZodIssueCode.too_big && issue.type === "string") {
+        return `${label} alanı en fazla ${issue.maximum} karakter olabilir.`;
+    }
+
+    if (issue.code === z.ZodIssueCode.custom && issue.message) {
+        return issue.message;
+    }
+
+    if (issue.message) {
+        return issue.message;
+    }
+
+    return `${label} alanı hatalıdır.`;
+}
+
+function normalizeValidationErrors(error: z.ZodError) {
+    const mapped = error.errors.map((issue) => {
+        const field = String(issue.path[0] ?? "form");
+        const label = getFieldLabel(field);
+
+        return {
+            field,
+            label,
+            message: buildIssueMessage(issue, label),
+        };
+    });
+
+    return mapped.filter(
+        (item, index, array) =>
+            array.findIndex(
+                (entry) =>
+                    entry.field === item.field &&
+                    entry.message === item.message,
+            ) === index,
+    );
+}
+
 export async function POST(request: Request) {
     let applicationId: string | null = null;
 
@@ -191,11 +286,11 @@ export async function POST(request: Request) {
         });
 
         if (!parsed.success) {
+            const validationErrors = normalizeValidationErrors(parsed.error);
             return NextResponse.json(
                 {
-                    error:
-                        parsed.error.errors[0]?.message ??
-                        "Form verisi eksik veya hatalı.",
+                    error: "Başvuru alınamadı. Eksik veya hatalı alanlar var.",
+                    validationErrors,
                 },
                 { status: 400 },
             );
@@ -206,10 +301,27 @@ export async function POST(request: Request) {
             return { type: definition.type, result };
         });
 
-        const fileError = files.find((entry) => "error" in entry.result);
-        if (fileError && "error" in fileError.result) {
+        const fileErrors = files
+            .filter((entry) => "error" in entry.result)
+            .map((entry) => {
+                const result = entry.result;
+                return {
+                    field: entry.type,
+                    label: getFieldLabel(entry.type),
+                    message:
+                        "error" in result
+                            ? result.error
+                            : "Dosya doğrulaması başarısız.",
+                };
+            });
+
+        if (fileErrors.length > 0) {
             return NextResponse.json(
-                { error: fileError.result.error },
+                {
+                    error:
+                        "Başvuru alınamadı. Evrak alanlarında düzeltilmesi gereken noktalar var.",
+                    validationErrors: fileErrors,
+                },
                 { status: 400 },
             );
         }
