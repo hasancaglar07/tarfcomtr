@@ -16,11 +16,11 @@ function ensureFontsRegistered() {
 
     const regularFont = path.join(
         process.cwd(),
-        "public/fonts/pdf/noto-sans-latin-ext-400-normal.woff",
+        "public/fonts/pdf/NotoSans-Regular.ttf",
     );
     const boldFont = path.join(
         process.cwd(),
-        "public/fonts/pdf/noto-sans-latin-ext-700-normal.woff",
+        "public/fonts/pdf/NotoSans-Bold.ttf",
     );
 
     if (!fs.existsSync(regularFont) || !fs.existsSync(boldFont)) {
