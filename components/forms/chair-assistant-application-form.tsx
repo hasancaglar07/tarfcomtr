@@ -40,6 +40,13 @@ type ValidationErrorItem = {
     message: string;
 };
 
+function uniqueNonEmpty(values: string[]) {
+    return values.filter(
+        (name: string, index: number, array: string[]) =>
+            !!name && array.indexOf(name) === index,
+    );
+}
+
 const inputClassName =
     "h-12 rounded-2xl border-slate-200 bg-white px-4 text-base text-slate-900 shadow-none transition-colors duration-200 placeholder:text-slate-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-200";
 
@@ -292,16 +299,14 @@ export function ChairAssistantApplicationForm() {
         const firstInvalidField = form.querySelector<
             HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
         >("input:invalid, textarea:invalid, select:invalid");
-        const invalidNames = Array.from(
+        const invalidNames = uniqueNonEmpty(
+            Array.from(
             form.querySelectorAll<
                 HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
             >("input:invalid, textarea:invalid, select:invalid"),
         )
-            .map((field) => field.name)
-            .filter(
-                (name, index, array) =>
-                    !!name && array.indexOf(name) === index,
-            );
+                .map((field) => field.name),
+        );
 
         setInvalidFieldNames(invalidNames);
 
@@ -355,7 +360,9 @@ export function ChairAssistantApplicationForm() {
             const payload = await response.json().catch(() => null);
 
             if (!response.ok) {
-                const detailedErrors = Array.isArray(payload?.validationErrors)
+                const detailedErrors: ValidationErrorItem[] = Array.isArray(
+                    payload?.validationErrors,
+                )
                     ? payload.validationErrors
                           .filter(
                               (item: unknown): item is ValidationErrorItem =>
@@ -365,7 +372,7 @@ export function ChairAssistantApplicationForm() {
                                   "label" in item &&
                                   "message" in item,
                           )
-                          .map((item) => ({
+                          .map((item: ValidationErrorItem) => ({
                               field: item.field,
                               label: item.label,
                               message: item.message,
@@ -375,12 +382,11 @@ export function ChairAssistantApplicationForm() {
                 if (detailedErrors.length > 0) {
                     setValidationErrors(detailedErrors);
                     setInvalidFieldNames(
-                        detailedErrors
-                            .map((item) => item.field)
-                            .filter(
-                                (name, index, array) =>
-                                    !!name && array.indexOf(name) === index,
+                        uniqueNonEmpty(
+                            detailedErrors.map(
+                                (item: ValidationErrorItem) => item.field,
                             ),
+                        ),
                     );
                 }
 
