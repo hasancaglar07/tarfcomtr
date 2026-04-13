@@ -1,10 +1,45 @@
+import fs from "fs";
+import path from "path";
 import {
     Document,
+    Font,
     Page,
     StyleSheet,
     Text,
     View,
 } from "@react-pdf/renderer";
+
+let fontsRegistered = false;
+
+function ensureFontsRegistered() {
+    if (fontsRegistered) return true;
+
+    const regularFont = path.join(
+        process.cwd(),
+        "public/fonts/pdf/noto-sans-latin-ext-400-normal.woff",
+    );
+    const boldFont = path.join(
+        process.cwd(),
+        "public/fonts/pdf/noto-sans-latin-ext-700-normal.woff",
+    );
+
+    if (!fs.existsSync(regularFont) || !fs.existsSync(boldFont)) {
+        console.warn(
+            "[chair-assistant-pdf] font files not found, falling back to default PDF font",
+        );
+        return false;
+    }
+
+    Font.register({
+        family: "Noto Sans PDF",
+        fonts: [
+            { src: regularFont, fontWeight: 400 },
+            { src: boldFont, fontWeight: 700 },
+        ],
+    });
+    fontsRegistered = true;
+    return true;
+}
 
 const styles = StyleSheet.create({
     page: {
@@ -139,9 +174,18 @@ export function ChairAssistantApplicationPdf({
     questions,
     documents,
 }: ChairAssistantApplicationPdfProps) {
+    const hasTurkishFont = ensureFontsRegistered();
+
     return (
         <Document title={`Kürsü Asistan Başvurusu - ${candidateName}`}>
-            <Page size="A4" style={styles.page}>
+            <Page
+                size="A4"
+                style={
+                    hasTurkishFont
+                        ? [styles.page, { fontFamily: "Noto Sans PDF" }]
+                        : styles.page
+                }
+            >
                 <Text style={styles.brand}>TARF Düşünce Enstitüsü</Text>
                 <Text style={styles.title}>
                     Kürsü Asistanı Başvuru PDF Çıktısı
