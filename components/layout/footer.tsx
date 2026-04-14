@@ -22,7 +22,7 @@ const footerNavigation = (locale: string) => ({
     { label: locale === 'tr' ? 'Aile' : locale === 'ar' ? 'الأسرة' : 'Family', href: `/${locale}/dusunce-enstitusu/aile` },
     { label: locale === 'tr' ? 'Tarih, Kültür ve Medeniyet' : locale === 'ar' ? 'الثقافة والفن' : 'Culture & Art', href: `/${locale}/dusunce-enstitusu/kultur-sanat` },
     { label: locale === 'tr' ? 'Uluslararası İlişkiler' : locale === 'ar' ? 'العلاقات الدولية' : 'International Relations', href: `/${locale}/dusunce-enstitusu/uluslararasi-iliskiler` },
-    { label: locale === 'tr' ? 'Ekoloji-İklim-Şehir' : locale === 'ar' ? 'البيئة والمناخ والطبيعة' : 'Environment & Climate', href: `/${locale}/dusunce-enstitusu/cevre-iklim-doga` },
+    { label: locale === 'tr' ? 'Çevre-İklim-Şehir' : locale === 'ar' ? 'البيئة والمناخ والطبيعة' : 'Environment & Climate', href: `/${locale}/dusunce-enstitusu/cevre-iklim-doga` },
     { label: locale === 'tr' ? 'Bilim ve Teknoloji' : locale === 'ar' ? 'العلم والتكنولوجيا' : 'Science & Technology', href: `/${locale}/dusunce-enstitusu/bilim-teknoloji` },
   ],
   akademi: [
