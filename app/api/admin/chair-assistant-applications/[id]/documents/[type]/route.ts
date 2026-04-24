@@ -9,7 +9,7 @@ import { sanitizeUploadFileName } from '@/lib/chair-assistant'
 export const runtime = 'nodejs'
 
 export async function GET(
-  _request: Request,
+  request: Request,
   {
     params,
   }: {
@@ -46,12 +46,13 @@ export async function GET(
   }
 
   const safeName = sanitizeUploadFileName(document.fileName) || 'evrak'
+  const disposition = new URL(request.url).searchParams.get('inline') === '1' ? 'inline' : 'attachment'
 
   return new Response(upstream.body, {
     headers: {
       'Content-Type':
         document.mimeType || upstream.headers.get('content-type') || 'application/octet-stream',
-      'Content-Disposition': `attachment; filename="${safeName}"`,
+      'Content-Disposition': `${disposition}; filename="${safeName}"`,
       'Cache-Control': 'no-store',
     },
   })

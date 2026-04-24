@@ -158,10 +158,23 @@ function ensureFile(formData: FormData, type: ChairAssistantDocumentType) {
     }
 
     const fileName = entry.name?.toLowerCase() || "";
-    const extensionAllowed = /\.(pdf|jpg|jpeg)$/.test(fileName);
+    if (type === ChairAssistantDocumentType.portrait_photo) {
+        const photoExtensionAllowed = /\.(jpg|jpeg|png)$/.test(fileName);
+        const photoMimeAllowed = ["image/jpeg", "image/png"].includes(
+            entry.type,
+        );
+
+        if (!photoMimeAllowed && !photoExtensionAllowed) {
+            return {
+                error: `${formatChairAssistantDocumentType(type)} yalnızca JPG veya PNG olabilir.`,
+            } as const;
+        }
+    }
+
+    const extensionAllowed = /\.(pdf|jpg|jpeg|png)$/.test(fileName);
     if (!isChairAssistantMimeTypeAllowed(entry.type) && !extensionAllowed) {
         return {
-            error: `${formatChairAssistantDocumentType(type)} yalnızca PDF veya JPG olabilir.`,
+            error: `${formatChairAssistantDocumentType(type)} yalnızca PDF, JPG veya PNG olabilir.`,
         } as const;
     }
 

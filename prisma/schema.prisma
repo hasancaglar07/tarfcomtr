@@ -53,6 +53,7 @@ enum ChairAssistantDocumentType {
   language_exam_result
   academic_cv
   criminal_record
+  portrait_photo
 }
 
 enum ChairAssistantGraduateLevel {

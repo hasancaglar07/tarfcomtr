@@ -19,6 +19,7 @@ export const chairAssistantRequestedDocuments = [
     "Adli sicil belgesi",
     "Lisansüstü öğrenci belgesi",
     "Akademik özgeçmiş ve yayın listesi",
+    "Vesikalık fotoğraf",
 ] as const;
 
 export const chairAssistantResponsibilities = [
@@ -120,6 +121,12 @@ export const chairAssistantDocumentDefinitions = [
         type: ChairAssistantDocumentType.academic_cv,
         label: "Akademik Özgeçmiş ve Yayın Listesi",
         helper: "Tek PDF veya JPG olarak ekleyin.",
+    },
+    {
+        type: ChairAssistantDocumentType.portrait_photo,
+        label: "Vesikalık Fotoğraf",
+        helper: "JPG, JPEG veya PNG formatında vesikalık fotoğrafınızı ekleyin.",
+        accept: ".jpg,.jpeg,.png",
     },
 ] as const;
 
@@ -233,10 +240,11 @@ export const chairAssistantStatusOptions: ApplicationStatus[] = [
     "closed",
 ];
 
-export const chairAssistantAcceptedFileExtensions = ".pdf,.jpg,.jpeg";
+export const chairAssistantAcceptedFileExtensions = ".pdf,.jpg,.jpeg,.png";
 export const chairAssistantAllowedMimeTypes = [
     "application/pdf",
     "image/jpeg",
+    "image/png",
 ] as const;
 export const chairAssistantMaxFileSize = 10 * 1024 * 1024;
 

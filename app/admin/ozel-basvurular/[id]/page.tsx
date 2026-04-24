@@ -1,6 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
+import { ChairAssistantDocumentType } from "@prisma/client";
 
 import { updateChairAssistantApplicationAction } from "@/app/admin/ozel-basvurular/actions";
 import { Badge } from "@/components/ui/badge";
@@ -197,6 +199,20 @@ export default async function SpecialApplicationDetailPage({
                                                     {document?.fileName ||
                                                         "Belge yüklenmemiş"}
                                                 </p>
+                                                {document &&
+                                                definition.type ===
+                                                    ChairAssistantDocumentType.portrait_photo ? (
+                                                    <div className="mt-4 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
+                                                        <Image
+                                                            src={`/api/admin/chair-assistant-applications/${application.id}/documents/${definition.type}?inline=1`}
+                                                            alt={`${application.fullName} vesikalık fotoğrafı`}
+                                                            width={320}
+                                                            height={426}
+                                                            unoptimized
+                                                            className="h-auto w-full object-cover"
+                                                        />
+                                                    </div>
+                                                ) : null}
                                                 {document ? (
                                                     <a
                                                         href={`/api/admin/chair-assistant-applications/${application.id}/documents/${definition.type}`}

@@ -836,7 +836,7 @@ export function ChairAssistantApplicationForm() {
             <SectionShell
                 step="Bölüm 5"
                 title="Evrak Yükleme"
-                description={`Belgeleri isterseniz PDF veya JPG formatında ekleyebilirsiniz. Her dosya en fazla ${Math.round(
+                description={`Belgeleri PDF, JPG veya PNG formatında ekleyebilirsiniz. Her dosya en fazla ${Math.round(
                     chairAssistantMaxFileSize / (1024 * 1024),
                 )} MB olabilir.`}
             >
@@ -870,7 +870,9 @@ export function ChairAssistantApplicationForm() {
                                         name={document.type}
                                         type="file"
                                         accept={
-                                            chairAssistantAcceptedFileExtensions
+                                            "accept" in document
+                                                ? document.accept
+                                                : chairAssistantAcceptedFileExtensions
                                         }
                                         onChange={(event) =>
                                             handleFileChange(

@@ -6,6 +6,7 @@ import { updateChairAssistantApplicationAction } from '@/app/admin/ozel-basvurul
 import { Badge } from '@/components/ui/badge'
 import {
   chairAssistantChairs,
+  chairAssistantDocumentDefinitions,
   chairAssistantStatusColors,
   chairAssistantStatusLabels,
   chairAssistantStatusOptions,
@@ -195,7 +196,9 @@ export default async function SpecialApplicationsPage({
                       <div className="text-xs text-slate-400">{application.city}</div>
                     </td>
                     <td className="px-4 py-3 align-top text-sm text-slate-200">
-                      <div>{application._count.documents} / 5 belge</div>
+                      <div>
+                        {application._count.documents} / {chairAssistantDocumentDefinitions.length} belge
+                      </div>
                       <div className="mt-2 flex flex-wrap gap-2">
                         <Link
                           href={`/admin/ozel-basvurular/${application.id}`}
