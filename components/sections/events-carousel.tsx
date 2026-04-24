@@ -357,7 +357,7 @@ function EventCard({
         <div className="absolute -inset-[100%] bg-gradient-to-tr from-transparent via-white/20 to-transparent rotate-45 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0" />
 
         {/* Event Image */}
-        <Link href={`/${locale}/events/${event.slug}`} className="relative block z-10 w-full aspect-[3/2] sm:aspect-[16/10] overflow-hidden m-2 rounded-[24px] mb-0">
+        <Link href={`/${locale}/events/${event.slug}`} className="relative block z-10 w-[calc(100%-1rem)] aspect-[1080/1440] overflow-hidden m-2 rounded-[24px] mb-0 bg-white">
           {event.featured_image ? (
             <Image
               src={resolveImageSrc(event.featured_image, getDefaultImage())}
@@ -365,16 +365,13 @@ function EventCard({
               fill
               priority={index < 4}
               sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-110"
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-primary/10 to-amber-50 flex items-center justify-center">
               <Calendar className="w-16 h-16 text-primary/30" />
             </div>
           )}
-
-          {/* Overlay Gradient for Text Contrast */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-60" />
 
           {/* Featured Badge */}
           {event.is_featured && (

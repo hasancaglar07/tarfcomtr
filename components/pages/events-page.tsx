@@ -118,7 +118,7 @@ export async function EventsPage({ locale, pastPage = 1 }: EventsPageProps) {
                         <div className="relative h-full flex flex-col sm:flex-row gap-6 p-6 rounded-[32px] border border-white/40 bg-white/60 shadow-[0_10px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:-translate-y-1 hover:bg-white/80">
                           {/* Poster */}
                           <div className="relative w-full sm:w-40 shrink-0">
-                            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-white/60 bg-white shadow-sm">
+                            <div className="relative aspect-[1080/1440] w-full overflow-hidden rounded-2xl border border-white/60 bg-white shadow-sm">
                               {event.featured_image ? (
                                 <Image
                                   src={resolveImageSrc(event.featured_image, getDefaultImage())}

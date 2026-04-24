@@ -2,7 +2,8 @@ import { api, listPublishedPostSlugs } from '@/lib/api'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { ArrowLeft, Calendar, MapPin, Clock3, Share2 } from 'lucide-react'
+import { ShareButton } from '@/components/ui/share-button'
+import { ArrowLeft, Calendar, MapPin, Clock3 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
@@ -86,10 +87,11 @@ export default async function EventDetailPage({
                 </Button>
               </Animate>
               <Animate variant="fadeIn" delay={0.15}>
-                <Button variant="outline" className="rounded-full bg-white/40 border-white/40 hover:bg-white/60">
-                  <Share2 className="mr-2 h-4 w-4" />
-                  {locale === 'tr' ? 'Paylaş' : locale === 'ar' ? 'شارك' : 'Share'}
-                </Button>
+                <ShareButton
+                  locale={locale}
+                  title={event.title}
+                  className="rounded-full bg-white/40 border-white/40 hover:bg-white/60"
+                />
               </Animate>
             </div>
 
@@ -213,22 +215,19 @@ export default async function EventDetailPage({
 
                     {/* Right Side: Visual / Map */}
                     <div className="relative">
-                      <div className="relative overflow-hidden rounded-[32px] bg-slate-100 shadow-2xl ring-1 ring-white/20 group/video aspect-video sm:aspect-[4/3] lg:aspect-square xl:aspect-[4/3]">
+                      <div className="relative overflow-hidden rounded-[32px] bg-white shadow-2xl ring-1 ring-white/20 group/video aspect-[1080/1440]">
                         {event.featured_image ? (
                           <Image
                             src={resolveImageSrc(event.featured_image, getDefaultImage())}
                             alt={event.title}
                             fill
-                            className="object-cover transition-transform duration-700 group-hover/video:scale-105"
+                            className="object-cover transition-transform duration-700 group-hover/video:scale-[1.02]"
                           />
                         ) : (
                           <div className="absolute inset-0 flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
                             <Calendar className="h-20 w-20 text-slate-300" />
                           </div>
                         )}
-
-                        {/* Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-60" />
                       </div>
                     </div>
                   </div>
@@ -315,12 +314,12 @@ export default async function EventDetailPage({
                       </h2>
                       <div className="grid gap-4 sm:grid-cols-2">
                         {event.gallery.map((img, idx) => (
-                          <div key={idx} className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/40 shadow-md group">
+                          <div key={idx} className="relative aspect-[1080/1440] w-full overflow-hidden rounded-2xl border border-white/40 bg-white shadow-md group">
                             <Image
                               src={resolveImageSrc(img, getDefaultImage())}
-                              alt={`Gallery ${idx}`}
+                              alt={`Gallery ${idx + 1}`}
                               fill
-                              className="object-cover transition-transform duration-500 group-hover:scale-110"
+                              className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                             />
                           </div>
                         ))}
@@ -341,13 +340,13 @@ export default async function EventDetailPage({
                       {related_events.map((related) => (
                         <Link href={`/${locale}/events/${related.slug}`} key={related.id} className="block group">
                           <div className="flex gap-4 p-4 rounded-3xl bg-white/40 hover:bg-white/60 border border-white/40 shadow-sm backdrop-blur-md transition-all">
-                            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-slate-200">
+                            <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-2xl bg-white">
                               {related.featured_image ? (
                                 <Image
                                   src={resolveImageSrc(related.featured_image, getDefaultImage())}
                                   alt={related.title}
                                   fill
-                                  className="object-cover transition-transform group-hover:scale-110"
+                                  className="object-cover transition-transform group-hover:scale-[1.03]"
                                 />
                               ) : (
                                 <div className="h-full w-full flex items-center justify-center">

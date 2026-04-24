@@ -136,7 +136,7 @@ export function EventPosterPopup({ locale, events = [] }: EventPosterPopupProps)
         onClick={(event) => event.stopPropagation()}
       >
         {/* Main Image Area - Full Cover */}
-        <div className="relative aspect-[3/4] sm:aspect-[4/5] w-full">
+        <div className="relative aspect-[1080/1440] w-full">
           <Link href={`/${locale}/events/${active.slug}`} className="block h-full w-full group/image">
             <Image
               src={resolveImageSrc(active.featured_image, getDefaultImage())}
